@@ -3,6 +3,8 @@ public class Ingredient
     double price;
     String expiryDate;
     String name;
+    int amount;
+    
 
     public Ingredient(String name, double price, String expiryDate)
     {
