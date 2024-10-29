@@ -20,6 +20,7 @@ public class Ingredient
         return new Ingredient(name, price, expiryDate, "");
     }
 
+    // getters
     public String getName() 
     {
         return name;
@@ -35,6 +36,12 @@ public class Ingredient
         return expiryDate;
     }
 
+    public String getAmount()
+    {
+        return amount;
+    }
+
+    // setters
     public void setAmount(String amount) {
         this.amount = amount;
     }

@@ -59,10 +59,9 @@ public class FoodStorage {
         ingredientList.values().forEach(list -> list.stream().filter(food -> food.getExpiryDate().equals(""))
         .forEach(System.out::println));
     // fikse expiryDate logikken, bruke SimpleDateFormat bl.a.
-    // finne måte å sjekke totalpris på objektene som har gått ut på dato
-    }
-
+    // finne måte å sjekke totalpris på objektene som har gått ut på dato    
+    }    
     public void getTotalValue()
     {
     }
-}
+}   
