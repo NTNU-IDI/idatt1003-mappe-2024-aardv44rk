@@ -1,21 +1,23 @@
+package foodwaste;
 public class Ingredient 
 {
     double price;
     String expiryDate;
     String name;
-    int amount;
+    String amount;
     
 
-    public Ingredient(String name, double price, String expiryDate)
+    public Ingredient(String name, double price, String expiryDate, String amount)
     {
         this.name = name;
         this.price = price;
         this.expiryDate = expiryDate;
+        this.amount = amount;
     }
 
     Ingredient createIngredient(String name, double price, String expiryDate)
     {
-        return new Ingredient(name, price, expiryDate);
+        return new Ingredient(name, price, expiryDate, "");
     }
 
     public String getName() 
@@ -31,5 +33,9 @@ public class Ingredient
     public String getExpiryDate()
     {
         return expiryDate;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
     }
 }
