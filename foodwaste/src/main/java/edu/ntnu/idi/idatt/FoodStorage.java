@@ -6,51 +6,48 @@ import java.util.List;
 public class FoodStorage {
     HashMap<String, List<Ingredient>> ingredientList;
 
-    public FoodStorage()
-    {
+    // Constructur initiates a new HashMap
+    public FoodStorage() {
         ingredientList = new HashMap<>();
     }
 
     // TODO: addIngredient method here
     
 
-    public void searchIngredient(Ingredient ingredient)
-    {
+    public void searchIngredient(Ingredient ingredient) {
         {
             int[] i = {1};
             String name = ingredient.getName();
-            // Sjekker om navnet finnes, hvis ikke defaulter vi til en immutabel liste
+            // Check if the name of the ingredient is in the storage. If not, we return an immutable list.
             ingredientList.getOrDefault(name, Collections.emptyList())
-            // Printer så ut for hver gjenstand i listen, nummerert 
+            // Then we print a numbered list of each food matching that name
                .forEach(food -> System.out.println((i[0]++) + ". " + food));    
-            // finnes kanskje en lettere måte å gjøre dette på? må testes      
+            // TODO: easier way to do this? (numbering)  
         }
     }
 
-    public void removeIngredient(Ingredient ingredient)
-    {
+    public void removeIngredient(Ingredient ingredient) {
         searchIngredient(ingredient);
         System.out.println("What " + ingredient.getName() + "(s) do you want to take out of the storage?");
 
-        // må legge til måte å velge mat å ta ut: scanner, split
+        // TODO: Finish method to remove items
     } 
 
-    // Printer alle elementer av listene i hashmappen
-    public void displayStorage()
-    {
+    public void displayStorage() {
+        // TODO: comment here (after making clean)
         ingredientList.values().forEach(list -> list.forEach(System.out::println));
     }
-    // få denne til å se litt clean ut 
-
-    public void displayExpiredFoods()
-    {
+        // TODO: Make output look "clean"
+        // Maybe separate food into categories, and print by categories?
+        // ooor print by keys and amount of each item? that way we dont print 1000 lines at once.
+    public void displayExpiredFoods() {
         ingredientList.values().forEach(list -> list.stream().filter(food -> food.getExpiryDate().equals(""))
         .forEach(System.out::println));
-    // fikse expiryDate logikken, bruke SimpleDateFormat bl.a.
-    // finne måte å sjekke totalpris på objektene som har gått ut på dato    
+        // TODO: fix date-logic
+        // TODO: method to get prices of all these and sum (with streams?) maybe call getTotalValue function.
     }    
-    public void getTotalValue()
-    {
+    public void getTotalValue() {
+        double totalValue = ingredientList.values().stream().flatMap(List::stream).mapToDouble(Ingredient::getPrice).sum();
+        System.out.println("Total value of items: " + totalValue);
     }
-
 }   
