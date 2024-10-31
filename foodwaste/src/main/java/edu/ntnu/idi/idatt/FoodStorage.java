@@ -1,18 +1,34 @@
 package edu.ntnu.idi.idatt;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+// TODO: replace all comments with javadoc
+
 public class FoodStorage {
     HashMap<String, List<Ingredient>> ingredientList;
-
+    
     // Constructur initiates a new HashMap
     public FoodStorage() {
         ingredientList = new HashMap<>();
     }
 
-    // TODO: addIngredient method here
-    
+    // TODO: hva er poenget med denne? spørre studass
+    // add exception-handling
+    public Ingredient createNewIngredient(String name) {
+        ingredientList.putIfAbsent(name, new ArrayList<>());
+        return new Ingredient(name);
+    }
+
+    public void addIngredient(String name, double price, String expiryDate, int amount, String unit) {
+        Ingredient ingredient = createNewIngredient(name);
+        ingredient.setPrice(price);
+        ingredient.setExpiryDate(expiryDate);
+        ingredient.setAmount(amount);
+        ingredient.setUnit(unit);
+        ingredientList.get(name).add(ingredient);
+    }
 
     public void searchIngredient(Ingredient ingredient) {
         {
