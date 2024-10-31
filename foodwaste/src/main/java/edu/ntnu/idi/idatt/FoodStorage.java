@@ -18,7 +18,7 @@ public class FoodStorage {
         ingredient.setAmount(amount);
         // Sjekker om det finnes en ingrediens av samme navn i hashmappet allerede
         if (!ingredientList.containsKey(ingredient.getName())) 
-        // Lager en ny key og oppretter en hashmap for å lagre og differensiere objekter av samme navn / type
+        // Lager en ny key og oppretter en arraylist for å lagre og differensiere objekter av samme navn / type
         {
             ingredientList.put(ingredient.getName(), new ArrayList<>());       
         }
@@ -64,4 +64,5 @@ public class FoodStorage {
     public void getTotalValue()
     {
     }
+
 }   

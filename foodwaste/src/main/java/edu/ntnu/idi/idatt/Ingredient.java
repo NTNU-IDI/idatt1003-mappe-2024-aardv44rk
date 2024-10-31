@@ -1,4 +1,4 @@
-package foodwaste;
+package edu.ntnu.idi.idatt;
 public class Ingredient 
 {
     double price;
