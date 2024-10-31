@@ -37,4 +37,4 @@ https://www.w3schools.com/java/java_ref_reference.asp
 
 This is at the moment the only website I have used for Java documentation.
 
-For git I've learning git I've mostly used git <command> -h or trial and error.
+For git I've learning git I've mostly used git `<command>` -h or trial and error.
