@@ -10,9 +10,13 @@ STUDENT ID = "137426"
 
 [//]: # (TODO: Write a short description of your project/product here.)
 
+This project is a part of required assignments in IDATT1003 (Programmering 1).
+
 ## Project structure
 
 [//]: # (TODO: Describe the structure of your project here. How have you used packages in your structure. Where are all sourcefiles stored. Where are all JUnit-test classes stored. etc.)
+All sourcefiles are stored in src/main/java/edu/ntnu/idi/idatt
+All testfiles are stored in src/test/java/
 
 ## Link to repository
 
@@ -24,17 +28,17 @@ https://github.com/NTNU-IDI/idatt1003-mappe-2024-aardv44rk
 
 [//]: # (TODO: Describe how to run your project here. What is the main class? What is the main method? What is the input and output of the program? What is the expected behaviour of the program?)
 
+
+
 ## How to run the tests
 
 [//]: # (TODO: Describe how to run the tests here.)
 
-## References
 
-[//]: # (TODO: Include references here, if any. For example, if you have used code from the course book, include a reference to the chapter.
-Or if you have used code from a website or other source, include a link to the source.)
+## References
 
 https://www.w3schools.com/java/java_ref_reference.asp
 
 This is at the moment the only website I have used for Java documentation.
 
-For git I've learning git I've mostly used git `<command>` -h or trial and error.
+For git I've learning git I've mostly used `git <command> -h` or trial and error.

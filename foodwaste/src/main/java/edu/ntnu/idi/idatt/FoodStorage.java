@@ -1,5 +1,4 @@
-package foodwaste;
-import java.util.ArrayList;
+package edu.ntnu.idi.idatt;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -12,19 +11,8 @@ public class FoodStorage {
         ingredientList = new HashMap<>();
     }
 
-    public void addIngredient(Ingredient ingredient, String amount)
-    {
-        // Setter mengden av ingrediensen vi legger til i "kjøleskapet"
-        ingredient.setAmount(amount);
-        // Sjekker om det finnes en ingrediens av samme navn i hashmappet allerede
-        if (!ingredientList.containsKey(ingredient.getName())) 
-        // Lager en ny key og oppretter en arraylist for å lagre og differensiere objekter av samme navn / type
-        {
-            ingredientList.put(ingredient.getName(), new ArrayList<>());       
-        }
-        // Legger til ingrediensen
-        ingredientList.get(ingredient.getName()).add(ingredient);
-    }
+    // TODO: addIngredient method here
+    
 
     public void searchIngredient(Ingredient ingredient)
     {

@@ -1,12 +1,13 @@
 package edu.ntnu.idi.idatt;
+
 public class Ingredient 
 {
-    double price;
-    String expiryDate;
-    String name;
-    String amount;
+    double price;   // Price is a double to be able to store both integers and floats
+    String expiryDate; // Expiry dates are stored as strings for easy formatting with "..."
+    String name;    // Names are stored as strings for obvious reasons. Names are used to differentiate ingredients.
+    String amount; // Amount is stored as strings to accommodate units (L, kg, and so on) and amounts at the same time.
+    // Amount logic is subject to change
     
-
     public Ingredient(String name, double price, String expiryDate, String amount)
     {
         this.name = name;
@@ -15,9 +16,10 @@ public class Ingredient
         this.amount = amount;
     }
 
-    Ingredient createIngredient(String name, double price, String expiryDate)
+    // The only function of the createIngredient method is to initialize new ingredient types.
+    Ingredient createIngredient(String name) 
     {
-        return new Ingredient(name, price, expiryDate, "");
+        return new Ingredient(name, 0, "0", "");
     }
 
     // getters
