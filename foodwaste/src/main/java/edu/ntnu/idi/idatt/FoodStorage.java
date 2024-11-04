@@ -1,69 +1,68 @@
 package edu.ntnu.idi.idatt;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 
 // TODO: replace all comments with javadoc
 
 public class FoodStorage {
-    HashMap<String, List<Ingredient>> ingredientList;
-    
+    private final HashMap<String, List<Ingredient>> ingredientList;
+
     // Constructur initiates a new HashMap
     public FoodStorage() {
         ingredientList = new HashMap<>();
     }
 
-    // TODO: hva er poenget med denne? spørre studass
-    // add exception-handling
-    public Ingredient createNewIngredient(String name) {
-        ingredientList.putIfAbsent(name, new ArrayList<>());
-        return new Ingredient(name);
-    }
+    // TODO: add exception-handling
 
-    public void addIngredient(String name, double price, String expiryDate, int amount, String unit) {
-        Ingredient ingredient = createNewIngredient(name);
-        ingredient.setPrice(price);
-        ingredient.setExpiryDate(expiryDate);
-        ingredient.setAmount(amount);
-        ingredient.setUnit(unit);
+    public void addIngredient(Ingredient ingredient) {
+        String name = ingredient.getName();
+        ingredientList.putIfAbsent(name, new ArrayList<>());
         ingredientList.get(name).add(ingredient);
     }
 
-    public void searchIngredient(Ingredient ingredient) {
+    public List<Ingredient> searchIngredient(String name) {
         {
-            int[] i = {1};
-            String name = ingredient.getName();
-            // Check if the name of the ingredient is in the storage. If not, we return an immutable list.
-            ingredientList.getOrDefault(name, Collections.emptyList())
-            // Then we print a numbered list of each food matching that name
-               .forEach(food -> System.out.println((i[0]++) + ". " + food));    
-            // TODO: easier way to do this? (numbering)  
+            // Check if the name of the ingredient is in the storage. If not, we return an
+            // immutable list.
+            return ingredientList.getOrDefault(name, Collections.emptyList());
         }
     }
 
-    public void removeIngredient(Ingredient ingredient) {
-        searchIngredient(ingredient);
-        System.out.println("What " + ingredient.getName() + "(s) do you want to take out of the storage?");
-
+    public void removeIngredient(String name, Scanner scanner) {
+        searchIngredient(name);
+        System.out.println("What " + name + "(s) do you want to take out of the storage?");
+        
         // TODO: Finish method to remove items
-    } 
+    }
 
     public void displayStorage() {
         // TODO: comment here (after making clean)
         ingredientList.values().forEach(list -> list.forEach(System.out::println));
     }
-        // TODO: Make output look "clean"
-        // Maybe separate food into categories, and print by categories?
-        // ooor print by keys and amount of each item? that way we dont print 1000 lines at once.
+
+    // TODO: Make output look "clean"
+    // Maybe separate food into categories, and print by categories?
+    // ooor print by keys and amount of each item? that way we dont print 1000 lines
+    // at once.
     public void displayExpiredFoods() {
-        ingredientList.values().forEach(list -> list.stream().filter(food -> food.getExpiryDate().equals(""))
-        .forEach(System.out::println));
+        ingredientList.values()
+            .forEach(list -> list.stream()
+            .filter(food -> food.getExpiryDate().equals(""))
+            .forEach(System.out::println));
         // TODO: fix date-logic
-        // TODO: method to get prices of all these and sum (with streams?) maybe call getTotalValue function.
-    }    
+        // TODO: method to get prices of all these and sum (with streams?) maybe call
+        // getTotalValue function.
+    }
+
     public void getTotalValue() {
-        double totalValue = ingredientList.values().stream().flatMap(List::stream).mapToDouble(Ingredient::getPrice).sum();
+        double totalValue = ingredientList.values().stream()
+            .flatMap(List::stream)
+            .mapToDouble(Ingredient::getPrice)
+            .sum();
         System.out.println("Total value of items: " + totalValue);
     }
-}   
+}
