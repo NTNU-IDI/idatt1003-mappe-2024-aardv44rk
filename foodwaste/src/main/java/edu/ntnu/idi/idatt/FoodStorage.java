@@ -2,16 +2,17 @@ package edu.ntnu.idi.idatt;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
+import java.util.Map;
 
 // TODO: replace all comments with javadoc
 
 public class FoodStorage {
-    private final HashMap<String, List<Ingredient>> ingredientList;
+    private final Map<String, List<Ingredient>> ingredientList;
 
-    // Constructur initiates a new HashMap
+    // Constructur initiates a new HashMap (looser coupling this way)
     public FoodStorage() {
         ingredientList = new HashMap<>();
     }
@@ -20,7 +21,7 @@ public class FoodStorage {
 
     public void addIngredient(Ingredient ingredient) {
         String name = ingredient.getName();
-        ingredientList.putIfAbsent(name, new ArrayList<>());
+        ingredientList.putIfAbsent(name, new ArrayList<>()); // looser coupling with arraylist here
         ingredientList.get(name).add(ingredient);
     }
 
@@ -32,37 +33,30 @@ public class FoodStorage {
         }
     }
 
-    public void removeIngredient(String name, Scanner scanner) {
-        searchIngredient(name);
-        System.out.println("What " + name + "(s) do you want to take out of the storage?");
-        
+    public void removeIngredient(String name, double amount) {        
         // TODO: Finish method to remove items
     }
 
-    public void displayStorage() {
-        // TODO: comment here (after making clean)
-        ingredientList.values().forEach(list -> list.forEach(System.out::println));
+    // Map instead of HashMap here to code to an interface directly
+    public Map<String, List<Ingredient>> getIngredientList() {
+        return ingredientList;
     }
 
-    // TODO: Make output look "clean"
-    // Maybe separate food into categories, and print by categories?
-    // ooor print by keys and amount of each item? that way we dont print 1000 lines
-    // at once.
-    public void displayExpiredFoods() {
+    public List<Ingredient> getExpiredFood() {
+        List<Ingredient> expiredFood = new ArrayList<>();
         ingredientList.values()
             .forEach(list -> list.stream()
-            .filter(food -> food.getExpiryDate().equals(""))
-            .forEach(System.out::println));
-        // TODO: fix date-logic
-        // TODO: method to get prices of all these and sum (with streams?) maybe call
-        // getTotalValue function.
+            .filter(food -> food.getExpiryDate().before(new Date()))
+            .forEach(expiredFood::add));
+        return expiredFood;
     }
 
-    public void getTotalValue() {
+
+    public double getTotalValue() {
         double totalValue = ingredientList.values().stream()
             .flatMap(List::stream)
             .mapToDouble(Ingredient::getPrice)
             .sum();
-        System.out.println("Total value of items: " + totalValue);
+        return totalValue;
     }
 }
