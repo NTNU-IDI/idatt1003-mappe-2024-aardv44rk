@@ -20,6 +20,7 @@ public class UI {
         List<Ingredient> expiredFoods = foodStorage.getExpiredFood();
         double sum = expiredFoods.stream()
             .mapToDouble(Ingredient::getPrice)
+            .peek(System.out::println)
             .sum();
 
         System.out.println("Total value of expired items: " + sum + " kr.");
