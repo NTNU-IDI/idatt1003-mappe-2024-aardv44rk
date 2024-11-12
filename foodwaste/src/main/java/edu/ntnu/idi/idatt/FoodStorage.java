@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 // TODO: replace all comments with javadoc
-
 public class FoodStorage {
     private final Map<String, List<Ingredient>> ingredientList;
 
@@ -18,9 +17,8 @@ public class FoodStorage {
     }
 
     // TODO: add exception-handling
-
-    public void addIngredient(Ingredient ingredient) {
-        String name = ingredient.getName();
+    public void addIngredient(String name, double price, Date expiryDate, double amount, String unit) {
+        Ingredient ingredient = new Ingredient(name, price, expiryDate, amount, unit);
         ingredientList.putIfAbsent(name, new ArrayList<>()); // looser coupling with arraylist here
         ingredientList.get(name).add(ingredient);
     }
@@ -33,8 +31,13 @@ public class FoodStorage {
         }
     }
 
-    public void removeIngredient(String name, double amount) {        
-        // TODO: Finish method to remove items
+    public void removeIngredient(Ingredient ingredient) {        
+        ingredientList.get(ingredient.getName()).remove(ingredient);
+    }
+
+    public void takeOutIngredient(String name, double amount) {
+        List<Ingredient> ingredients = ingredientList.get(name);
+        
     }
 
     // Map instead of HashMap here to code to an interface directly
@@ -50,7 +53,6 @@ public class FoodStorage {
             .forEach(expiredFood::add));
         return expiredFood;
     }
-
 
     public double getTotalValue() {
         double totalValue = ingredientList.values().stream()
