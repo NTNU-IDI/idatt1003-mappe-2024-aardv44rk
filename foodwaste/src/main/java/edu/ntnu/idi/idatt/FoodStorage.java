@@ -12,15 +12,16 @@ import java.util.Map;
 public class FoodStorage {
     private final Map<String, List<Ingredient>> ingredientList;
 
-    // Constructur initiates a new HashMap (looser coupling this way)
+    // Constructur initiates a new HashMap 
     public FoodStorage() {
         ingredientList = new HashMap<>();
     }
 
     // TODO: add exception-handling
+    // Also add so that if an ingredient with the same expiration date already exists, we just add to the amount ??
     public void addIngredient(Ingredient ingredient) {
         String name = ingredient.getName();
-        ingredientList.putIfAbsent(name, new ArrayList<>()); // looser coupling with arraylist here
+        ingredientList.putIfAbsent(name, new ArrayList<>());
         ingredientList.get(name).add(ingredient);
     }
 
@@ -58,16 +59,22 @@ public class FoodStorage {
         }
     }
 
+    public List<String> sortStorage() {
+        List<String> sortedStorage = new ArrayList<>(ingredientList.keySet());
+        sortedStorage.sort(String::compareToIgnoreCase); 
+        return sortedStorage; // temp, might need to return all amounts aswell?
+    }
+
     // Map instead of HashMap here to code to an interface directly
     public Map<String, List<Ingredient>> getIngredientList() {
         return ingredientList;
     }
 
-    public List<Ingredient> getExpiredFood() {
+    public List<Ingredient> getExpiredFood(Date date) {
         List<Ingredient> expiredFood = new ArrayList<>();
         ingredientList.values()
             .forEach(list -> list.stream()
-            .filter(food -> food.getExpiryDate().before(new Date()))
+            .filter(food -> food.getExpiryDate().before(date))
             .forEach(expiredFood::add));
         return expiredFood;
     }
