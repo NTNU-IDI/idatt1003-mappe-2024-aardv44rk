@@ -18,11 +18,19 @@ public class FoodStorage {
     }
 
     // TODO: add exception-handling
-    // Also add so that if an ingredient with the same expiration date already exists, we just add to the amount ??
     public void addIngredient(Ingredient ingredient) {
         String name = ingredient.getName();
+        List<Ingredient> ingredients = ingredientList.get(name);
         ingredientList.putIfAbsent(name, new ArrayList<>());
-        ingredientList.get(name).add(ingredient);
+
+        for (Ingredient i : ingredients) {
+            if (i.getExpiryDate() == ingredient.getExpiryDate()) {
+                i.setAmount(i.getAmount() + ingredient.getAmount());
+                return;
+            }
+        }
+
+        ingredients.add(ingredient);
     }
 
     public List<Ingredient> searchIngredient(String name) {
@@ -62,7 +70,7 @@ public class FoodStorage {
     public List<String> sortStorage() {
         List<String> sortedStorage = new ArrayList<>(ingredientList.keySet());
         sortedStorage.sort(String::compareToIgnoreCase); 
-        return sortedStorage; // temp, might need to return all amounts aswell?
+        return sortedStorage; // temp, might need to return all ingredients aswell? if so just for
     }
 
     // Map instead of HashMap here to code to an interface directly
