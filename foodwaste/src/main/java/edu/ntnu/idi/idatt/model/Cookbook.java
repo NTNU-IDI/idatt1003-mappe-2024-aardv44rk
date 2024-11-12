@@ -15,14 +15,21 @@ public class Cookbook {
         cookbook.add(recipe);
     }
 
-    public Recipe recommendRecipe() { // wip needs fixing
-        Recipe recommendedRecipe = null;
+    // TODO: decide between returning list of all "makeable" recipes, or recommending 2-3 of them
+    // could also recommend a recipe if we have 9/10 of the ingredients needed ? 
+    public ArrayList<Recipe> recommendRecipes() { // wip needs fixing
+        ArrayList<Ingredient> availableIngredients = new ArrayList<>();
+        ArrayList<Recipe> recommendedRecipes = new ArrayList<>();
         for (Recipe recipe : cookbook) {
             for (Ingredient ingredient : recipe.getIngredients()) {
-                // might be issues with ingredientList being a HashMap with ingredient values? 
-                // TODO: figure out algorithm here, if not need to change from hm to arraylist etc IMPORTANT
+                if (foodStorage.getIngredientList().containsKey(ingredient.getName())) {
+                    availableIngredients.add(ingredient);
+                }
+            }
+            if (availableIngredients.containsAll(recipe.getIngredients())) {
+                recommendedRecipes.add(recipe);
             }
         }
-        return recommendedRecipe;
+        return recommendedRecipes;
     }
 }
