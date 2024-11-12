@@ -54,7 +54,7 @@ public class FoodStorage {
                 ingredient.setAmount(ingredient.getAmount() - amount);
                 amount = 0;
                 if (ingredient.getAmount() == 0) {
-                    iterator.remove(); // .remove() should remove it from ingredientList aswell, not 100% sure, needs testing.
+                    iterator.remove(); 
                 }
             }
             else {
@@ -70,7 +70,7 @@ public class FoodStorage {
     public List<String> sortStorage() {
         List<String> sortedStorage = new ArrayList<>(ingredientList.keySet());
         sortedStorage.sort(String::compareToIgnoreCase); 
-        return sortedStorage; // temp, might need to return all ingredients aswell? if so just for
+        return sortedStorage; // temp, might need to return all ingredients aswell?
     }
 
     // Map instead of HashMap here to code to an interface directly
