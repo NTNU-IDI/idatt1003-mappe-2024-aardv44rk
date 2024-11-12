@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Cookbook {
-    private List<Recipe> cookbook;
+    private final List<Recipe> cookbook;
 
     public Cookbook() {
         cookbook = new ArrayList<>();
