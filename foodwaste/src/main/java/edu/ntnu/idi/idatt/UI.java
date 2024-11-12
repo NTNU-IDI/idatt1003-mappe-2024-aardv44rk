@@ -13,6 +13,11 @@ public class UI {
     }
 
     public void displayMenu() {
+        
+        System.out.println("""
+                ------ Food Storage v0.1 ------
+                
+                """);
     }
     
     public void displayStorage() {
