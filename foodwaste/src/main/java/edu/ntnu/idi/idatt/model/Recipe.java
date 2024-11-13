@@ -3,10 +3,10 @@ package edu.ntnu.idi.idatt.model;
 import java.util.List;
 
 public class Recipe {
-    private final String name;
-    private final String description;
-    private final String instruction;
-    private final List<Ingredient> ingredients; // possibly not a list of ingredients, come back to this TODO
+    String name;
+    String description;
+    String instruction;
+    List <Ingredient> ingredients;
 
     public Recipe(String name, String description, String instruction, List<Ingredient> ingredients) {
         this.name = name;
@@ -30,4 +30,12 @@ public class Recipe {
     public List<Ingredient> getIngredients() {
         return ingredients;
     }
+
+    @Override
+    public String toString() { // TODO
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append(description).append(instruction).append(ingredients);
+        return sb.toString();
+    }
+
 }

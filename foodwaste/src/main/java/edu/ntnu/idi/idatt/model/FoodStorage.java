@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // TODO: replace all comments with javadoc
 public class FoodStorage {
@@ -21,14 +22,24 @@ public class FoodStorage {
     public void addIngredient(Ingredient ingredient) {
         String name = ingredient.getName();
         List<Ingredient> ingredients = ingredientList.get(name);
+        // Iterator<Ingredient> iterator = ingredients.iterator();
         ingredientList.putIfAbsent(name, new ArrayList<>());
 
-        for (Ingredient i : ingredients) {
-            if (i.getExpiryDate() == ingredient.getExpiryDate()) {
-                i.setAmount(i.getAmount() + ingredient.getAmount());
-                return;
-            }
-        }
+        // while (iterator.hasNext()) {
+        //     if (iterator.next().getExpiryDate() == ingredient.getExpiryDate()) {
+        //         iterator.next().setAmount(iterator.next().getAmount() + ingredient.getAmount());
+        //         return;
+        //     } 
+        // }
+
+        // for (Ingredient i : ingredients) {
+        //     if (i.getExpiryDate() == ingredient.getExpiryDate()) {
+        //         i.setAmount(i.getAmount() + ingredient.getAmount());
+        //         return;
+        //     }
+        // }
+
+        // TODO: choose between these two loops
 
         ingredients.add(ingredient);
     }
@@ -39,10 +50,9 @@ public class FoodStorage {
         return ingredientList.getOrDefault(name, Collections.emptyList());
     }
 
-    public void removeIngredient(String name, double amount) {
+    public int removeIngredient(String name, double amount) {
         if (!ingredientList.containsKey(name)) {
-            System.out.println("Item not found.");
-            return;
+            return -1;
         }
 
         List<Ingredient> ingredients = ingredientList.get(name);
@@ -54,7 +64,8 @@ public class FoodStorage {
                 ingredient.setAmount(ingredient.getAmount() - amount);
                 amount = 0;
                 if (ingredient.getAmount() == 0) {
-                    iterator.remove(); 
+                    iterator.remove();
+                    return 1; 
                 }
             }
             else {
@@ -63,14 +74,15 @@ public class FoodStorage {
             }
         }
         if (amount > 0) {
-            System.out.println("Insufficient amount in storage"); // move this to ui?
+            return 0;
         }
+        return -1;
     }
 
     public List<String> sortStorage() {
         List<String> sortedStorage = new ArrayList<>(ingredientList.keySet());
         sortedStorage.sort(String::compareToIgnoreCase); 
-        return sortedStorage; // temp, might need to return all ingredients aswell?
+        return sortedStorage; // temp, might need to return all ingredients objects aswell?
     }
 
     // Map instead of HashMap here to code to an interface directly
@@ -78,16 +90,15 @@ public class FoodStorage {
         return ingredientList;
     }
 
-    public List<Ingredient> getExpiredFood(Date date) {
-        List<Ingredient> expiredFood = new ArrayList<>();
-        ingredientList.values()
-            .forEach(list -> list.stream()
-            .filter(food -> food.getExpiryDate().before(date))
-            .forEach(expiredFood::add));
+    public List<Ingredient> getExpiredFood(Date date) { // maybe just use new Date(), input not rly needed
+        List<Ingredient> expiredFood = ingredientList.values()
+                                .stream().flatMap(List::stream)
+                                .filter(ingredient -> ingredient.getExpiryDate().before(date))
+                                .collect(Collectors.toList());
         return expiredFood;
     }
 
-    public double getTotalValue() {
+    public double getTotalValue() { // might need an input here to use this function on display expired food
         double totalValue = ingredientList.values().stream()
             .flatMap(List::stream)
             .mapToDouble(Ingredient::getPrice)
