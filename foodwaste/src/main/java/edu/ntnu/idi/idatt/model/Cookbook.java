@@ -17,7 +17,7 @@ public class Cookbook {
 
     // TODO: decide between returning list of all "makeable" recipes, or recommending 2-3 of them
     // could also recommend a recipe if we have 9/10 of the ingredients needed ? 
-    // also make it so 
+    // also make it so it sorts after expirydate
     public ArrayList<Recipe> recommendRecipes() { // wip needs fixing
         ArrayList<Ingredient> availableIngredients = new ArrayList<>();
         ArrayList<Recipe> recommendedRecipes = new ArrayList<>();
