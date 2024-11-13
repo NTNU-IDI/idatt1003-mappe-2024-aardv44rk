@@ -13,47 +13,47 @@ import edu.ntnu.idi.idatt.model.Recipe;
 
 
 public class UI {
-    private FoodStorage foodStorage = new FoodStorage();
-    private Cookbook cookbook = new Cookbook();
-    private Scanner sc = new Scanner(System.in);
+    private final FoodStorage foodStorage = new FoodStorage();
+    private final Cookbook cookbook = new Cookbook();
+    private final Scanner sc = new Scanner(System.in);
     
     public void start() {
-        boolean running = true;
-        int input;
-
-        do {
-            displayMenu();
-            if (sc.hasNextInt()) { // use inputhandler here
-                input = sc.nextInt();
-                sc.nextLine();
-            }
-            else {
-                throw new InputMismatchException("Invalid input, please try again");
-            }
-            switch(input) {
-                case 1 -> displayStorage();
-                case 2 -> displayExpiredFoods();
-                // case 3 -> foodStorage.searchIngredient(String name); Add input handling for this ?
-                // case 4 -> foodStorage.removeIngredient(String name); and this? or make separate methods in ui...
-                case 5 -> foodStorage.getTotalValue();
-                // case 6 -> foodStorage.addIngredient(Ingredient ingredient)
-                // Idea:
-                // One separate method, e.g. menuChoice(int input) instead of a switch case
-                // this way it's possible to handle all types of inputs ?? maybe, ask TA
-                // case 7 -> 
-                case 9 -> {
-                    System.out.println("Thank you for using the Food Storage app (name temp)");
-                    running = false;
+        try (sc) {
+            boolean running = true;
+            int input;
+            
+            do {
+                displayMenu();
+                if (sc.hasNextInt()) { // use inputhandler here
+                    input = sc.nextInt();
+                    sc.nextLine();
                 }
-            }
-        } while (running);
-        
-        sc.close();
+                else {
+                    throw new InputMismatchException("Invalid input, please try again");
+                }
+                switch(input) {
+                    case 1 -> displayStorage();
+                    case 2 -> displayExpiredFoods();
+                    // case 3 -> foodStorage.searchIngredient(String name); Add input handling for this ?
+                    // case 4 -> foodStorage.removeIngredient(String name); and this? or make separate methods in ui...
+                    case 5 -> foodStorage.getTotalValue();
+                    // case 6 -> foodStorage.addIngredient(Ingredient ingredient)
+                    // Idea:
+                    // One separate method, e.g. menuChoice(int input) instead of a switch case
+                    // this way it's possible to handle all types of inputs ?? maybe, ask TA
+                    case 7 -> readCookbook();
+                    case 9 -> {
+                        System.out.println("Thank you for using the Food Storage app (name temp)");
+                        running = false;
+                    }
+                }
+            } while (running);
+        }
     }
 
-    public void init() {
+    public void init() { // temp dummy method
         Ingredient ingredient = new Ingredient("melk", 10, null, 0, null);
-        List<Ingredient> list = new ArrayList();
+        List<Ingredient> list = new ArrayList<>();
         list.add(ingredient);
         Recipe recipe1 = new Recipe("a", "d", "23", list);
         Recipe recipe2 = new Recipe("b", "c", "23", list);
@@ -77,7 +77,7 @@ public class UI {
                 5. Check the total value of ingredients
                 6. Add an item to the storage
                 7. Look inside the cookbook
-                8. 
+                8. ?
                 9. Exit
                 """);
     }
