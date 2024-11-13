@@ -1,16 +1,21 @@
 package edu.ntnu.idi.idatt.view;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import edu.ntnu.idi.idatt.model.Cookbook;
 import edu.ntnu.idi.idatt.model.FoodStorage;
 import edu.ntnu.idi.idatt.model.Ingredient;
+import edu.ntnu.idi.idatt.model.Recipe;
+
 
 public class UI {
-    FoodStorage foodStorage = new FoodStorage();
-    Scanner sc = new Scanner(System.in);
+    private FoodStorage foodStorage = new FoodStorage();
+    private Cookbook cookbook = new Cookbook();
+    private Scanner sc = new Scanner(System.in);
     
     public void start() {
         boolean running = true;
@@ -35,8 +40,7 @@ public class UI {
                 // Idea:
                 // One separate method, e.g. menuChoice(int input) instead of a switch case
                 // this way it's possible to handle all types of inputs ?? maybe, ask TA
-                // case 7 -> ...
-                // TODO: recipes and cookbook
+                // case 7 -> 
                 case 9 -> {
                     System.out.println("Thank you for using the Food Storage app (name temp)");
                     running = false;
@@ -48,6 +52,18 @@ public class UI {
     }
 
     public void init() {
+        Ingredient ingredient = new Ingredient("melk", 10, null, 0, null);
+        List<Ingredient> list = new ArrayList();
+        list.add(ingredient);
+        Recipe recipe1 = new Recipe("a", "d", "23", list);
+        Recipe recipe2 = new Recipe("b", "c", "23", list);
+        Recipe recipe3 = new Recipe("c", "b", "23", list);
+        Recipe recipe4 = new Recipe("d", "a", "a3", list);
+
+        cookbook.addRecipe(recipe1);
+        cookbook.addRecipe(recipe2);
+        cookbook.addRecipe(recipe3);
+        cookbook.addRecipe(recipe4);
     }
 
     public void displayMenu() {
@@ -79,5 +95,9 @@ public class UI {
 
         System.out.println("Total value of expired items: " + sum + " kr.");
         // getTotalValue function.
+    }
+
+    public void readCookbook() {
+        cookbook.getCookbook().stream().forEach(System.out::println);
     }
 }
