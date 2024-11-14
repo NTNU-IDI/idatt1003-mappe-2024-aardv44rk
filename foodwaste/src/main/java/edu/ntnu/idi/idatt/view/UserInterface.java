@@ -1,14 +1,14 @@
 package edu.ntnu.idi.idatt.view;
 
+import edu.ntnu.idi.idatt.model.Cookbook;
+import edu.ntnu.idi.idatt.model.FoodStorage;
+import edu.ntnu.idi.idatt.model.Ingredient;
+import edu.ntnu.idi.idatt.util.InputHandler;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import edu.ntnu.idi.idatt.model.Cookbook;
-import edu.ntnu.idi.idatt.model.FoodStorage;
-import edu.ntnu.idi.idatt.model.Ingredient;
-import edu.ntnu.idi.idatt.util.InputHandler;
 
 
 
@@ -149,7 +149,6 @@ public class UserInterface {
    * 
    * <p>Calls <code>searchIngredient</code> from <code>FoodStorage</code>.</p>
    *
-   * @param scanner Scanner to read input.
    */
   public void ingredientSearcher() {
     String input = inputHandler.getValidString("What ingredient do you want to search for?");
