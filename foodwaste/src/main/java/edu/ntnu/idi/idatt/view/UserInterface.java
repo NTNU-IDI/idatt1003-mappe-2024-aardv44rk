@@ -13,7 +13,7 @@ import java.util.Scanner;
  * <p>Works together with <code>InputHandler</code> for input handling
  * and instantiates the storage and cookbook.</p>
  */
-public class Ui {
+public class Interface {
   private final FoodStorage foodStorage = new FoodStorage();
   private final Cookbook cookbook = new Cookbook();
   private final Scanner sc = new Scanner(System.in);

@@ -1,17 +1,20 @@
 package edu.ntnu.idi.idatt.controller;
 
-// import edu.ntnu.idi.idatt.model.*;
-import edu.ntnu.idi.idatt.view.Ui;
+import edu.ntnu.idi.idatt.view.UserInterface;
 
+/**
+ * The main class of the program, runs UI start and init.
+ */
 public class Main {
   
-  /** 
-   * @param args
-   * @throws Exception
+  /**
+   * Main function of the program.
+   *
+   * @param args Unused?
    */
-  public static void main(String[] args) throws Exception {
-    Ui ui = new Ui();
-    ui.init();
-    ui.start();
+  public static void main(String[] args) {
+    UserInterface userInterface = new UserInterface();
+    userInterface.init();
+    userInterface.start();
   }
 }
