@@ -13,7 +13,7 @@ public class Ingredient {
   private Date expiryDate;
 
   /**
-   *
+   * Sole constructor.
    *
    * @param name Name of the ingredient
    * @param price Price per unit of the ingredient
@@ -63,6 +63,10 @@ public class Ingredient {
     this.price = price;
   }
 
+  public void setUnit(String unit) {
+    this.unit = unit;
+  }
+  
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();

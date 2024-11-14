@@ -1,15 +1,12 @@
 package edu.ntnu.idi.idatt.view;
 
+import edu.ntnu.idi.idatt.model.Cookbook;
+import edu.ntnu.idi.idatt.model.FoodStorage;
+import edu.ntnu.idi.idatt.model.Ingredient;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
-
-import edu.ntnu.idi.idatt.model.Cookbook;
-import edu.ntnu.idi.idatt.model.FoodStorage;
-import edu.ntnu.idi.idatt.model.Ingredient;
-
-
 
 /**
  * A terminal user interface that manages all methods for printing and receiving input.
@@ -22,7 +19,7 @@ public class Ui {
   private final Scanner sc = new Scanner(System.in);
 
   /**
-   * Starts the User Interface.
+   * Starts the User Interface. TODO
    */
   public void start() {
     try (sc) {
@@ -118,6 +115,10 @@ public class Ui {
     }
   }
 
+  /**
+   * Displays the food in the storage that have expired and their value.
+   * Calls <code>getTotalValue</code> to display the value of the items.
+   */
   public void displayExpiredFoods() {
     List<Ingredient> expiredFoods = foodStorage.getExpiredFood(new Date());
     double sum = expiredFoods.stream()

@@ -2,6 +2,9 @@ package edu.ntnu.idi.idatt.model;
 
 import java.util.List;
 
+/**
+ * Recipe class. TODO
+ */
 public class Recipe {
   String name;
   String description;
@@ -9,7 +12,7 @@ public class Recipe {
   List<Ingredient> ingredients;
 
   /**
-   * 
+   * Sole constructor.
    *
    * @param name A name for a recipe
    * @param description A description for a recipe
@@ -23,11 +26,6 @@ public class Recipe {
     this.ingredients = ingredients;
   }
 
-  
-  /** 
-   * 
-   * @return String
-   */
   public String getName() {
     return name;
   }
