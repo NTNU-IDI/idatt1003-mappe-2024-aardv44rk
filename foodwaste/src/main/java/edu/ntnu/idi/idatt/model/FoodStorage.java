@@ -1,6 +1,7 @@
 package edu.ntnu.idi.idatt.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -68,9 +69,14 @@ public class FoodStorage {
   }
 
   /** 
-   * <p>The <code>removeIngredient</code> method takes a <code>name</code> and <code>amount</code>
+   * The <code>removeIngredient</code> method takes a <code>name</code> and <code>amount</code>
    * as input and removes that amount of an <code>Ingredient</code> from the storage.
-   * If an amount of an object is zero after the operation it is removed. </p>
+   * 
+   * <p>If the desired amount is successfully removed 1 is returned.</p>
+   * 
+   * <p>If the desired amount is not succesfully removed 0 is returend </p>
+   * 
+   * <p>If the ingredient was not in the storage to begin with -1 is returned</p>
    *
    * @param name The name of the ingredient to remove.
    * @param amount The amount of the ingredient to remove.
@@ -134,13 +140,13 @@ public class FoodStorage {
   }
 
   /**
-   * Returns total value of fridge.
-   * 
+   * Returns total price of all objects in a <code>Collection&lt;Ingredient&gt;</code>.
+   *
+   * @param ingredientCollection A collection of ingredient objects
+   * @return The total price of ingredients in the Collection 
    */
-  public double getTotalValue() { 
-    // might need an input here to use this function on display expired food
-    double totalValue = ingredientList.values().stream()
-        .flatMap(List::stream)
+  public double getTotalValue(Collection<Ingredient> ingredientCollection) { 
+    double totalValue = ingredientCollection.stream()
         .mapToDouble(Ingredient::getPrice)
         .sum();
     return totalValue;
