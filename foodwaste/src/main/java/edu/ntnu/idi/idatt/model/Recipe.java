@@ -8,6 +8,14 @@ public class Recipe {
   String instruction;
   List<Ingredient> ingredients;
 
+  /**
+   * 
+   *
+   * @param name A name for a recipe
+   * @param description A description for a recipe
+   * @param instruction An instruction for a recipe
+   * @param ingredients A list of ingredients
+   */
   public Recipe(String name, String description, String instruction, List<Ingredient> ingredients) {
     this.name = name;
     this.description = description;

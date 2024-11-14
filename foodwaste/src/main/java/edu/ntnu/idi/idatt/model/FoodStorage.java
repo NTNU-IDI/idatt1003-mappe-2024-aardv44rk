@@ -39,14 +39,17 @@ public class FoodStorage {
     ingredientList.putIfAbsent(name, new ArrayList<>());
 
     List<Ingredient> ingredients = ingredientList.get(name);
-    Iterator<Ingredient> iterator = ingredients.iterator();
-    while (iterator.hasNext()) {
-      if (iterator.next().getExpiryDate() == ingredient.getExpiryDate()) {
-        iterator.next().setAmount(iterator.next().getAmount()
-                                  + ingredient.getAmount());
-        return;
-      }
-    }
+    ingredients.add(ingredient);
+    // Iterator<Ingredient> iterator = ingredients.iterator();
+    // while (iterator.hasNext()) {
+    //   if (iterator.next().getExpiryDate() == ingredient.getExpiryDate()) {
+    //     iterator.next().setAmount(iterator.next().getAmount()
+    //                               + ingredient.getAmount());
+    //     return;
+    //   } else {
+    //     return;
+    //   }
+    // }
 
     // for (Ingredient i : ingredients) {
     // if (i.getExpiryDate() == ingredient.getExpiryDate()) {
@@ -74,14 +77,10 @@ public class FoodStorage {
     return ingredientList.getOrDefault(name, Collections.emptyList());
   }
 
-  /**
-   * Removes a certain amount of an ingredient from the storage.
-   * 
+  /** 
    * <p>The <code>removeIngredient</code> method takes a <code>name</code> and <code>amount</code>
-   * as input and removes that amount of an <code>Ingredient</code> from the storage.</p>
-   * 
-   * <p>Returns -1 if the ingredient was absent, 0 if there were insufficient amounts
-   * of the ingredient in the storage, and 1 if the amount was removed successfully.</p>
+   * as input and removes that amount of an <code>Ingredient</code> from the storage.
+   * If an amount of an object is zero after the operation the storage </p>
    *
    * @param name The name of the ingredient to remove.
    * @param amount The amount of the ingredient to remove.
@@ -116,17 +115,15 @@ public class FoodStorage {
   }
 
   /**
-   * Sorts the storage alphabetically.
-   * 
-   * 
+   * <p>Uses <code>treeMap</code> to sort <code>keys</code> alphabetically.</p>
+   *
+   * @return <code>Map&lt;String, List&lt;Ingredient&gt;&gt;</code> sortedMap
+   *        <code>TreeMap</code> implementation of the ingredientList.
    */
   public Map<String, List<Ingredient>> sortStorage() {
     Map<String, List<Ingredient>> sortedMap = new TreeMap<>();
-    for (String key : ingredientList.keySet()) {
-      List<Ingredient> values = ingredientList.get(key);
-      sortedMap.put(key, values);
-    }
-    return sortedMap; // temp, might need to return all ingredients objects aswell?
+    sortedMap.putAll(ingredientList);
+    return sortedMap;
   }
 
   // Map instead of HashMap here to code to an interface directly
@@ -144,7 +141,6 @@ public class FoodStorage {
         .stream().flatMap(List::stream)
         .filter(ingredient -> ingredient.getExpiryDate().before(date))
         .collect(Collectors.toList()); //Collectors.toList?? toList??
-
     return expiredFood;
   }
 
@@ -159,5 +155,14 @@ public class FoodStorage {
         .mapToDouble(Ingredient::getPrice)
         .sum();
     return totalValue;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    ingredientList.values().stream()
+                  .flatMap(List::stream)
+                  .forEach(ingredient -> sb.append(ingredient).append("\n"));
+    return sb.toString();
   }
 }

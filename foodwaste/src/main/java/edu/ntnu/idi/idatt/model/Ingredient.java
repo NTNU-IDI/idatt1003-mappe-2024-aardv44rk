@@ -3,7 +3,7 @@ package edu.ntnu.idi.idatt.model;
 import java.util.Date;
 
 /**
- * <code>Ingredient</code> class is a constructor class.
+ * <code>Ingredient</code> class is a class. TODO
  */
 public class Ingredient {
   private final String name;
@@ -69,7 +69,8 @@ public class Ingredient {
     sb.append(name)
         .append("\n Price: ").append(price)
         .append("\n Amount: ").append(amount)
-        .append("\n Expiry Date: ").append(expiryDate);
-    return sb.toString(); // run toString on StringBuilder object to return correct datatype
+        .append("\n Expiry Date: ").append(expiryDate)
+        .append("\n\n");
+    return sb.toString();
   }
 }
