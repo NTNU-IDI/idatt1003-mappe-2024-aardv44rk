@@ -30,9 +30,12 @@ public class FoodStorage {
    * Adds an ingredient to the collection.
    *
    * <p>The <code>addIngredient</code> method adds an <code>Ingredient</code> to a list in the
-   * <code>HashMap</code>, using the name as the key.
+   * <code>HashMap</code>, using the name as the key. 
+   * 
+   * <p>If there exists an ingredient with the same expiry date, 
+   * the amount of that one is increased instead</p>
    *
-   * @param ingredient An ingredient object.</p>
+   * @param ingredient An ingredient object.
    */
   public void addIngredient(Ingredient ingredient) {
     String name = ingredient.getName();
@@ -40,27 +43,14 @@ public class FoodStorage {
 
     List<Ingredient> ingredients = ingredientList.get(name);
     ingredients.add(ingredient);
-    // Iterator<Ingredient> iterator = ingredients.iterator();
-    // while (iterator.hasNext()) {
-    //   if (iterator.next().getExpiryDate() == ingredient.getExpiryDate()) {
-    //     iterator.next().setAmount(iterator.next().getAmount()
-    //                               + ingredient.getAmount());
-    //     return;
-    //   } else {
-    //     return;
-    //   }
-    // }
-
-    // for (Ingredient i : ingredients) {
-    // if (i.getExpiryDate() == ingredient.getExpiryDate()) {
-    // i.setAmount(i.getAmount() + ingredient.getAmount());
-    // return;
-    // }
-    // }
-
-    // TODO: choose between these two loops
-
-    // ingredients.add(ingredient);
+    Iterator<Ingredient> iterator = ingredients.iterator();
+    while (iterator.hasNext()) {
+      if (iterator.next().getExpiryDate() == ingredient.getExpiryDate()) {
+        iterator.next().setAmount(iterator.next().getAmount()
+                                  + ingredient.getAmount());
+        return;
+      } 
+    }
   }
 
   /**
@@ -80,7 +70,7 @@ public class FoodStorage {
   /** 
    * <p>The <code>removeIngredient</code> method takes a <code>name</code> and <code>amount</code>
    * as input and removes that amount of an <code>Ingredient</code> from the storage.
-   * If an amount of an object is zero after the operation the storage </p>
+   * If an amount of an object is zero after the operation it is removed. </p>
    *
    * @param name The name of the ingredient to remove.
    * @param amount The amount of the ingredient to remove.
@@ -126,7 +116,6 @@ public class FoodStorage {
     return sortedMap;
   }
 
-  // Map instead of HashMap here to code to an interface directly
   public Map<String, List<Ingredient>> getIngredientList() {
     return ingredientList;
   }
