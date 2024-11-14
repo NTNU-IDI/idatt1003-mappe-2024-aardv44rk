@@ -1,21 +1,22 @@
 package edu.ntnu.idi.idatt.view;
 
+import edu.ntnu.idi.idatt.model.Cookbook;
+import edu.ntnu.idi.idatt.model.FoodStorage;
+import edu.ntnu.idi.idatt.model.Ingredient;
+import edu.ntnu.idi.idatt.util.InputHandler;
 import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import edu.ntnu.idi.idatt.model.Cookbook;
-import edu.ntnu.idi.idatt.model.FoodStorage;
-import edu.ntnu.idi.idatt.model.Ingredient;
-import edu.ntnu.idi.idatt.util.InputHandler;
+
 
 
 
 /**
  * A terminal user interface that manages all methods for printing and receiving input.
- * <p>Works together with <code>InputHandler</code> for input handling
- * and instantiates the storage and cookbook.</p>
+ * 
+ * <p>All methods call <code>InputHandler</code> for input handling.</p>
  */
 public class UserInterface {
   private final FoodStorage foodStorage = new FoodStorage();
@@ -128,7 +129,8 @@ public class UserInterface {
   }
 
   /**
-   * Prints all element of the cookbook.
+   * Prints all elements of a given Collection&lt;Recipe&gt;. TODO
+   * 
    */
   public void readCookbook() {
     cookbook.getCookbook().stream().forEach(System.out::println);
@@ -145,29 +147,43 @@ public class UserInterface {
   }
 
   /**
-   * Searches for an ingredient in the storage.
-   * 
-   * <p>Calls <code>searchIngredient</code> from <code>FoodStorage</code>.</p>
+   * Prompts the user for input and stores it in <code>input</code>.
    *
-   * @param scanner Scanner to read input.
+   * <p>Passes input to <code>searchIngredient</code> from <code>FoodStorage</code>.</p>
    */
   public void ingredientSearcher() {
     String input = inputHandler.getValidString("What ingredient do you want to search for?");
     System.out.println(foodStorage.searchIngredient(input));
   }
 
+  /**
+   * Promps the user for input and stores it respectively in <code>name</code> and 
+   * <code>amount</code>. 
+   * 
+   * <p>Passes inputs as arguments to <code>removeIngredient</code>
+   * from <code>FoodStorage</code>.</p>
+   * 
+   * <p>Prints out different results based on the return value of <code>removeIngredient</code>.</p>
+   */
   public void ingredientRemover() {
     String name = inputHandler.getValidString("What ingredient do you want remove?");
     double amount = inputHandler.getValidDouble("How many " + name + " do you want to remove?");
     int result = foodStorage.removeIngredient(name, amount);
-    switch(result) {
+    switch (result) {
       case -1 -> System.out.println("Ingredient wasn't found in the storage :(");
       case 0 -> System.out.println("Oh no! You didn't have enough to remove the desired amount!");
       case 1 -> System.out.println("Successfully removed " + amount + " of " + name);
       default -> System.out.println("An unknown error has occured.");
     }
   }
-
+  
+  /**
+   * Prompts the user for input and stores it respectively in <code>name</code>,
+   * <code>price</code>, <code>expiryDate</code>, <code>amount</code>, and <code>unit</code>.
+   * 
+   * <p>Passes those to an <code>Ingredient</code> constructor and that to <code>addIngredient</code>
+   * from <code>FoodStorage</code>.
+   */
   public void ingredientAdder() {
     String name = inputHandler.getValidString("What is the name of the ingredient?");
     double price = inputHandler.getValidDouble("What is the price of the ingredient?");

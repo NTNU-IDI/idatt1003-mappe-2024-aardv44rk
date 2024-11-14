@@ -4,6 +4,8 @@ import edu.ntnu.idi.idatt.view.UserInterface;
 
 /**
  * The main class of the program, runs UI start and init.
+ *
+ * @author @aardv44rk
  */
 public class Main {
   
