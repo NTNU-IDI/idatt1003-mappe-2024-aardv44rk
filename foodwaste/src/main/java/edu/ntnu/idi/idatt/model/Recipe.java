@@ -18,7 +18,7 @@ public class Recipe {
    * @param description A description for a recipe
    * @param instruction An instruction for a recipe
    * @param ingredients A list of ingredients
-   */
+   */ //TODO EXCEPTION HANDLING
   public Recipe(String name, String description, String instruction, List<Ingredient> ingredients) {
     this.name = name;
     this.description = description;
@@ -43,9 +43,14 @@ public class Recipe {
   }
 
   @Override
-  public String toString() { // TODO
+  public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append(name).append(description).append(instruction).append(ingredients);
+    
+    sb.append("Recipe:\n").append(name).append("\n")
+    .append(description).append("\n");
+    ingredients.stream()
+              .forEach(ingredient -> sb.append(ingredient).append("\n"));
+    sb.append("\nStep by step:").append(instruction);
     return sb.toString();
   }
 

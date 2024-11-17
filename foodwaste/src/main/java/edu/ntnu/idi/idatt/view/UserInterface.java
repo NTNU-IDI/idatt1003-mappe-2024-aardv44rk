@@ -10,9 +10,12 @@ import edu.ntnu.idi.idatt.model.Ingredient;
 import edu.ntnu.idi.idatt.util.InputHandler;
 
 /**
- * A terminal user interface that manages all methods for printing and receiving input.
+ * A terminal user interface that manages all methods for printing and receiving
+ * input.
  * 
- * <p>All methods call <code>InputHandler</code> for input handling.</p>
+ * <p>
+ * All methods call <code>InputHandler</code> for input handling.
+ * </p>
  */
 public class UserInterface {
   private final FoodStorage foodStorage = new FoodStorage();
@@ -43,8 +46,8 @@ public class UserInterface {
           case 3 -> ingredientSearcher();
           case 4 -> ingredientRemover();
           case 5 -> foodStorage.getTotalValue(
-            foodStorage.getIngredientList().values().stream().flatMap(List::stream).toList()
-          ); // TODO
+              foodStorage.getIngredientList().values().stream().flatMap(List::stream).toList());
+          // TODO
           case 6 -> ingredientAdder();
           case 7 -> readCookbook();
           case 8 -> recipeRecommender();
@@ -75,7 +78,7 @@ public class UserInterface {
     foodStorage.addIngredient(new Ingredient("Flour", 1.5, new Date(), 2.0, "kg"));
     foodStorage.addIngredient(new Ingredient("Butter", 4.0, new Date(), 500, "grams"));
     foodStorage.addIngredient(new Ingredient("Sugar", 1.2, new Date(), 1.0, "kg"));
-  } 
+  }
 
   /**
    * Displays the choices in the menu. TODO
@@ -101,7 +104,7 @@ public class UserInterface {
    */
   public void displayStorage() {
     System.out.println("Displaying storage contents:");
-    
+
     if (foodStorage.getIngredientList().isEmpty()) {
       System.out.println("No ingredients in storage.");
     } else {
@@ -114,7 +117,9 @@ public class UserInterface {
   /**
    * Displays the food in the users storage that have expired and their value.
    * 
-   * <p>Calls <code>getTotalValue</code> to display the value of the items.</p>
+   * <p>
+   * Calls <code>getTotalValue</code> to display the value of the items.
+   * </p>
    */
   public void displayExpiredFoods() {
     List<Ingredient> expiredFoods = foodStorage.getExpiredFood(new Date());
@@ -142,7 +147,9 @@ public class UserInterface {
   /**
    * Prompts the user for input and stores it in <code>input</code>.
    *
-   * <p>Passes input as argument to <code>FoodStorage.searchIngredient</code>.</p>
+   * <p>
+   * Passes input as argument to <code>FoodStorage.searchIngredient</code>.
+   * </p>
    */
   public void ingredientSearcher() {
     String input = inputHandler.getValidString("What ingredient do you want to search for?");
@@ -150,13 +157,19 @@ public class UserInterface {
   }
 
   /**
-   * Promps the user for input and stores it in <code>name</code> and <code>amount</code>
-   * variables respectively. 
+   * Promps the user for input and stores it in <code>name</code> and
+   * <code>amount</code>
+   * variables respectively.
    * 
-   * <p>Passes input variables as arguments to <code>FoodStorage.removeIngredient</code>.</p>
+   * <p>
+   * Passes input variables as arguments to
+   * <code>FoodStorage.removeIngredient</code>.
+   * </p>
    * 
-   * <p>Prints out different results based on the return value of
-   * <code>FoodStorage.removeIngredient</code>.</p>
+   * <p>
+   * Prints out different results based on the return value of
+   * <code>FoodStorage.removeIngredient</code>.
+   * </p>
    */
   public void ingredientRemover() {
     String name = inputHandler.getValidString("What ingredient do you want remove?");
@@ -172,19 +185,21 @@ public class UserInterface {
 
   /**
    * Prompts the user for input and stores it in <code>name</code>,
-   * <code>price</code>, <code>expiryDate</code>, <code>amount</code>, 
+   * <code>price</code>, <code>expiryDate</code>, <code>amount</code>,
    * and <code>unit</code> variables respectively.
    * 
-   * <p>Passes the variables as arguments in an <code>Ingredient</code> constructor
-   * and that to <code>FoodStorage.addIngredient</code>.</p>
+   * <p>
+   * Passes the variables as arguments in an <code>Ingredient</code> constructor
+   * and that to <code>FoodStorage.addIngredient</code>.
+   * </p>
    */
   public void ingredientAdder() {
     String name = inputHandler.getValidString("What is the name of the ingredient?");
     double price = inputHandler.getValidDouble("What is the price of the ingredient?");
     Date expiryDate = inputHandler.getValidDate("""
-                                                  What date does it expire?
-                                                  On the format dd-MM-yyyy please
-                                                """);
+          What date does it expire?
+          On the format dd-MM-yyyy please
+        """);
     double amount = inputHandler.getValidDouble("How many of the ingredient do you want to add?");
     String unit = inputHandler.getValidString("And in what unit is the ingredient measured?");
     foodStorage.addIngredient(new Ingredient(name, price, expiryDate, amount, unit));
