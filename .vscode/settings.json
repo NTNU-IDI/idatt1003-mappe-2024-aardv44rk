@@ -2,8 +2,6 @@
     "java.checkstyle.configuration": "/google_checks.xml",
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
-    "java.format.enabled": false,
-    "java.project.sourcePaths": [
-        "foodwaste 2"
-    ],
+    "editor.formatOnSave": false,
+    "java.format.enabled": false
 }

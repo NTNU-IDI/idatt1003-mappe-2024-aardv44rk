@@ -20,6 +20,9 @@ public class Recipe {
    * @param ingredients A list of ingredients
    */ //TODO EXCEPTION HANDLING
   public Recipe(String name, String description, String instruction, List<Ingredient> ingredients) {
+    if (ingredients.isEmpty()) {
+      throw new IllegalArgumentException("Recipe cannot have 0 ingredients!");
+    }
     this.name = name;
     this.description = description;
     this.instruction = instruction;
@@ -47,7 +50,7 @@ public class Recipe {
     StringBuilder sb = new StringBuilder();
     
     sb.append("Recipe:\n").append(name).append("\n")
-    .append(description).append("\n");
+                      .append(description).append("\n");
     ingredients.stream()
               .forEach(ingredient -> sb.append(ingredient).append("\n"));
     sb.append("\nStep by step:").append(instruction);

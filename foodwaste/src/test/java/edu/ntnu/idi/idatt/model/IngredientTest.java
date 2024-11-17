@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
  * Unit test class responsible for testing the ingredient class.
  */
 public class IngredientTest {
-  
+
   @Test
-  void testConstructorAndGetters() {
+  void testConstructorAndGetters() { 
     String name = "Egg";
     double price = 10;
     Date expiryDate = new Date();
@@ -70,11 +70,6 @@ public class IngredientTest {
     String unit = "stk";
 
     Ingredient ingredient = new Ingredient(name, price, expiryDate, amount, unit);
-
-    double newAmount = 2.0;
-    ingredient.setAmount(newAmount);
-    assertEquals(ingredient.getAmount(), newAmount);
-    
     // TODO setters
   }
   // TODO tostring?

@@ -49,6 +49,7 @@ public class Cookbook {
     for (Recipe recipe : cookbook) {
       for (Ingredient ingredient : recipe.getIngredients()) {
         if (foodStorage.getIngredientList().containsKey(ingredient.getName())) {
+          // TODO amount handling here
           availableIngredients.add(ingredient);
         }
       }
