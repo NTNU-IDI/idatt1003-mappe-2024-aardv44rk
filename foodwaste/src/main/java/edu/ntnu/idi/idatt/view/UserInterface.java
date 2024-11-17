@@ -1,13 +1,14 @@
 package edu.ntnu.idi.idatt.view;
-import java.util.Date;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
 
 import edu.ntnu.idi.idatt.model.Cookbook;
 import edu.ntnu.idi.idatt.model.FoodStorage;
 import edu.ntnu.idi.idatt.model.Ingredient;
 import edu.ntnu.idi.idatt.util.InputHandler;
+import java.util.Date;
+import java.util.InputMismatchException;
+import java.util.List;
+import java.util.Scanner;
+
 
 /**
  * A terminal user interface that manages all methods for printing and receiving
