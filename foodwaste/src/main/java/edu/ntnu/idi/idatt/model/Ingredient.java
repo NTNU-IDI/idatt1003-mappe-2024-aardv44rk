@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.util.Validator;
 import java.util.Date;
 
 /**
@@ -22,6 +23,21 @@ public class Ingredient {
    * @param unit Unit of the ingredient (e.g. L, kg)
    */
   public Ingredient(String name, double price, Date expiryDate, double amount, String unit) {
+    if (!Validator.isValidString(name)) {
+      throw new IllegalArgumentException("Name cannot be empty.");
+    }
+    if (!Validator.isValidDouble(price)) {
+      throw new IllegalArgumentException("Price cannot be negative or 0.");
+    }
+    if (!Validator.isValidDate(expiryDate)) {
+      throw new IllegalArgumentException("Date cannot be null");
+    }
+    if (!Validator.isValidDouble(amount)) {
+      throw new IllegalArgumentException("Amount cannot be negative or 0.");
+    }
+    if (!Validator.isValidString(unit)) {
+      throw new IllegalArgumentException("Unit cannot be empty");
+    }
     this.name = name;
     this.price = price;
     this.expiryDate = expiryDate;
@@ -50,9 +66,8 @@ public class Ingredient {
     return unit;
   }
 
-  // setters
+  // TODO setters handling?
   public void setAmount(double amount) {
-    
     this.amount = amount;
   }
 

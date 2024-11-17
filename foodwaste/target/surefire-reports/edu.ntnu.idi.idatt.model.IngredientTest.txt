@@ -1,4 +1,27 @@
 -------------------------------------------------------------------------------
 Test set: edu.ntnu.idi.idatt.model.IngredientTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.284 s -- in edu.ntnu.idi.idatt.model.IngredientTest
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.393 s <<< FAILURE! -- in edu.ntnu.idi.idatt.model.IngredientTest
+edu.ntnu.idi.idatt.model.IngredientTest.testToString -- Time elapsed: 0.268 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 
+String should equal ==> expected: <Milk
+ Price: 10
+ Amount: 10
+ Expiry Date: Thu Dec 12 00:00:00 CET 2024
+
+> but was: <Milk
+ Price: 10.0
+ Amount: 10.0
+ Expiry Date: Thu Dec 12 00:00:00 CET 2024
+
+>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1152)
+	at edu.ntnu.idi.idatt.model.IngredientTest.testToString(IngredientTest.java:87)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+

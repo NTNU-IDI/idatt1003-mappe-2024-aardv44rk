@@ -3,6 +3,7 @@ package edu.ntnu.idi.idatt.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,7 +35,7 @@ public class FoodStorage {
    * <code>HashMap</code>, using the name as the key. 
    * 
    * <p>If there exists an ingredient with the same expiry date, 
-   * the amount of that one is increased instead</p>
+   * the amount of that one is increased instead.</p>
    *
    * @param ingredient An ingredient object.
    */
@@ -43,15 +44,15 @@ public class FoodStorage {
     ingredientList.putIfAbsent(name, new ArrayList<>());
 
     List<Ingredient> ingredients = ingredientList.get(name);
-    ingredients.add(ingredient);
-    Iterator<Ingredient> iterator = ingredients.iterator();
-    while (iterator.hasNext()) {
-      if (iterator.next().getExpiryDate() == ingredient.getExpiryDate()) {
-        iterator.next().setAmount(iterator.next().getAmount()
-                                  + ingredient.getAmount());
+    
+    for (Ingredient i : ingredients) {
+      if (i.getExpiryDate().equals(ingredient.getExpiryDate())) {
+        i.setAmount(i.getAmount() + ingredient.getAmount());
         return;
-      } 
+      }
     }
+
+    ingredients.add(ingredient); 
   }
 
   /**
@@ -83,6 +84,9 @@ public class FoodStorage {
    * @return An integer corresponding to the result.
    */
   public int removeIngredient(String name, double amount) {
+    if (amount < 0) {
+      throw new IllegalArgumentException("Amount cannot be negative");
+    }
     if (!ingredientList.containsKey(name)) {
       return -1;
     }
@@ -90,24 +94,23 @@ public class FoodStorage {
     List<Ingredient> ingredients = ingredientList.get(name);
     Iterator<Ingredient> iterator = ingredients.iterator();
 
-    while (iterator.hasNext() && amount > 0) { // sort by expirydate
+    ingredients.sort(Comparator.comparing(Ingredient::getExpiryDate)); 
+    // Oldest items get removed first ^
+
+    while (iterator.hasNext() && amount > 0) {
       Ingredient ingredient = iterator.next();
       if (ingredient.getAmount() >= amount) {
         ingredient.setAmount(ingredient.getAmount() - amount);
         amount = 0;
         if (ingredient.getAmount() == 0) {
           iterator.remove();
-          return 1;
         }
       } else {
         amount -= ingredient.getAmount();
         iterator.remove();
       }
     }
-    if (amount > 0) {
-      return 0;
-    }
-    return -1;
+    return amount > 0 ? 0 : 1;
   }
 
   /**
