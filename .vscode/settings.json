@@ -3,7 +3,4 @@
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
     "java.format.enabled": false,
-    "java.project.sourcePaths": [
-        "foodwaste 2"
-    ],
 }
