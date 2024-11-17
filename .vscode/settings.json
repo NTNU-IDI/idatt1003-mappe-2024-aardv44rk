@@ -1,10 +1,6 @@
 {
     "java.checkstyle.configuration": "/google_checks.xml",
-<<<<<<< HEAD
-    "java.configuration.updateBuildConfiguration": "interactive"
-=======
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
     "java.format.enabled": false,
->>>>>>> 9d81dfbbbe5a99ed2f94fbb36b81f58555db49f0
 }
