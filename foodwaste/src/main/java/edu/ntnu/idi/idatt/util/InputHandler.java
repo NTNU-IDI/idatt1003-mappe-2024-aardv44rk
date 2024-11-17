@@ -16,7 +16,8 @@ public class InputHandler {
    *
    *
    * @param userPrompt String to prompt the user in the terminal
-   * @return the user input as double
+   * @return the user input parsed to double
+   * @throws IllegalArgumentException if user input is negative
    */
   public double getValidDouble(String userPrompt) {
     double value = 0;
@@ -25,21 +26,25 @@ public class InputHandler {
     while (!valid) {
       System.out.println(userPrompt);
       String input = scanner.nextLine();
-
       try {
         value = Double.parseDouble(input);
         valid = true;
         if (value < 0) {
           valid = false;
-          System.out.println("That cannot be a negative number, sorry.");
+          throw new IllegalArgumentException("Please enter a positive number :)"); //TODO ?
         }
       } catch (NumberFormatException e) {
-        System.out.println("Invalid input. Please enter a number");
+        System.out.println("""
+                          I'm sorry, that's not a number!
+                          Please enter a number :)
+                          """);
+      } catch (NullPointerException e) {
+        System.out.println("I'm sorry, input cannot be empty. (" + e.getMessage() + ")");
       }
     }
     return value;
   }
-
+  
   /**
    * Prompts the user in the terminal. Returns user input if it is not empty.
    *
@@ -53,6 +58,7 @@ public class InputHandler {
       System.out.println(userPrompt);
       if (scanner.hasNextLine()) {
         output = scanner.nextLine();
+        valid = true;
       }
     }
     return output;
@@ -82,7 +88,7 @@ public class InputHandler {
         }
       } catch (NumberFormatException e) {
         System.out.println("Invalid input. Please enter an integer");
-      }
+      } 
     }
 
     return value;

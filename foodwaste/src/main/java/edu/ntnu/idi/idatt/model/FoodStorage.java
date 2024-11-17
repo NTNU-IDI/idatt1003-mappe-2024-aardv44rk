@@ -111,10 +111,10 @@ public class FoodStorage {
   }
 
   /**
-   * <p>Uses <code>treeMap</code> to sort <code>keys</code> alphabetically.</p>
+   * Uses <code>TreeMap</code> to sort <code>keys</code> in storage alphabetically.
    *
    * @return <code>Map&lt;String, List&lt;Ingredient&gt;&gt;</code> sortedMap
-   *        <code>TreeMap</code> implementation of the ingredientList.
+   *        a <code>TreeMap</code> implementation of the ingredientList.
    */
   public Map<String, List<Ingredient>> sortStorage() {
     Map<String, List<Ingredient>> sortedMap = new TreeMap<>();
