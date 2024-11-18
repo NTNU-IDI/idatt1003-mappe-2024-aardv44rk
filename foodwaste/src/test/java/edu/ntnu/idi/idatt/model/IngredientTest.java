@@ -71,35 +71,42 @@ public class IngredientTest {
                 () -> new Ingredient(name, price, expiryDate, amount, null),
                "IllegalArgumentException should be thrown if unit is null"
     );
-    // TODO Replace with for-loop
+    // TODO Replace with for-loop ?? Alternatives?
   }
 
   @Test
-  void testSetters() {
+  void testSetAmount() {
     double newAmount = 5.0;
-    double newPrice = 5.0;
     ingredient.setAmount(newAmount);
-    ingredient.setPrice(newPrice);
-    
     assertEquals(ingredient.getAmount(), newAmount, "Amount should match");
-    assertEquals(ingredient.getPrice(), newPrice, "Price should match");
-    
-    assertThrows(IllegalArgumentException.class, 
-                () -> ingredient.setPrice(-1), 
-                "IllegalArgumentException should be thrown if price"
-    );
-    assertThrows(IllegalArgumentException.class, 
-                () -> ingredient.setPrice(0),
-               "IllegalArgumentException should be thrown if price is 0"
-    );
-
-    assertThrows(IllegalArgumentException.class, 
-                () -> ingredient.setAmount(-1),
-               "IllegalArgumentException should be thrown if amount is negative"
-    );
-    assertThrows(IllegalArgumentException.class, 
-                () -> ingredient.setAmount(0),
-               "IllegalArgumentException should be thrown if amount is 0"
-    );
   }
+
+  @Test
+  void testSetPrice() {
+    double newPrice = 5.0;
+    ingredient.setPrice(newPrice);
+    assertEquals(ingredient.getPrice(), newPrice, "Price should match");
+  }
+
+  @Test
+  void testSetAmountThrows() {
+    double newAmount = 0;
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
+                () -> ingredient.setAmount(newAmount),
+               "IllegalArgumentException should be thrown if amount is negative or zero"
+    );
+    assertEquals("Amount should not be negative or zero", e.getMessage(), "Messages should match");
+  }
+
+  @Test
+  void testSetPriceThrows() {
+    double newPrice = -1;
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
+                () -> ingredient.setPrice(newPrice), 
+                "IllegalArgumentException should be thrown if price is negative or zero"
+    );
+    assertEquals("Price should not be negative or zero", e.getMessage(), "Messages should match");
+  }
+
+
 }

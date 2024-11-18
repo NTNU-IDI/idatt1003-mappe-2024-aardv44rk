@@ -13,14 +13,14 @@ public class Ingredient {
   private String unit;
 
   /**
-   * Ingredient constructor.
-   * Validates arguments... TODO
+   * Ingredient constructor. Initializes an object of class <code>Ingredient</code>
    *
    * @param name The ingredients name
    * @param price Price per unit of the ingredient
    * @param expiryDate Date that the ingredient expires
    * @param amount Available amount of an ingredient 
    * @param unit The unit the ingredient is measured in
+   * @throws IllegalArgumentException if values are invalid
    */
   public Ingredient(String name, double price, Date expiryDate, double amount, String unit) {
     if (name == null || name.trim().isEmpty()) {
@@ -67,12 +67,29 @@ public class Ingredient {
     return unit;
   }
 
-  // Setters
+  /**
+   * Sets the price attribute of an object.
+   *
+   * @param price new price of object
+   * @throws IllegalArgumentException if amount <= 0
+   */
   public void setPrice(double price) {
+    if (price <= 0) {
+      throw new IllegalArgumentException("Price should not be negative or zero");
+    }
     this.price = price;
   }
 
+  /**
+   * Sets the amount attribute of an object.
+   *
+   * @param amount new amount of object
+   * @throws IllegalArgumentException if amount <= 0
+   */
   public void setAmount(double amount) {
+    if (amount <= 0) {
+      throw new IllegalArgumentException("Amount should not be negative or zero");
+    }
     this.amount = amount;
   }
 
