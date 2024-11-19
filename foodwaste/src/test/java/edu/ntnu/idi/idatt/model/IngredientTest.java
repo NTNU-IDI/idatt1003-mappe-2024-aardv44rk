@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Class responsible for testing the Ingredient class.
  */
-public class IngredientTest {
+class IngredientTest {
   private Ingredient ingredient;
   private String name;
   private double price;
@@ -31,6 +31,7 @@ public class IngredientTest {
   }
 
 
+  // TODO separate this a bit.
   @Test
   void testConstructors() {
     assertEquals(name, ingredient.getName(), "Names should be equal");
@@ -71,7 +72,6 @@ public class IngredientTest {
                 () -> new Ingredient(name, price, expiryDate, amount, null),
                "IllegalArgumentException should be thrown if unit is null"
     );
-    // TODO Replace with for-loop ?? Alternatives?
   }
 
   @Test
