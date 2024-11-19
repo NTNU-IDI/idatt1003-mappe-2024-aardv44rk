@@ -2,9 +2,9 @@ package edu.ntnu.idi.idatt.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -33,7 +33,10 @@ public class FoodStorage {
     storage.putIfAbsent(name, new ArrayList<>());
 
     for (Ingredient i : storage.get(name)) {
-      if (i.getExpiryDate().equals(ingredient.getExpiryDate())) {
+      if (
+            i.getExpiryDate().equals(ingredient.getExpiryDate()) 
+            && i.getPrice() == ingredient.getPrice()
+          ) {
         i.setAmount(i.getAmount() + ingredient.getAmount());
         return;
       }
@@ -43,7 +46,8 @@ public class FoodStorage {
 
   /**
    * Removes a certain amount of an <code>Ingredient</code> from the storage.
-   * <p>Returns -1 if the operation failed, 0 if the amount was not successfully removed, and 1 if it was a success.</p>
+   * <p>Returns -1 if the operation failed, 0 if the amount was not successfully removed,
+   *  and 1 if it was a success.</p>
    *
    * @param name of ingredient to be removed 
    * @param amount of ingredient to be removed
@@ -51,28 +55,30 @@ public class FoodStorage {
    */
   public int removeIngredient(String name, double amount) {
     if (amount <= 0) {
-      throw new IllegalArgumentException("Amount cannot be negative");
+      throw new IllegalArgumentException("Amount cannot be negative or zero");
     }
     if (!storage.containsKey(name)) {
       return -1;
     }
-    List<Ingredient> ingredients = storage.get(name);
-    Iterator<Ingredient> iterator = ingredients.iterator();
 
-    while (iterator.hasNext() && amount > 0) {
-      Ingredient ingredient = iterator.next();
-      if (ingredient.getAmount() >= amount) {
-        ingredient.setAmount(ingredient.getAmount() - amount);
-        if (ingredient.getAmount() == 0) {
-          iterator.remove();
-        }
-      } else {
-        ingredient.setAmount(ingredient.getAmount() - amount);
+    List<Ingredient> ingredients = storage.get(name);
+    ingredients.sort(Comparator.comparing(Ingredient::getExpiryDate));
+    for (Ingredient i : ingredients) {
+      if (i.getAmount() >= amount) {
+        i.setAmount(i.getAmount() - amount);
         amount = 0;
+        if (i.getAmount() == 0) {
+          ingredients.remove(i);
+        }
+        break;
+      } else {
+        amount -= i.getAmount();
+        i.setAmount(0);
       }
+
     }
 
-    return amount == 0 ? 0 : 1;
+    return amount <= 0 ? 0 : 1;
   }
 
   /**
