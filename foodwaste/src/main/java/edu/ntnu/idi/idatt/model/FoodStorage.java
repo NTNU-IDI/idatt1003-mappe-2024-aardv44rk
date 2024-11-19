@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.model;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,10 +12,31 @@ import java.util.TreeMap;
  * FoodStorage class manages the storage and provides methods to...
  */
 public class FoodStorage {
-  private Map<String, List<Ingredient>> storage;
+  private final Map<String, List<Ingredient>> storage;
 
   public FoodStorage() {
     storage = new HashMap<>();
+  }
+
+  /**
+   * Method that adds an ingredient to the storage.
+   * <p>If an ingredient of the same expiryDate already exists, 
+   * the amount of that one is increased instead.</p>
+   * TODO price handling.
+   *
+   * @param ingredient to be put in storage
+   */
+  public void addIngredient(Ingredient ingredient) {
+    String name = ingredient.getName();
+    storage.putIfAbsent(name, new ArrayList<>());
+
+    for (Ingredient i : storage.get(name)) {
+      if (i.getExpiryDate().equals(ingredient.getExpiryDate())) {
+        i.setAmount(i.getAmount() + ingredient.getAmount());
+        return;
+      }
+    }
+    storage.get(name).add(ingredient);
   }
 
   /**
