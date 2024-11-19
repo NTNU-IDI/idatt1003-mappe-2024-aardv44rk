@@ -2,11 +2,13 @@ package edu.ntnu.idi.idatt.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 /**
  * FoodStorage class manages the storage and provides methods to...
@@ -41,6 +43,7 @@ public class FoodStorage {
 
   /**
    * Removes a certain amount of an <code>Ingredient</code> from the storage.
+   * <p>Returns -1 if the operation failed, 0 if the amount was not successfully removed, and 1 if it was a success.</p>
    *
    * @param name of ingredient to be removed 
    * @param amount of ingredient to be removed
@@ -84,14 +87,37 @@ public class FoodStorage {
   }
 
   /**
-   * Function that sorts the storage by placing all keys and values into a TreeMap. 
+   * Function that sorts the storage by placing all keys and values into a <code>TreeMap</code>. 
    *
    * @return <code>TreeMap</code> that contains same key-value pairs as <code>storage</code>
    */
-  public Map<String, List<Ingredient>> sortStorage() {
+  public Map<String, List<Ingredient>> sortStorage(Map<String, List<Ingredient>> map) {
     Map<String, List<Ingredient>> sortedStorage = new TreeMap<>();
-    sortedStorage.putAll(storage);
+    sortedStorage.putAll(map);
     return sortedStorage;
+  }
+
+  /**
+   * Method that returns a list of all ingredients that have an expirydate before a certain date.
+   *
+   * @param date chosen date
+   * @return A list consisting of all expired <code>Ingredient</code> objects
+   */
+  public List<Ingredient> getExpiredFood(Date date) {
+    return storage.values().stream()
+                    .flatMap(List::stream)
+                    .filter(ingredient -> ingredient.getExpiryDate().before(date))
+                    .collect(Collectors.toList()); 
+  }
+
+  /**
+   * Method that returns total price of all ingredients in a list.
+   *
+   * @param list a list of <code>Ingredient</code> objects
+   * @return a double corresponding to the total value of the objects in the list
+   */
+  public double getTotalPrice(List<Ingredient> list) {
+    return list.stream().mapToDouble(Ingredient::getPrice).sum();
   }
 }
 
