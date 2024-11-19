@@ -46,9 +46,16 @@ public class FoodStorage {
       }
     }
 
-    return amount < 0 ? 0 : 1;
+    return amount == 0 ? 0 : 1;
   }
 
+  /**
+   * Function to search for an ingredient in the storage.
+   *
+   * @param name of ingredient to search for
+   * @returns A list of all ingredients matching that name, or <code>Collections.emptyList()</code>
+   , an immutable list as default if the <code>key</code> name cannot be found in the storage.
+   */
   public List<Ingredient> searchIngredient(String name) {
     return storage.getOrDefault(name, Collections.emptyList());
   }
