@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * FoodStorage class manages the storage and provides methods to...
@@ -58,6 +59,17 @@ public class FoodStorage {
    */
   public List<Ingredient> searchIngredient(String name) {
     return storage.getOrDefault(name, Collections.emptyList());
+  }
+
+  /**
+   * Function that sorts the storage by placing all keys and values into a TreeMap. 
+   *
+   * @return <code>TreeMap</code> that contains same key-value pairs as <code>storage</code>
+   */
+  public Map<String, List<Ingredient>> sortStorage() {
+    Map<String, List<Ingredient>> sortedStorage = new TreeMap<>();
+    sortedStorage.putAll(storage);
+    return sortedStorage;
   }
 }
 
