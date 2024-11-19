@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.model;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +49,8 @@ public class FoodStorage {
     return amount < 0 ? 0 : 1;
   }
 
-
+  public List<Ingredient> searchIngredient(String name) {
+    return storage.getOrDefault(name, Collections.emptyList());
+  }
 }
 
