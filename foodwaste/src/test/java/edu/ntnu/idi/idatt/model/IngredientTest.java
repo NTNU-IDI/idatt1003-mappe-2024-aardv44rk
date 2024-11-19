@@ -32,13 +32,13 @@ public class IngredientTest {
 
 
   @Test
-  void testConstructorsAndGetters() {
+  void testConstructors() {
     assertEquals(name, ingredient.getName(), "Names should be equal");
     assertEquals(price, ingredient.getPrice(), "Price should be equal");
     assertEquals(expiryDate, ingredient.getExpiryDate(), "Dates should be equal");
     assertEquals(amount, ingredient.getAmount(), "Amount should be equal");
     assertEquals(unit, ingredient.getUnit(), "Unit should be equal");
-
+    
     assertThrows(IllegalArgumentException.class, 
                 () -> new Ingredient("", price, expiryDate, amount, unit),
                "IllegalArgumentException should be thrown if name is empty"
