@@ -9,6 +9,10 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Class responsible for testing the Ingredient class.
+ * 
+ * @author @aardv44rk
+ * @since November 19th 2024
+ * @version 0.8
  */
 class IngredientTest {
   private Ingredient ingredient;
