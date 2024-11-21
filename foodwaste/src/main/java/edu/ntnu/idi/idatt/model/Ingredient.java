@@ -33,7 +33,7 @@ public class Ingredient {
       throw new IllegalArgumentException("Date cannot be null.");
     }
     if (amount <= 0) {
-      throw new IllegalArgumentException("Amount cannot be 0 or negative");
+      throw new IllegalArgumentException("Amount cannot be 0 or negative.");
     }
     if (unit == null || unit.trim().isEmpty()) {
       throw new IllegalArgumentException("Unit cannot be null or empty.");
@@ -79,6 +79,7 @@ public class Ingredient {
     }
     this.price = price;
   }
+  // TODO Input validator and bound
 
   /**
    * Sets the amount attribute of an object.
@@ -94,9 +95,12 @@ public class Ingredient {
   }
 
   @Override
-  public String toString() { // TODO
+  public String toString() {
     StringBuilder sb = new StringBuilder();
-
+    sb.append(name).append("\n")
+      .append("Price: ").append(price).append("money units\n")
+      .append("Amount: ").append(amount).append(" ").append(unit).append("\n")
+      .append("Expiry date: ").append(expiryDate);
     return sb.toString();
   }
 }

@@ -24,7 +24,6 @@ public class FoodStorage {
    * Method that adds an ingredient to the storage.
    * <p>If an ingredient of the same expiryDate already exists, 
    * the amount of that one is increased instead.</p>
-   * TODO price handling.
    *
    * @param ingredient to be put in storage
    */
@@ -117,7 +116,7 @@ public class FoodStorage {
   }
 
   /**
-   * Method that returns total price of all ingredients in a list.
+   * Method that returns total price of all ingredients in a <code>List</code>.
    *
    * @param list a list of <code>Ingredient</code> objects
    * @return a double corresponding to the total value of the objects in the list
