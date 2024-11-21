@@ -3,7 +3,11 @@ package edu.ntnu.idi.idatt.model;
 import java.util.Date;
 
 /**
- * TEMP. TODO
+ * The ingredient 
+ *
+ * @author @aardv44rk
+ * @since November 19th 2024
+ * @version 0.8
  */
 public class Ingredient {
   private String name;
@@ -15,16 +19,16 @@ public class Ingredient {
   /**
    * Ingredient constructor. Initializes an object of class <code>Ingredient</code>
    *
-   * @param name The ingredients name
-   * @param price Price per unit of the ingredient
-   * @param expiryDate Date that the ingredient expires
-   * @param amount Available amount of an ingredient 
-   * @param unit The unit the ingredient is measured in
+   * @param name A String representing the name of an <code>Ingredient</code>
+   * @param price A double representing the price per unit of the <code>Ingredient</code>
+   * @param expiryDate A Date representing the date an <code>Ingredient</code> expires
+   * @param amount A double representing the amount of an <code>Ingredient</code>
+   * @param unit A string representing the unit an <code>Ingredient</code> is measured in
    * @throws IllegalArgumentException if values are invalid
    */
   public Ingredient(String name, double price, Date expiryDate, double amount, String unit) {
     if (name == null || name.trim().isEmpty()) {
-      throw new IllegalArgumentException("Name cannot be null or empty.");
+      throw new IllegalArgumentException("Name cannot be null or empty."); // TODO remove messages
     }
     if (price <= 0) {
       throw new IllegalArgumentException("Price cannot be 0 or negative.");

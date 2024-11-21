@@ -13,6 +13,10 @@ import java.util.stream.Collectors;
 
 /**
  * FoodStorage class manages the storage and provides methods to...
+ * 
+ * @author @aardv44rk
+ * @since November 19th 2024
+ * @version 0.8
  */
 public class FoodStorage {
   private final Map<String, List<Ingredient>> storage;
