@@ -3,7 +3,8 @@ package edu.ntnu.idi.idatt.model;
 import java.util.Date;
 
 /**
- * The ingredient 
+ * The ingredient class is responsible for creating ingredients and provides
+ * getters, setters, and a toString method.
  *
  * @author @aardv44rk
  * @since November 19th 2024
@@ -17,14 +18,14 @@ public class Ingredient {
   private String unit;
 
   /**
-   * Ingredient constructor. Initializes an object of class <code>Ingredient</code>
+   * Ingredient constructor. Initializes an object of class <code>Ingredient</code>.
    *
-   * @param name A String representing the name of an <code>Ingredient</code>
-   * @param price A double representing the price per unit of the <code>Ingredient</code>
-   * @param expiryDate A Date representing the date an <code>Ingredient</code> expires
-   * @param amount A double representing the amount of an <code>Ingredient</code>
-   * @param unit A string representing the unit an <code>Ingredient</code> is measured in
-   * @throws IllegalArgumentException if values are invalid
+   * @param name A String representing the name of an <code>Ingredient</code>.
+   * @param price A double representing the price per unit of the <code>Ingredient</code>.
+   * @param expiryDate A Date representing the date an <code>Ingredient</code> expires.
+   * @param amount A double representing the amount of an <code>Ingredient</code>.
+   * @param unit A string representing the unit an <code>Ingredient</code> is measured in.
+   * @throws IllegalArgumentException if values are invalid.
    */
   public Ingredient(String name, double price, Date expiryDate, double amount, String unit) {
     if (name == null || name.trim().isEmpty()) {
@@ -84,6 +85,7 @@ public class Ingredient {
     this.price = price;
   }
   // TODO Input validator and bound
+  // TODO SDF and Date logic
 
   /**
    * Sets the amount attribute of an object.
