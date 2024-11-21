@@ -125,4 +125,3 @@ public class FoodStorage {
     return list.stream().mapToDouble(Ingredient::getPrice).sum();
   }
 }
-
