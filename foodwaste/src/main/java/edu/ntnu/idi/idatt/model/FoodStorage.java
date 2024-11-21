@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -62,19 +63,18 @@ public class FoodStorage {
 
     List<Ingredient> ingredients = storage.get(name);
     ingredients.sort(Comparator.comparing(Ingredient::getExpiryDate));
-    for (Ingredient i : ingredients) {
-      if (i.getAmount() >= amount) {
-        i.setAmount(i.getAmount() - amount);
-        amount = 0;
-        if (i.getAmount() == 0) {
-          ingredients.remove(i);
-        }
-        break;
-      } else {
-        amount -= i.getAmount();
-        i.setAmount(0);
-      }
+    Iterator<Ingredient> iterator = ingredients.iterator();
+    Ingredient ingredient;
 
+    while (iterator.hasNext() && amount > 0) {
+      ingredient = iterator.next();
+      if (ingredient.getAmount() >= amount) {
+        ingredient.setAmount(ingredient.getAmount() - amount);
+        amount = 0;
+      } else {
+        amount -= ingredient.getAmount();
+        iterator.remove();
+      }
     }
 
     return amount <= 0 ? 0 : 1;
