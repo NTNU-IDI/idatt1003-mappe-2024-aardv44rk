@@ -18,7 +18,7 @@ public class Ingredient {
   private String unit;
 
   /**
-   * Ingredient constructor. Initializes an object of class <code>Ingredient</code>.
+   * Constructs an Ingredient with a name, price, expiryDate amount and unit.
    *
    * @param name A String representing the name of an <code>Ingredient</code>.
    * @param price A double representing the price per unit of the <code>Ingredient</code>.
@@ -29,7 +29,7 @@ public class Ingredient {
    */
   public Ingredient(String name, double price, Date expiryDate, double amount, String unit) {
     if (name == null || name.trim().isEmpty()) {
-      throw new IllegalArgumentException("Name cannot be null or empty."); // TODO remove messages
+      throw new IllegalArgumentException("Name cannot be null or empty.");
     }
     if (price <= 0) {
       throw new IllegalArgumentException("Price cannot be 0 or negative.");
@@ -100,13 +100,28 @@ public class Ingredient {
     this.amount = amount;
   }
 
+  /**
+   * Method that returns a string with all the information of the attached ingredient.
+   *
+   * @return A string with the attributes of an <code>Ingredient</code>
+   */
+  public String printIngredient() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(this.name).append("\n")
+      .append("Price: ").append(this.price).append("money units\n")
+      .append("Amount: ").append(this.amount).append(" ").append(this.unit).append("\n")
+      .append("Expiry date: ").append(this.expiryDate);
+    return sb.toString();
+  }
+
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append(name).append("\n")
-      .append("Price: ").append(price).append("money units\n")
-      .append("Amount: ").append(amount).append(" ").append(unit).append("\n")
-      .append("Expiry date: ").append(expiryDate);
+    sb.append(name).append(" ")
+      .append(amount).append(" ")
+      .append(unit).append(" ")
+      .append(price).append(" ")
+      .append(expiryDate);
     return sb.toString();
   }
 }
