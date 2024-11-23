@@ -7,15 +7,15 @@ import java.util.Date;
  * getters, setters, and a toString method.
  *
  * @author @aardv44rk
- * @since November 19th 2024
- * @version 0.8
+ * @since November 17th 2024
+ * @version 1.0
  */
 public class Ingredient {
-  private String name;
+  private final String name;
   private double price;
   private Date expiryDate;
   private double amount;
-  private String unit;
+  private final String unit;
 
   /**
    * Constructs an Ingredient with a name, price, expiryDate amount and unit.
