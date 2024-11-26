@@ -2,7 +2,6 @@ package edu.ntnu.idi.idatt.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,17 +34,18 @@ public class FoodStorage {
   public void addIngredient(Ingredient ingredient) {
     String name = ingredient.getName();
     storage.putIfAbsent(name, new ArrayList<>());
+    List<Ingredient> ingredients = storage.get(name);
 
-    for (Ingredient i : storage.get(name)) {
-      if (
-            i.getExpiryDate().equals(ingredient.getExpiryDate()) 
-            && i.getPrice() == ingredient.getPrice()
-          ) {
-        i.setAmount(i.getAmount() + ingredient.getAmount());
-        return;
-      }
-    }
-    storage.get(name).add(ingredient);
+    ingredients.stream().filter(item -> item.getExpiryDate().equals(ingredient.getExpiryDate())
+              && item.getPrice() == ingredient.getPrice())
+              .findFirst()
+              .ifPresent(item -> item.setAmount(item.getAmount() + ingredient.getAmount()));
+
+    int index = (int) ingredients.stream()
+              .takeWhile(item -> item.getExpiryDate().compareTo(item.getExpiryDate()) < 0)
+              .count();
+
+    ingredients.add(index, ingredient);
   }
 
   /**
@@ -57,16 +57,15 @@ public class FoodStorage {
    * @param amount of ingredient to be removed
    * @return an integer based on the result
    */
-  public int removeIngredient(String name, double amount) {
+  public boolean removeIngredient(String name, double amount) {
     if (amount <= 0) {
-      throw new IllegalArgumentException("Amount cannot be negative or zero");
+      throw new IllegalArgumentException("Amount to remove cannot be negative or zero");
     }
     if (!storage.containsKey(name)) {
-      return -1;
+      throw new IllegalArgumentException("Ingredient not in storage");
     }
 
     List<Ingredient> ingredients = storage.get(name);
-    ingredients.sort(Comparator.comparing(Ingredient::getExpiryDate));
     Iterator<Ingredient> iterator = ingredients.iterator();
     Ingredient ingredient;
 
@@ -78,10 +77,13 @@ public class FoodStorage {
       } else {
         amount -= ingredient.getAmount();
         iterator.remove();
+        if (ingredients.isEmpty()) {
+          storage.remove(name);
+        }
       }
     }
 
-    return amount <= 0 ? 0 : 1;
+    return amount <= 0;
   }
 
   /**
