@@ -126,6 +126,8 @@ public class FoodStorage {
    * @return a double corresponding to the total value of the objects in the list
    */
   public double getTotalPrice(List<Ingredient> list) {
-    return list.stream().mapToDouble(Ingredient::getPrice).sum();
+    return list.stream()
+          .mapToDouble(ingredient -> ingredient.getPrice() * ingredient.getAmount())
+          .sum();
   }
 }
