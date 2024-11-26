@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -16,6 +17,7 @@ public class Ingredient {
   private Date expiryDate;
   private double amount;
   private final String unit;
+  private final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
   /**
    * Constructs an Ingredient with a name, price, expiryDate amount and unit.
@@ -84,8 +86,6 @@ public class Ingredient {
     }
     this.price = price;
   }
-  // TODO Input validator and bound
-  // TODO SDF and Date logic
 
   /**
    * Sets the amount attribute of an object.
@@ -101,27 +101,16 @@ public class Ingredient {
   }
 
   /**
-   * Method that returns a string with all the information of the attached ingredient.
+   * Method that functions as a toString for an <code>Ingredient</code>.
    *
-   * @return A string with the attributes of an <code>Ingredient</code>
+   * @return A string containing the attributes of an <code>Ingredient</code>
    */
   public String printIngredient() {
     StringBuilder sb = new StringBuilder();
     sb.append(this.name).append("\n")
-      .append("Price: ").append(this.price).append("money units\n")
+      .append("Price: ").append(this.price).append(" money units\n")
       .append("Amount: ").append(this.amount).append(" ").append(this.unit).append("\n")
-      .append("Expiry date: ").append(this.expiryDate);
-    return sb.toString();
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append(name).append(" ")
-      .append(amount).append(" ")
-      .append(unit).append(" ")
-      .append(price).append(" ")
-      .append(expiryDate);
+      .append("Expiry date: ").append(sdf.format(this.expiryDate));
     return sb.toString();
   }
 }

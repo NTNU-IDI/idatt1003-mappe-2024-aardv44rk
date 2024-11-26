@@ -35,17 +35,17 @@ public class FoodStorage {
     String name = ingredient.getName();
     storage.putIfAbsent(name, new ArrayList<>());
     List<Ingredient> ingredients = storage.get(name);
-
-    ingredients.stream().filter(item -> item.getExpiryDate().equals(ingredient.getExpiryDate())
-              && item.getPrice() == ingredient.getPrice())
-              .findFirst()
-              .ifPresent(item -> item.setAmount(item.getAmount() + ingredient.getAmount()));
-
+    
     int index = (int) ingredients.stream()
-              .takeWhile(item -> item.getExpiryDate().compareTo(item.getExpiryDate()) < 0)
+              .takeWhile(item -> item.getExpiryDate().compareTo(ingredient.getExpiryDate()) < 0)
               .count();
 
-    ingredients.add(index, ingredient);
+    ingredients.stream()
+              .filter(item -> item.getExpiryDate().equals(ingredient.getExpiryDate())
+              && item.getPrice() == ingredient.getPrice())
+              .findFirst()
+              .ifPresentOrElse(item -> item.setAmount(item.getAmount() + ingredient.getAmount()),
+                  () -> ingredients.add(index, ingredient));
   }
 
   /**
@@ -127,9 +127,29 @@ public class FoodStorage {
    * @param list a list of <code>Ingredient</code> objects
    * @return a double corresponding to the total value of the objects in the list
    */
-  public double getTotalPrice(List<Ingredient> list) {
+  public static double getTotalPrice(List<Ingredient> list) {
     return list.stream()
-          .mapToDouble(ingredient -> ingredient.getPrice() * ingredient.getAmount())
+          .mapToDouble(Ingredient::getPrice)
+          .sum() * getTotalAmount(list);
+  }
+
+  /**
+   * Method that sums the total price of all Ingredients in a list.
+   *
+   * @param list a List of <code>Ingredient</code> objects 
+   * @return a double corresponding to the total amount
+   */
+  public static double getTotalAmount(List<Ingredient> list) {
+    return list.stream()
+          .mapToDouble(Ingredient::getAmount)
           .sum();
+  }
+
+  public boolean containsIngredient(String name, double amount) {
+    return storage.containsKey(name) && getTotalAmount(storage.get(name)) >= amount;
+  }
+
+  public Map<String, List<Ingredient>> getStorage() {
+    return storage;
   }
 }
