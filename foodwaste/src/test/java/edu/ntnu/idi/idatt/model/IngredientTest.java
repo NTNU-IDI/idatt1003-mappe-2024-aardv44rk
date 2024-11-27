@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.model;
 
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -7,6 +8,7 @@ import edu.ntnu.idi.idatt.util.DateUtil;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 
 /**
  * Class responsible for testing the Ingredient class.
@@ -57,7 +59,7 @@ class IngredientTest {
 
   // Negative tests
   @Test
-  void testNameThrows() {
+  void testNameEmptyOrNull() {
     IllegalArgumentException exception1 = assertThrows(IllegalArgumentException.class,
         () -> new Ingredient("", price, expiryDate, amount, unit),
         "IllegalArgumentException should be thrown if name is empty");
@@ -71,7 +73,7 @@ class IngredientTest {
   }
 
   @Test
-  void testPriceThrows() {
+  void testPriceNegativeOrZero() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
         () -> new Ingredient(name, -1, expiryDate, amount, unit),
         "IllegalArgumentException should be thrown if price is negative or zero");
@@ -79,7 +81,7 @@ class IngredientTest {
   }
 
   @Test
-  void testDateThrows() {
+  void testDateNull() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
         () -> new Ingredient(name, price, null, amount, unit),
         "IllegalArgumentException should be thrown if date is null");
@@ -87,7 +89,7 @@ class IngredientTest {
   }
 
   @Test
-  void testAmountThrows() {
+  void testAmountZeroOrNegative() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
         () -> new Ingredient(name, price, expiryDate, 0, unit),
         "IllegalArgumentException should be thrown if amount is negative or zero");
@@ -95,7 +97,7 @@ class IngredientTest {
   }
 
   @Test
-  void testUnitThrows() {
+  void testUnitNullOrEmpty() {
     IllegalArgumentException e1 = assertThrows(IllegalArgumentException.class,
         () -> new Ingredient(name, price, expiryDate, amount, ""),
         "IllegalArgumentException should be thrown if unit is empty");
@@ -122,7 +124,7 @@ class IngredientTest {
   }
 
   @Test
-  void testSetAmountThrows() {
+  void testSetAmountZeroOrNegative() {
     double newAmount = 0;
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
         () -> ingredient.setAmount(newAmount),
@@ -131,7 +133,7 @@ class IngredientTest {
   }
 
   @Test
-  void testSetPriceThrows() {
+  void testSetPriceZeroOrNegative() {
     double newPrice = -1;
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
         () -> ingredient.setPrice(newPrice),
