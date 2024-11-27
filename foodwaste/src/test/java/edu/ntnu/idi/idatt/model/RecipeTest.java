@@ -1,10 +1,10 @@
 package edu.ntnu.idi.idatt.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,6 +24,7 @@ class RecipeTest {
   private Recipe recipe;
   
   @BeforeEach
+  @SuppressWarnings("unused")
   void testInit() {
     name = "Oatmeal";
     description = "A mediocre meal consisting of oats and water.";

@@ -1,8 +1,8 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
 import java.util.List;
 
-import edu.ntnu.idi.idatt.util.ArgumentValidator;
 
 /**
  * The recipe class is responsible for creating recipes and provides getters,
@@ -104,7 +104,7 @@ public class Recipe {
    * @throws IllegalArgumentException if <code>ingredients</code> is empty
    */
   public void setIngredients(List<Ingredient> ingredients) throws IllegalArgumentException {
-    ArgumentValidator.isRecipe = true;
+    ArgumentValidator.setIsRecipe(true);
     ArgumentValidator.isValidList(ingredients, "Recipe cannot have zero ingredients!");
     this.ingredients = ingredients;
   }
