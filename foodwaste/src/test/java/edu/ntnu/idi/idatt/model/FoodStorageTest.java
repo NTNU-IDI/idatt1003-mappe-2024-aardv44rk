@@ -2,7 +2,6 @@ package edu.ntnu.idi.idatt.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +54,13 @@ class FoodStorageTest {
   // Positive cases
   @Test
   void testAddIngredient() {
+    fs.addIngredient(ingredient1);
+    assertTrue(fs.getStorage().containsKey(name));
+    assertTrue(fs.searchIngredient(name).contains(ingredient1));
+  }
+
+  @Test
+  void testAddIngredientMerge() {
     fs.addIngredient(ingredient2);
     List<Ingredient> ingredients = fs.searchIngredient(name);
     
@@ -82,6 +88,13 @@ class FoodStorageTest {
   }
 
   @Test
+  void testAddIngredientNotMerge() {
+    fs.addIngredient(ingredient1);
+    fs.addIngredient(ingredient2);
+    assertEquals(2, fs.searchIngredient(name).size(), "Size should be 2");
+  }
+
+  @Test
   void testRemoveIngredient() {
     fs.addIngredient(ingredient1);
     fs.addIngredient(ingredient2);
@@ -90,6 +103,20 @@ class FoodStorageTest {
     assertEquals(true, fs.removeIngredient(name, 2.5), "Return value should be true");
     assertEquals(1, ingredients.size(), "Size should be 1");
     assertEquals(false, fs.removeIngredient(name, 0.8), "Return value should be false");
+    assertFalse(fs.getStorage().containsKey(name));
+  }
+
+  @Test
+  void testRemoveIngredientExcessAmount() {
+    fs.addIngredient(ingredient1);
+    assertFalse(fs.removeIngredient(name, 10), "Should return false if excess amount");
+  }
+
+  @Test
+  void testRemoveIngredientNameOnly() {
+    fs.addIngredient(ingredient1);
+    assertTrue(fs.getStorage().containsKey(name));
+    fs.removeIngredient(name);
     assertFalse(fs.getStorage().containsKey(name));
   }
 
@@ -148,10 +175,11 @@ class FoodStorageTest {
 
   // Negative cases TODO
   @Test
-  void testAddIngredientNotMerge() {
-    fs.addIngredient(ingredient1);
-    fs.addIngredient(ingredient2);
-    assertEquals(2, fs.searchIngredient(name).size(), "Size should be 2");
+  void testAddIngredientNull() {
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> fs.addIngredient(null),
+                "IllegalArgumentException should be thrown if null argument is passed to method");
+    assertEquals("Ingredient cannot be null", e.getMessage(), "Messages should match");
   }
 
   @Test
@@ -178,18 +206,42 @@ class FoodStorageTest {
   }
 
   @Test
-  void testRemoveIngredientNotFound() {
-    IllegalStateException e = assertThrows(IllegalStateException.class,
-                   () -> fs.removeIngredient("", amount),
-                   "IllegalStateException should be thrown if Ingredient not present");
-    assertEquals("Ingredient not in storage", e.getMessage());
+  void testSearchIngredientNotExist() {
+    assertTrue(fs.searchIngredient("NonExistent").isEmpty());
   }
 
   @Test
+  void testRemoveIngredientNotFound() {
+    IllegalStateException e1 = assertThrows(IllegalStateException.class,
+                  () -> fs.removeIngredient("", amount),
+                  "IllegalStateException should be thrown if Ingredient not present");
+    assertEquals("Ingredient not in storage", e1.getMessage());
+
+    IllegalStateException e2 = assertThrows(IllegalStateException.class,
+                  () -> fs.removeIngredient(""),
+                  "IllegalStateException should be thrown if Ingredient not present");
+    assertEquals("Ingredient not in storage", e2.getMessage()); 
+  }
+
+  @Test 
   void testRemoveIngredientInvalidAmount() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
                   () -> fs.removeIngredient(name, -1),
                   "IllegalArgumentException should be thrown if negative or zero amount");
     assertEquals("Amount cannot be negative or zero!", e.getMessage());
+  }
+
+  @Test
+  void testSortEmptyStorage() {
+    Map<String, List<Ingredient>> storage = fs.sortStorage(fs.getStorage());
+    assertTrue(storage.isEmpty());
+  }
+
+  @Test
+  void testSortNullStorage() {
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                              () -> fs.sortStorage(null),
+                              "Exception should be thrown if null map");
+    assertEquals("Map cannot be null", e.getMessage(), "Messages should match");
   }
 }
