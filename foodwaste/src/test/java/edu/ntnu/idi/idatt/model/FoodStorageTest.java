@@ -1,17 +1,20 @@
 package edu.ntnu.idi.idatt.model;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import edu.ntnu.idi.idatt.util.DateUtil;
 
 /**
  * Class responsible for testing FoodStorage class. 
@@ -25,9 +28,10 @@ class FoodStorageTest {
   private Ingredient ingredient2;
   private Ingredient ingredient3;
   private Ingredient ingredient4;
+  private Ingredient ingredient5;
   private String name;
   private double price;
-  private Date expiryDate;
+  private LocalDate expiryDate;
   private double amount;
   private String unit;
   private FoodStorage fs;
@@ -38,13 +42,14 @@ class FoodStorageTest {
     fs = new FoodStorage();
     name = "Milk";
     price = 10;
-    expiryDate = new Date();
+    expiryDate = DateUtil.parseDate("12-12-2024");
     amount = 2.0;
     unit = "L";
     ingredient1 = new Ingredient(name, price, expiryDate, amount, unit);
     ingredient2 = new Ingredient(name, 12.00, expiryDate, 1.00, unit);
     ingredient3 = new Ingredient(name, 12.00, expiryDate, 1.00, unit);
-    ingredient4 = new Ingredient("Banana", price, new Date(160000000L), amount, unit);
+    ingredient4 = new Ingredient("Banana", price, DateUtil.parseDate("12-12-2023"), amount, unit);
+    ingredient5 = new Ingredient(name, price, DateUtil.parseDate("14-12-2024"), amount, unit);
   }
 
   // Positive cases
@@ -60,7 +65,14 @@ class FoodStorageTest {
     assertEquals(2,
               ingredients.getFirst().getAmount(),
               "Amounts should match");
-  } 
+  }
+  
+  @Test
+  void testAddIngredientDifferentExpiryDates() {
+    fs.addIngredient(ingredient1);
+    fs.addIngredient(ingredient5);
+    assertEquals(2, fs.getStorage().get(name).size(), "Size should be 2");
+  }
   
   @Test
   void testAddIngredientNewKeyInStorage() {
@@ -100,16 +112,38 @@ class FoodStorageTest {
   @Test
   void testGetExpired() {
     fs.addIngredient(ingredient4);
-    assertTrue(fs.getExpiredFood(new Date()).contains(ingredient4));
+    assertTrue(fs.getExpiredFood(DateUtil.parseDate("12-12-2024")).contains(ingredient4));
   }
 
   @Test
-  void testGetTotal() {
+  void testGetTotalPrice() {
     fs.addIngredient(ingredient1);
     fs.addIngredient(ingredient2);
     fs.addIngredient(ingredient3);
-    double total = fs.getTotalPrice(fs.searchIngredient(name));
+    double total = FoodStorage.getTotalPrice(fs.searchIngredient(name));
     assertEquals(44, total, "Price should equal");
+  }
+
+  @Test
+  void testGetTotalAmount() {
+    fs.addIngredient(ingredient1);
+    fs.addIngredient(ingredient2);
+    fs.addIngredient(ingredient3);
+    double total = FoodStorage.getTotalAmount(fs.searchIngredient(name));
+    assertEquals(4, total, "Price should equal");
+  }
+
+  @Test
+  void testContainsIngredient() {
+    fs.addIngredient(ingredient1);
+    assertTrue(fs.containsIngredient(name, amount));
+  }
+
+  @Test
+  void testNotContainsIngredient() {
+    assertFalse(fs.containsIngredient(name, amount));
+    fs.addIngredient(ingredient2);
+    assertFalse(fs.containsIngredient(name, amount));
   }
 
   // Negative cases TODO
@@ -123,9 +157,18 @@ class FoodStorageTest {
   @Test
   void testGetTotalPriceEmptyList() {
     List<Ingredient> ingredients = new ArrayList<>();
-    double total = fs.getTotalPrice(ingredients);
+    IllegalStateException e = assertThrows(IllegalStateException.class, 
+            () -> FoodStorage.getTotalPrice(ingredients),
+            "Should throw an IllegalStateException for an empty List");
+    assertEquals("List cannot be empty, whoops!", e.getMessage(), "Messages should match");
+  }
 
-    assertEquals(0, total, "Total should be zero");
+  @Test
+  void testGetTotalPriceNull() {
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
+            () -> FoodStorage.getTotalPrice(null),
+            "Should throw an IllegalArgumentException for a null List");
+    assertEquals("List cannot be empty, whoops!", e.getMessage(), "Messages should match");
   }
 
   @Test
@@ -135,15 +178,18 @@ class FoodStorageTest {
   }
 
   @Test
-  void testRemoveIngredientThrows() {
-    IllegalArgumentException e1 = assertThrows(IllegalArgumentException.class,
+  void testRemoveIngredientNotFound() {
+    IllegalStateException e = assertThrows(IllegalStateException.class,
                    () -> fs.removeIngredient("", amount),
-                   "IllegalArgumentException should be thrown if Ingredient not present");
-    assertEquals("Ingredient not in storage", e1.getMessage());
+                   "IllegalStateException should be thrown if Ingredient not present");
+    assertEquals("Ingredient not in storage", e.getMessage());
+  }
 
-    IllegalArgumentException e2 = assertThrows(IllegalArgumentException.class,
-                  () -> fs.removeIngredient(name, -19),
+  @Test
+  void testRemoveIngredientInvalidAmount() {
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                  () -> fs.removeIngredient(name, -1),
                   "IllegalArgumentException should be thrown if negative or zero amount");
-    assertEquals("Amount to remove cannot be negative or zero", e2.getMessage());
+    assertEquals("Amount cannot be negative or zero!", e.getMessage());
   }
 }

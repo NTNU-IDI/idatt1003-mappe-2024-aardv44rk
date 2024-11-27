@@ -3,7 +3,8 @@ package edu.ntnu.idi.idatt.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.Date;
+import edu.ntnu.idi.idatt.util.DateUtil;
+import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ class IngredientTest {
   private Ingredient ingredient;
   private String name;
   private double price;
-  private Date expiryDate;
+  private LocalDate expiryDate;
   private double amount;
   private String unit;
 
@@ -27,7 +28,7 @@ class IngredientTest {
   void testInit() {
     name = "Milk";
     price = 10;
-    expiryDate = new Date(0);
+    expiryDate = DateUtil.parseDate("12-12-2024");
     amount = 2.0;
     unit = "L";
 

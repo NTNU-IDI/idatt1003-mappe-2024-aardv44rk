@@ -1,8 +1,9 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
  *
  * @author @aardv44rk
  * @since November 19th 2024
- * @version 0.8
+ * @version 1.0
  */
 public class FoodStorage {
   private final Map<String, List<Ingredient>> storage;
@@ -49,20 +50,20 @@ public class FoodStorage {
   }
 
   /**
-   * Removes a certain amount of an <code>Ingredient</code> from the storage.
-   * <p>Returns -1 if the operation failed, 0 if the amount was not successfully removed,
-   *  and 1 if it was a success.</p>
+   * Removes a double <code>amount</code> from a List corresponding to key <code>name</code>
+   * from the storage. Returns true or false based on the result.
    *
    * @param name of ingredient to be removed 
    * @param amount of ingredient to be removed
-   * @return an integer based on the result
+   * @return true or false based on result 
+   * @throws IllegalArgumentException if <code>amount</code> is negative or zero
+   * @throws IllegalStateException if key <code>name</code> not present in <code>storage</code>
    */
-  public boolean removeIngredient(String name, double amount) {
-    if (amount <= 0) {
-      throw new IllegalArgumentException("Amount to remove cannot be negative or zero");
-    }
+  public boolean removeIngredient(String name, double amount) throws IllegalArgumentException,
+                                  IllegalStateException {
+    ArgumentValidator.isValidDouble(amount, "Amount cannot be negative or zero!");
     if (!storage.containsKey(name)) {
-      throw new IllegalArgumentException("Ingredient not in storage");
+      throw new IllegalStateException("Ingredient not in storage");
     }
 
     List<Ingredient> ingredients = storage.get(name);
@@ -114,10 +115,11 @@ public class FoodStorage {
    * @param date chosen date
    * @return A list consisting of all expired <code>Ingredient</code> objects
    */
-  public List<Ingredient> getExpiredFood(Date date) {
+  public List<Ingredient> getExpiredFood(LocalDate date) {
+    ArgumentValidator.isValidDate(date, "Invalid date! Please try again.");
     return storage.values().stream()
                     .flatMap(List::stream)
-                    .filter(ingredient -> ingredient.getExpiryDate().before(date))
+                    .filter(ingredient -> ingredient.getExpiryDate().isBefore(date))
                     .collect(Collectors.toList()); 
   }
 
@@ -128,9 +130,10 @@ public class FoodStorage {
    * @return a double corresponding to the total value of the objects in the list
    */
   public static double getTotalPrice(List<Ingredient> list) {
+    ArgumentValidator.isValidList(list, "List cannot be empty, whoops!");
     return list.stream()
-          .mapToDouble(Ingredient::getPrice)
-          .sum() * getTotalAmount(list);
+          .mapToDouble(ingredient -> ingredient.getPrice() * ingredient.getAmount())
+          .sum();
   }
 
   /**
@@ -140,6 +143,7 @@ public class FoodStorage {
    * @return a double corresponding to the total amount
    */
   public static double getTotalAmount(List<Ingredient> list) {
+    ArgumentValidator.isValidList(list, "List cannot be empty, whoops!");
     return list.stream()
           .mapToDouble(Ingredient::getAmount)
           .sum();
