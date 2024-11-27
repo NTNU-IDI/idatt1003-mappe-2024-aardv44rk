@@ -14,7 +14,7 @@ public class DateUtil {
    *
    * @throws UnsupportedOperationException if DateUtil is instantiated
    */
-  private DateUtil() throws UnsupportedOperationException {
+  protected DateUtil() throws UnsupportedOperationException {
     throw new UnsupportedOperationException("Utility class");
   }
 

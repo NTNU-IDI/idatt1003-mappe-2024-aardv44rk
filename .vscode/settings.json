@@ -6,6 +6,7 @@
     "java.format.settings.url": ".vscode/google_checks.xml",
     "java.completion.importOrder": [
         "#",
+        "",
         "java",
         "javax",
         "org",
