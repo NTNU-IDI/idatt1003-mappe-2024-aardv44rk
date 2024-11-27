@@ -1,9 +1,9 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -11,8 +11,13 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+
 /**
  * FoodStorage class manages the storage and provides methods to...
+ *
+ * @author @aardv44rk
+ * @since November 19th 2024
+ * @version 1.0
  */
 public class FoodStorage {
   private final Map<String, List<Ingredient>> storage;
@@ -29,40 +34,41 @@ public class FoodStorage {
    * @param ingredient to be put in storage
    */
   public void addIngredient(Ingredient ingredient) {
+    ArgumentValidator.isValidObject(ingredient, "Ingredient cannot be null");
     String name = ingredient.getName();
     storage.putIfAbsent(name, new ArrayList<>());
+    List<Ingredient> ingredients = storage.get(name);
+    
+    int index = (int) ingredients.stream()
+              .takeWhile(item -> item.getExpiryDate().compareTo(ingredient.getExpiryDate()) < 0)
+              .count();
 
-    for (Ingredient i : storage.get(name)) {
-      if (
-            i.getExpiryDate().equals(ingredient.getExpiryDate()) 
-            && i.getPrice() == ingredient.getPrice()
-          ) {
-        i.setAmount(i.getAmount() + ingredient.getAmount());
-        return;
-      }
-    }
-    storage.get(name).add(ingredient);
+    ingredients.stream()
+              .filter(item -> item.getExpiryDate().equals(ingredient.getExpiryDate())
+              && item.getPrice() == ingredient.getPrice())
+              .findFirst()
+              .ifPresentOrElse(item -> item.setAmount(item.getAmount() + ingredient.getAmount()),
+                  () -> ingredients.add(index, ingredient));
   }
 
   /**
-   * Removes a certain amount of an <code>Ingredient</code> from the storage.
-   * <p>Returns -1 if the operation failed, 0 if the amount was not successfully removed,
-   *  and 1 if it was a success.</p>
+   * Removes a double <code>amount</code> from a List corresponding to key <code>name</code>
+   * from the storage. Returns true or false based on the result.
    *
    * @param name of ingredient to be removed 
    * @param amount of ingredient to be removed
-   * @return an integer based on the result
+   * @return true or false based on result 
+   * @throws IllegalArgumentException if <code>amount</code> is negative or zero
+   * @throws IllegalStateException if key <code>name</code> not present in <code>storage</code>
    */
-  public int removeIngredient(String name, double amount) {
-    if (amount <= 0) {
-      throw new IllegalArgumentException("Amount cannot be negative or zero");
-    }
+  public boolean removeIngredient(String name, double amount) throws IllegalArgumentException,
+                                  IllegalStateException {
+    ArgumentValidator.isValidDouble(amount, "Amount cannot be negative or zero!");
     if (!storage.containsKey(name)) {
-      return -1;
+      throw new IllegalStateException("Ingredient not in storage");
     }
 
     List<Ingredient> ingredients = storage.get(name);
-    ingredients.sort(Comparator.comparing(Ingredient::getExpiryDate));
     Iterator<Ingredient> iterator = ingredients.iterator();
     Ingredient ingredient;
 
@@ -74,11 +80,29 @@ public class FoodStorage {
       } else {
         amount -= ingredient.getAmount();
         iterator.remove();
+        if (ingredients.isEmpty()) {
+          storage.remove(name);
+        }
       }
     }
 
-    return amount <= 0 ? 0 : 1;
+    return amount <= 0;
   }
+
+  /**
+   * Method that removes ingredient(s) completely from the storage.
+   *
+   * @param name a String corresponding to key <code>name</code> in storage
+   * @throws IllegalStateException if storage does not contain <code>name</code>
+   */
+  public void removeIngredient(String name) {
+    if (!storage.containsKey(name)) {
+      throw new IllegalStateException("Ingredient not in storage");
+    }
+
+    storage.remove(name);
+  }
+
 
   /**
    * Function to search for an ingredient in the storage.
@@ -97,10 +121,11 @@ public class FoodStorage {
    * @return <code>TreeMap</code> that contains same key-value pairs as <code>storage</code>
    */
   public Map<String, List<Ingredient>> sortStorage(Map<String, List<Ingredient>> map) {
+    ArgumentValidator.isValidObject(map, "Map cannot be null");
     Map<String, List<Ingredient>> sortedStorage = new TreeMap<>();
     sortedStorage.putAll(map);
     return sortedStorage;
-  }
+  } // TODO partial matching
 
   /**
    * Method that returns a list of all ingredients that have an expirydate before a certain date.
@@ -108,10 +133,11 @@ public class FoodStorage {
    * @param date chosen date
    * @return A list consisting of all expired <code>Ingredient</code> objects
    */
-  public List<Ingredient> getExpiredFood(Date date) {
+  public List<Ingredient> getExpiredFood(LocalDate date) {
+    ArgumentValidator.isValidDate(date, "Invalid date! Please try again.");
     return storage.values().stream()
                     .flatMap(List::stream)
-                    .filter(ingredient -> ingredient.getExpiryDate().before(date))
+                    .filter(ingredient -> ingredient.getExpiryDate().isBefore(date))
                     .collect(Collectors.toList()); 
   }
 
@@ -121,8 +147,31 @@ public class FoodStorage {
    * @param list a list of <code>Ingredient</code> objects
    * @return a double corresponding to the total value of the objects in the list
    */
-  public double getTotalPrice(List<Ingredient> list) {
-    return list.stream().mapToDouble(Ingredient::getPrice).sum();
+  public static double getTotalPrice(List<Ingredient> list) {
+    ArgumentValidator.isValidList(list, "List cannot be null, whoops!");
+    return list.stream()
+          .mapToDouble(ingredient -> ingredient.getPrice() * ingredient.getAmount())
+          .sum();
+  }
+
+  /**
+   * Method that sums the total price of all Ingredients in a list.
+   *
+   * @param list a List of <code>Ingredient</code> objects 
+   * @return a double corresponding to the total amount
+   */
+  public static double getTotalAmount(List<Ingredient> list) {
+    ArgumentValidator.isValidList(list, "List cannot be null, whoops!");
+    return list.stream()
+          .mapToDouble(Ingredient::getAmount)
+          .sum();
+  }
+
+  public boolean containsIngredient(String name, double amount) {
+    return storage.containsKey(name) && getTotalAmount(storage.get(name)) >= amount;
+  }
+
+  public Map<String, List<Ingredient>> getStorage() {
+    return storage;
   }
 }
-

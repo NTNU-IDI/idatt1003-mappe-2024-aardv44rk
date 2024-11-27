@@ -16,13 +16,18 @@ This project is a part of required assignments in IDATT1003 (Programmering 1).
 
 [//]: # (TODO: Describe the structure of your project here. How have you used packages in your structure. Where are all sourcefiles stored. Where are all JUnit-test classes stored. etc.)
 All sourcefiles are stored in src/main/java/edu/ntnu/idi/idatt
-All testfiles are stored in src/test/java/
+All testfiles are stored in src/test/java/edu/ntnu/idi/idatt
 
 ## Link to repository
 
 [//]: # (TODO: Include a link to your GitHub repository here.)
 
 https://github.com/NTNU-IDI/idatt1003-mappe-2024-aardv44rk
+
+## Prerequisites
+
+Java JDK
+Maven
 
 ## How to run the project
 
