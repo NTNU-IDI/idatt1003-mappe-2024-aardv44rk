@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 
+
 /**
  * Class responsible for handling all input validation in the program. 
  *
@@ -14,6 +15,11 @@ import java.util.List;
  */
 
 public class ArgumentValidator {
+  private static boolean isRecipe = false;
+
+  public static void setIsRecipe(boolean isRecipe) {
+    ArgumentValidator.isRecipe = isRecipe;
+  }
 
   protected ArgumentValidator() {
     throw new UnsupportedOperationException("Utility class");
@@ -86,7 +92,7 @@ public class ArgumentValidator {
    * @throws IllegalStateException if <code>list</code> is null or empty
    */
   public static void isValidList(List<Ingredient> list, String m) throws IllegalStateException {
-    if (list == null) {
+    if (list == null || (isRecipe && list.isEmpty())) {
       throw new IllegalArgumentException(m);
     }
   }
