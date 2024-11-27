@@ -1,9 +1,8 @@
 package edu.ntnu.idi.idatt.util;
 
+import edu.ntnu.idi.idatt.model.Ingredient;
 import java.time.LocalDate;
 import java.util.List;
-
-import edu.ntnu.idi.idatt.model.Ingredient;
 
 
 /**
@@ -11,12 +10,12 @@ import edu.ntnu.idi.idatt.model.Ingredient;
  *
  * @author @aardv44rk
  * @since November 19th 2024
- * @version 1.0
+ * @version 1.1
  */
 
 public class ArgumentValidator {
 
-  private ArgumentValidator() {
+  protected ArgumentValidator() {
     throw new UnsupportedOperationException("Utility class");
   }
 
@@ -89,8 +88,6 @@ public class ArgumentValidator {
   public static void isValidList(List<Ingredient> list, String m) throws IllegalStateException {
     if (list == null) {
       throw new IllegalArgumentException(m);
-    } else if (list.isEmpty()) {
-      throw new IllegalStateException(m);
     }
   }
 }

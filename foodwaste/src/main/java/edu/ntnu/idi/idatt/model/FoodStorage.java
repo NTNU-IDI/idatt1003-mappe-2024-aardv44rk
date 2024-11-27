@@ -11,12 +11,13 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
+
 /**
  * FoodStorage class manages the storage and provides methods to...
  *
  * @author @aardv44rk
  * @since November 19th 2024
- * @version 1.0
+ * @version 1.1
  */
 public class FoodStorage {
   private final Map<String, List<Ingredient>> storage;
@@ -33,6 +34,7 @@ public class FoodStorage {
    * @param ingredient to be put in storage
    */
   public void addIngredient(Ingredient ingredient) {
+    ArgumentValidator.isValidObject(ingredient, "Ingredient cannot be null");
     String name = ingredient.getName();
     storage.putIfAbsent(name, new ArrayList<>());
     List<Ingredient> ingredients = storage.get(name);
@@ -88,6 +90,21 @@ public class FoodStorage {
   }
 
   /**
+   * Method that removes ingredient(s) completely from the storage.
+   *
+   * @param name a String corresponding to key <code>name</code> in storage
+   * @throws IllegalStateException if storage does not contain <code>name</code>
+   */
+  public void removeIngredient(String name) {
+    if (!storage.containsKey(name)) {
+      throw new IllegalStateException("Ingredient not in storage");
+    }
+
+    storage.remove(name);
+  }
+
+
+  /**
    * Function to search for an ingredient in the storage.
    *
    * @param name of ingredient to search for
@@ -104,10 +121,11 @@ public class FoodStorage {
    * @return <code>TreeMap</code> that contains same key-value pairs as <code>storage</code>
    */
   public Map<String, List<Ingredient>> sortStorage(Map<String, List<Ingredient>> map) {
+    ArgumentValidator.isValidObject(map, "Map cannot be null");
     Map<String, List<Ingredient>> sortedStorage = new TreeMap<>();
     sortedStorage.putAll(map);
     return sortedStorage;
-  }
+  } // TODO partial matching
 
   /**
    * Method that returns a list of all ingredients that have an expirydate before a certain date.
@@ -130,7 +148,7 @@ public class FoodStorage {
    * @return a double corresponding to the total value of the objects in the list
    */
   public static double getTotalPrice(List<Ingredient> list) {
-    ArgumentValidator.isValidList(list, "List cannot be empty, whoops!");
+    ArgumentValidator.isValidList(list, "List cannot be null, whoops!");
     return list.stream()
           .mapToDouble(ingredient -> ingredient.getPrice() * ingredient.getAmount())
           .sum();
@@ -143,7 +161,7 @@ public class FoodStorage {
    * @return a double corresponding to the total amount
    */
   public static double getTotalAmount(List<Ingredient> list) {
-    ArgumentValidator.isValidList(list, "List cannot be empty, whoops!");
+    ArgumentValidator.isValidList(list, "List cannot be null, whoops!");
     return list.stream()
           .mapToDouble(Ingredient::getAmount)
           .sum();
