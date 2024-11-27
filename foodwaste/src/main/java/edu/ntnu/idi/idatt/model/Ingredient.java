@@ -20,14 +20,13 @@ public class Ingredient {
   private final String unit;
   
   /**
-   * Constructs an Ingredient with a name, price, expiryDate amount and unit.
+   * Constructs an Ingredient with a name, price, expiration date, amount, and unit.
    *
    * @param name A String representing the name of an <code>Ingredient</code>
    * @param price A double representing the price per unit of the <code>Ingredient</code>
    * @param expiryDate A Date representing the date an <code>Ingredient</code> expires
    * @param amount A double representing the amount of an <code>Ingredient</code>
    * @param unit A string representing the unit an <code>Ingredient</code> is measured in
-   * @throws IllegalArgumentException if values are invalid
    */
   public Ingredient(String name, double price, LocalDate expiryDate, double amount, String unit) {
     ArgumentValidator.isValidString(name, "Name cannot be empty or null!");
@@ -39,6 +38,27 @@ public class Ingredient {
     this.name = name;
     this.price = price;
     this.expiryDate = expiryDate;
+    this.amount = amount;
+    this.unit = unit;
+  }
+  
+  /**
+   * Constructor specifically for Ingredients in recipes. Creates an ingredient with default
+   * values for price and date.
+   *
+   * @param name A String representing the name of an <code>Ingredient</code>
+   * @param amount A double representing the amount of an <code>Ingredient</code>
+   * @param unit A string representing the unit an <code>Ingredient</code> is measured in
+   * @throws IllegalArgumentException if values are invalid
+   */
+  public Ingredient(String name, double amount, String unit) {
+    ArgumentValidator.isValidString(name, "Name cannot be empty or null!");
+    ArgumentValidator.isValidDouble(amount, "Amount cannot be negative or zero!");
+    ArgumentValidator.isValidString(unit, "Unit cannot be empty or null!");
+
+    this.name = name;
+    this.price = -1;
+    this.expiryDate = LocalDate.MAX;
     this.amount = amount;
     this.unit = unit;
   }
@@ -97,6 +117,17 @@ public class Ingredient {
       .append("Price: ").append(this.price).append(" money units\n")
       .append("Amount: ").append(this.amount).append(" ").append(this.unit).append("\n")
       .append("Expiry date: ").append(DateUtil.formatDate(this.expiryDate));
+    return sb.toString();
+  }
+
+  /**
+   * Prints an Ingredient specifically for Recipe class.
+   *
+   * @return A string consisting of Ingredient name, amount, and unit.
+   */
+  public String printRecipeIngredient() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(this.name).append(" ").append(this.amount).append(" ").append(this.unit);
     return sb.toString();
   }
 }

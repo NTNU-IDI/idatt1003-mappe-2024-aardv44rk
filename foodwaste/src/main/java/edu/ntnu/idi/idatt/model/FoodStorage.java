@@ -134,6 +134,7 @@ public class FoodStorage {
    * @return A list consisting of all expired <code>Ingredient</code> objects
    */
   public List<Ingredient> getExpiredFood(LocalDate date) {
+    ArgumentValidator.setIsRecipe(false);
     ArgumentValidator.isValidDate(date, "Invalid date! Please try again.");
     return storage.values().stream()
                     .flatMap(List::stream)
@@ -148,6 +149,7 @@ public class FoodStorage {
    * @return a double corresponding to the total value of the objects in the list
    */
   public static double getTotalPrice(List<Ingredient> list) {
+    ArgumentValidator.setIsRecipe(false);
     ArgumentValidator.isValidList(list, "List cannot be null, whoops!");
     return list.stream()
           .mapToDouble(ingredient -> ingredient.getPrice() * ingredient.getAmount())
@@ -161,6 +163,7 @@ public class FoodStorage {
    * @return a double corresponding to the total amount
    */
   public static double getTotalAmount(List<Ingredient> list) {
+    ArgumentValidator.setIsRecipe(false);
     ArgumentValidator.isValidList(list, "List cannot be null, whoops!");
     return list.stream()
           .mapToDouble(Ingredient::getAmount)

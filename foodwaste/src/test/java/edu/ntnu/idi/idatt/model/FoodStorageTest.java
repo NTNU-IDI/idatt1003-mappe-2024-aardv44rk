@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 /**
- * Class responsible for testing FoodStorage class. 
+ * Class responsible for testing FoodStorage class.
  *
  * @author @aardv44rk
  * @since November 19th 2024
@@ -60,7 +60,7 @@ class FoodStorageTest {
   void testAddIngredientMerge() {
     fs.addIngredient(ingredient2);
     List<Ingredient> ingredients = fs.searchIngredient(name);
-    
+
     assertEquals(1, ingredients.size(), "Sizes should match");
     fs.addIngredient(ingredient3);
 
@@ -69,7 +69,7 @@ class FoodStorageTest {
               ingredients.getFirst().getAmount(),
               "Amounts should match");
   }
-  
+
   @Test
   void testAddIngredientNewKeyInStorage() {
     fs.addIngredient(ingredient1);
@@ -110,7 +110,7 @@ class FoodStorageTest {
 
   @Test
   void testSearchIngredient() {
-    fs.addIngredient(ingredient1);    
+    fs.addIngredient(ingredient1);
     assertTrue(fs.searchIngredient(ingredient1.getName()).contains(ingredient1),
                "Ingredient should exist");
   }
@@ -152,7 +152,8 @@ class FoodStorageTest {
 
   @Test
   void testGetTotalPriceEmptyList() {
-    assertEquals(0, FoodStorage.getTotalPrice(new ArrayList<>()));
+    List<Ingredient> emptyList = new ArrayList<>();
+    assertEquals(0, FoodStorage.getTotalPrice(emptyList));
   }
 
   @Test
@@ -166,7 +167,8 @@ class FoodStorageTest {
 
   @Test
   void testGetTotalAmountEmptyList() {
-    assertEquals(0, FoodStorage.getTotalAmount(new ArrayList<>()));
+    List<Ingredient> emptyList = new ArrayList<>();
+    assertEquals(0, FoodStorage.getTotalAmount(emptyList));
   }
 
   @Test
@@ -202,7 +204,7 @@ class FoodStorageTest {
 
   @Test
   void testGetTotalPriceNull() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
             () -> FoodStorage.getTotalPrice(null),
             "Should throw an IllegalArgumentException for a null List");
     assertEquals("List cannot be null, whoops!", e.getMessage(), "Messages should match");
@@ -210,7 +212,7 @@ class FoodStorageTest {
 
   @Test
   void getTotalAmountNull() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
             () -> FoodStorage.getTotalAmount(null),
             "Should throw an IllegalArgumentException for a null List");
     assertEquals("List cannot be null, whoops!", e.getMessage(), "Messages should match");
@@ -240,10 +242,10 @@ class FoodStorageTest {
     IllegalStateException e = assertThrows(IllegalStateException.class,
                   () -> fs.removeIngredient(""),
                   "IllegalStateException should be thrown if Ingredient not present");
-    assertEquals("Ingredient not in storage", e.getMessage()); 
+    assertEquals("Ingredient not in storage", e.getMessage());
   }
 
-  @Test 
+  @Test
   void testRemoveIngredientInvalidAmount() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
                   () -> fs.removeIngredient(name, -1),
