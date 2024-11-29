@@ -3,8 +3,8 @@ package edu.ntnu.idi.idatt.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +16,9 @@ class RecipeTest {
   private String name;
   private String description;
   private String instruction;
-  private List<Ingredient> ingredients;
+  private Map<String, Double> ingredientMap;
   private double portions;
 
-  private Ingredient ingredient1;
-  private Ingredient ingredient2;
   private Recipe recipe;
   
   @BeforeEach
@@ -29,13 +27,11 @@ class RecipeTest {
     name = "Oatmeal";
     description = "A mediocre meal consisting of oats and water.";
     instruction = "Boil water, add oats, bon apetit";
-    ingredients = new ArrayList<>();
-    ingredient1 = new Ingredient("Oats", 100, "g");
-    ingredient2 = new Ingredient("Water", 100, "mL");
-    ingredients.add(ingredient1);
-    ingredients.add(ingredient2);
+    ingredientMap = new HashMap<>();
+    ingredientMap.put("Oats", 100.0);
+    ingredientMap.put("Water", 100.0);
     portions = 1.0;
-    recipe = new Recipe(name, description, instruction, ingredients, portions);
+    recipe = new Recipe(name, description, instruction, ingredientMap, portions);
 
   }
 
@@ -44,7 +40,7 @@ class RecipeTest {
     assertEquals(name, recipe.getName(), "Name fields should match");
     assertEquals(description, recipe.getDescription(), "Description fields should match");
     assertEquals(instruction, recipe.getInstruction(), "Instruction fields should match");
-    assertEquals(ingredients, recipe.getIngredients(), "Ingredient lists should match");
+    assertEquals(ingredientMap, recipe.getIngredientMap(), "Ingredient lists should match");
     assertEquals(portions, recipe.getPortions(), "Portion integers should match");
   }
 
@@ -70,13 +66,14 @@ class RecipeTest {
   }
 
   @Test
-  void testSetIngredients() {
-    List<Ingredient> expected = new ArrayList<>();
-    Ingredient ingredient = new Ingredient("Milk", 100, "mL");
-    expected.add(ingredient);
-    expected.add(ingredient2);
-    recipe.setIngredients(expected);
-    assertEquals(expected, recipe.getIngredients());
+  void testSetIngredientMap() {
+    Map<String, Double> expected = new HashMap<>();
+    String ingredientName = "Milk";
+    double amount = 100.0;
+    expected.put(ingredientName, amount);
+    expected.put("Oats", 100.0);
+    recipe.setIngredientMap(expected);
+    assertEquals(expected, recipe.getIngredientMap());
   }
 
   @Test
@@ -115,7 +112,6 @@ class RecipeTest {
               () -> recipe.setDescription(null),
               "Should throw IllegalArgumentException if null is passed");
     assertEquals("Description field cannot be empty!", e.getMessage());
-  
   }
 
   @Test
@@ -129,7 +125,7 @@ class RecipeTest {
   @Test
   void testSetIngredientsNull() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
-              () -> recipe.setIngredients(null),
+              () -> recipe.setIngredientMap(null),
               "Should throw IllegalArgumentException if null is passed");
     assertEquals("Recipe cannot have zero ingredients!", e.getMessage());
   }
@@ -156,7 +152,6 @@ class RecipeTest {
               () -> recipe.setDescription(""),
               "Should throw IllegalArgumentException if null is passed");
     assertEquals("Description field cannot be empty!", e.getMessage());
-  
   }
 
   @Test
@@ -168,11 +163,11 @@ class RecipeTest {
   }
   
   @Test
-  void testSetIngredientsEmpty() {
-    List<Ingredient> emptyList = new ArrayList<>();
+  void testSetIngredientMapEmpty() {
+    Map<String, Double> emptyMap = new HashMap<>();
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
-              () -> recipe.setIngredients(emptyList),
-              "Should throw IllegalArgumentException if empty list is passed");
+              () -> recipe.setIngredientMap(emptyMap),
+              "Should throw IllegalArgumentException if empty map is passed");
     assertEquals("Recipe cannot have zero ingredients!", e.getMessage());
   }
 

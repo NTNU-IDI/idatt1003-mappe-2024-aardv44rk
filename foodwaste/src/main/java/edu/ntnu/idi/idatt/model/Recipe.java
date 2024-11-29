@@ -1,8 +1,7 @@
 package edu.ntnu.idi.idatt.model;
 
 import edu.ntnu.idi.idatt.util.ArgumentValidator;
-import java.util.List;
-
+import java.util.Map;
 
 /**
  * The recipe class is responsible for creating recipes and provides getters,
@@ -16,8 +15,8 @@ public class Recipe {
   String name;
   String description;
   String instruction;
-  List<Ingredient> ingredients;
   double portions;
+  Map<String, Double> ingredientMap; // TODO
 
   /**
    * Sole constructor.
@@ -25,20 +24,24 @@ public class Recipe {
    * @param name A name for a recipe
    * @param description A description for a recipe
    * @param instruction An instruction for a recipe
-   * @param ingredients A list of ingredients
+   * @param ingredientMap A map of ingredient names and amounts
    */
-  public Recipe(String name, String description, String instruction,
-                List<Ingredient> ingredients, double portions) {
+  public Recipe(String name, 
+                String description, 
+                String instruction,
+                Map<String, Double> ingredientMap, 
+                double portions
+  ) {
     ArgumentValidator.isValidString(name, "Name cannot be empty!");
     ArgumentValidator.isValidString(description, "Description cannot be empty!");
     ArgumentValidator.isValidString(instruction, "Instruction cannot be empty!");
-    ArgumentValidator.isValidList(ingredients, "A recipe cannot have zero ingredients!");
+    ArgumentValidator.isValidMap(ingredientMap, "A recipe cannot have zero ingredients!");
     ArgumentValidator.isValidDouble(portions,
           "A recipe cannot have zero or negative amount of portions!");
     this.name = name;
     this.description = description;
     this.instruction = instruction;
-    this.ingredients = ingredients;
+    this.ingredientMap = ingredientMap;
     this.portions = portions;
   }
 
@@ -54,8 +57,8 @@ public class Recipe {
     return instruction;
   }
 
-  public List<Ingredient> getIngredients() {
-    return ingredients;
+  public Map<String, Double> getIngredientMap() {
+    return ingredientMap;
   }
 
   public double getPortions() {
@@ -63,7 +66,6 @@ public class Recipe {
   }
 
   // setters
-
   /**
    * Sets the name of a recipe.
    *
@@ -100,13 +102,13 @@ public class Recipe {
   /**
    * Sets the <code>Ingredients</code> in a recipe.
    *
-   * @param ingredients the name of the recipe
+   * @param ingredientMap the name of the recipe
    * @throws IllegalArgumentException if <code>ingredients</code> is empty
    */
-  public void setIngredients(List<Ingredient> ingredients) throws IllegalArgumentException {
+  public void setIngredientMap(Map<String, Double> ingredientMap) throws IllegalArgumentException {
     ArgumentValidator.setIsRecipe(true);
-    ArgumentValidator.isValidList(ingredients, "Recipe cannot have zero ingredients!");
-    this.ingredients = ingredients;
+    ArgumentValidator.isValidMap(ingredientMap, "Recipe cannot have zero ingredients!");
+    this.ingredientMap = ingredientMap;
   }
 
   /**
@@ -131,9 +133,7 @@ public class Recipe {
     
     sb.append("Recipe:\n").append(this.name).append("\n")
                       .append(this.description).append("\n");
-    this.ingredients.stream()
-              .forEach(ingredient -> sb.append("* ").append(ingredient.printRecipeIngredient())
-              .append("\n"));
+  // TODO
     sb.append("\nStep by step:\n").append(this.instruction);
     return sb.toString();
   }
