@@ -1,8 +1,8 @@
 package edu.ntnu.idi.idatt.util;
 
-import edu.ntnu.idi.idatt.model.Ingredient;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -15,12 +15,7 @@ import java.util.List;
  */
 
 public class ArgumentValidator {
-  private static boolean isRecipe = false;
-
-  public static void setIsRecipe(boolean isRecipe) {
-    ArgumentValidator.isRecipe = isRecipe;
-  }
-
+   
   protected ArgumentValidator() {
     throw new UnsupportedOperationException("Utility class");
   }
@@ -91,9 +86,71 @@ public class ArgumentValidator {
    * @param m the message of the thrown Exception
    * @throws IllegalStateException if <code>list</code> is null or empty
    */
-  public static void isValidList(List<Ingredient> list, String m) throws IllegalStateException {
-    if (list == null || (isRecipe && list.isEmpty())) {
+  public static void isValidList(List<?> list, String m) throws IllegalStateException {
+    if (list == null || list.isEmpty()) {
       throw new IllegalArgumentException(m);
+    }
+  }
+
+  public static void isValidQuantity(double amount, String unit) {
+    isValidDouble(amount, "Amount cannot be negative or zero!");
+    isValidString(unit, "Unit cannot be blank or empty");
+  }
+
+  /**
+   * Validates all parameters of an Ingredient object.
+   *
+   * @param name String representing name of an Ingredient
+   * @param price Double representing price of an Ingredient
+   * @param expiryDate LocalDate representing expiration date
+   * @param amount Double representing amount of an Ingredient
+   * @param unit String representing unit of an Ingredient
+   */
+  public static void isValidIngredient(
+                        String name, 
+                        double price, 
+                        LocalDate expiryDate, 
+                        double amount, 
+                        String unit
+  ) {
+    isValidString(name, "Name cannot be empty or null!");
+    isValidDouble(price, "Price cannot be negative or zero!");
+    isValidDate(expiryDate, "Date cannot be null!");
+    isValidDouble(amount, "Amount cannot be negative or zero!");
+    isValidString(unit, "Unit cannot be empty or null!");
+  }
+
+  /**
+   * Validates user input <code>map</code>. Throws IllegalStateException with message
+   * <code>m</code> if <code>map</code> contains no key-value pairs.
+   *
+   * @param map map with 
+   * @param m the message of the thrown Exception
+   * @throws IllegalStateException if <code>map</code> is empty
+   */
+  public static void isValidMap(Map<?, ?> map, String m) throws IllegalStateException {
+    if (map == null || map.isEmpty()) {
+      throw new IllegalStateException(m);
+    }
+  }
+
+  /**
+   * Validates if user input <code>map</code> contains key <code>k</code>. Throws
+   * IllegalStateException with message <code>m</code> if <code>map</code> doesn't contain
+   * <code>k</code>.
+   * 
+   *
+   * @param map the Map to be validated
+   * @param k key to have its presence validated
+   * @param m message of the thrown Exception
+   * @throws IllegalStateException if <code>k</code> is not present in <code>map</code>
+   */
+  public static void mapContainsKey(Map<?, ?> map,
+                                   String k, 
+                                   String m) 
+                            throws IllegalStateException {
+    if (!map.containsKey(k)) {
+      throw new IllegalStateException(m);
     }
   }
 }
