@@ -1,8 +1,9 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
+import java.util.Collections;
 import java.util.Map;
 
-import edu.ntnu.idi.idatt.util.ArgumentValidator;
 
 /**
  * The recipe class is responsible for creating recipes and provides getters,
@@ -17,7 +18,7 @@ public class Recipe {
   String description;
   String instruction;
   double portions;
-  Map<String, Quantity> ingredientMap; // TODO
+  Map<String, Quantity> ingredientMap;
 
   /**
    * Sole constructor.
@@ -106,7 +107,8 @@ public class Recipe {
    * @param ingredientMap the name of the recipe
    * @throws IllegalArgumentException if <code>ingredients</code> is empty
    */
-  public void setIngredientMap(Map<String, Quantity> ingredientMap) throws IllegalArgumentException {
+  public void setIngredientMap(Map<String, Quantity> ingredientMap) 
+              throws IllegalArgumentException {
     ArgumentValidator.isValidMap(ingredientMap, "Recipe cannot have zero ingredients!");
     this.ingredientMap = ingredientMap;
   }
@@ -137,5 +139,27 @@ public class Recipe {
                                       .append(v.quantityString()).append("\n"));
     sb.append("\nStep by step:\n").append(this.instruction);
     return sb.toString();
+  }
+
+  /**
+   * Compares the ingredients in a recipe to the ingredients in a storage.
+   * Returns true or false based on the result.
+   *
+   * @param fs storage to compare
+   */
+  public boolean isMakeableRecipe(FoodStorage fs) {
+    Map<String, Quantity> ingredients = this.getIngredientMap();
+    return ingredients.entrySet().stream()
+      .allMatch(recipe -> {
+        String ingredientName = recipe.getKey().toLowerCase();
+        double amount = recipe.getValue().getAmount();
+
+        double availableAmount = fs.getStorage()
+                  .getOrDefault(ingredientName, Collections.emptyList()).stream()
+                  .mapToDouble(ingredient -> ingredient.getQuantity().getAmount())
+                  .sum();
+
+        return amount <= availableAmount;
+      });
   }
 }

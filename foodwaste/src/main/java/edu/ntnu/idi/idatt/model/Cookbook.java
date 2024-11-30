@@ -1,5 +1,6 @@
 package edu.ntnu.idi.idatt.model;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -11,7 +12,7 @@ import java.util.TreeMap;
  * @version 1.1
  */
 public class Cookbook {
-  private Map<String, Recipe> recipes;
+  private final Map<String, Recipe> recipes;
 
   public Cookbook() {
     recipes = new TreeMap<>();
@@ -42,5 +43,25 @@ public class Cookbook {
     }
 
     recipes.remove(name);
+  }
+
+  /**
+   * Finds all recipes that are makeable in a cookbook based on Ingredients in a FoodStorage
+   * <code>fs</code>.
+   *
+   * @param fs FoodStorage to be compared with.
+   * @return List consisting of all recipes that are makeable
+   */
+  public List<Recipe> recommendRecipes(FoodStorage fs) {
+    return this.recipes.values().stream().filter(recipe -> recipe.isMakeableRecipe(fs)).toList();
+  }
+
+  /**
+   * Lists names of all recipes in the cookbook.
+   *
+   * @return List of all keys in <code>recipes</code>
+   */
+  public List<String> listRecipes() {
+    return this.recipes.keySet().stream().toList();
   }
 }
