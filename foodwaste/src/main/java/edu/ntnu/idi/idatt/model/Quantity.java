@@ -3,13 +3,20 @@ package edu.ntnu.idi.idatt.model;
 import edu.ntnu.idi.idatt.util.ArgumentValidator;
 
 /**
- * Responsible for handling units. TODO
+ * Represents quantity of an Ingredient with an amount and unit.
  */
 public class Quantity {
   private double amount;
   private String unit;
 
+  /**
+   * Sole constructor. Validates inputs with <code>ArgumentValidator.isValidQuantity</code>.
+   *
+   * @param amount double representing amount
+   * @param unit String representing unit
+   */
   public Quantity(double amount, String unit) {
+    ArgumentValidator.isValidQuantity(amount, unit);
     this.amount = amount;
     this.unit = unit;
   }
