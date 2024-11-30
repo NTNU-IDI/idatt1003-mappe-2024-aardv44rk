@@ -1,10 +1,10 @@
 package edu.ntnu.idi.idatt.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,9 +16,10 @@ class RecipeTest {
   private String name;
   private String description;
   private String instruction;
-  private Map<String, Double> ingredientMap;
+  private Map<String, Quantity> ingredientMap;
+  private Quantity oatQuantity;
+  private Quantity otherQuantity;
   private double portions;
-
   private Recipe recipe;
   
   @BeforeEach
@@ -28,8 +29,10 @@ class RecipeTest {
     description = "A mediocre meal consisting of oats and water.";
     instruction = "Boil water, add oats, bon apetit";
     ingredientMap = new HashMap<>();
-    ingredientMap.put("Oats", 100.0);
-    ingredientMap.put("Water", 100.0);
+    oatQuantity = new Quantity(100, "g");
+    otherQuantity = new Quantity(100, "mL");
+    ingredientMap.put("Oats", oatQuantity);
+    ingredientMap.put("Water", otherQuantity);
     portions = 1.0;
     recipe = new Recipe(name, description, instruction, ingredientMap, portions);
 
@@ -67,11 +70,11 @@ class RecipeTest {
 
   @Test
   void testSetIngredientMap() {
-    Map<String, Double> expected = new HashMap<>();
+    Map<String, Quantity> expected = new HashMap<>();
     String ingredientName = "Milk";
-    double amount = 100.0;
-    expected.put(ingredientName, amount);
-    expected.put("Oats", 100.0);
+    Quantity quantity = new Quantity(100.0, "mL");
+    expected.put(ingredientName, quantity);
+    expected.put("Oats", oatQuantity);
     recipe.setIngredientMap(expected);
     assertEquals(expected, recipe.getIngredientMap());
   }
@@ -89,12 +92,13 @@ class RecipeTest {
         Recipe:
         Oatmeal
         A mediocre meal consisting of oats and water.
-        * Oats 100.0 g
+        Ingredients:
         * Water 100.0 mL
-
+        * Oats 100.0 g
+        
         Step by step:
         Boil water, add oats, bon apetit""", 
-        recipe.printRecipe());
+        recipe.printRecipe(), "Should be equal");
   }
 
   // Negative tests
@@ -124,7 +128,7 @@ class RecipeTest {
   
   @Test
   void testSetIngredientsNull() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
+    IllegalStateException e = assertThrows(IllegalStateException.class, 
               () -> recipe.setIngredientMap(null),
               "Should throw IllegalArgumentException if null is passed");
     assertEquals("Recipe cannot have zero ingredients!", e.getMessage());
@@ -164,8 +168,8 @@ class RecipeTest {
   
   @Test
   void testSetIngredientMapEmpty() {
-    Map<String, Double> emptyMap = new HashMap<>();
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
+    Map<String, Quantity> emptyMap = new HashMap<>();
+    IllegalStateException e = assertThrows(IllegalStateException.class, 
               () -> recipe.setIngredientMap(emptyMap),
               "Should throw IllegalArgumentException if empty map is passed");
     assertEquals("Recipe cannot have zero ingredients!", e.getMessage());

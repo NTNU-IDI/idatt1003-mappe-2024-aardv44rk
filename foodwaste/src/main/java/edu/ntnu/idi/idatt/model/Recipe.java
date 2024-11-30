@@ -1,7 +1,8 @@
 package edu.ntnu.idi.idatt.model;
 
-import edu.ntnu.idi.idatt.util.ArgumentValidator;
 import java.util.Map;
+
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
 
 /**
  * The recipe class is responsible for creating recipes and provides getters,
@@ -16,7 +17,7 @@ public class Recipe {
   String description;
   String instruction;
   double portions;
-  Map<String, Double> ingredientMap; // TODO
+  Map<String, Quantity> ingredientMap; // TODO
 
   /**
    * Sole constructor.
@@ -29,7 +30,7 @@ public class Recipe {
   public Recipe(String name, 
                 String description, 
                 String instruction,
-                Map<String, Double> ingredientMap, 
+                Map<String, Quantity> ingredientMap, 
                 double portions
   ) {
     ArgumentValidator.isValidString(name, "Name cannot be empty!");
@@ -57,7 +58,7 @@ public class Recipe {
     return instruction;
   }
 
-  public Map<String, Double> getIngredientMap() {
+  public Map<String, Quantity> getIngredientMap() {
     return ingredientMap;
   }
 
@@ -105,8 +106,7 @@ public class Recipe {
    * @param ingredientMap the name of the recipe
    * @throws IllegalArgumentException if <code>ingredients</code> is empty
    */
-  public void setIngredientMap(Map<String, Double> ingredientMap) throws IllegalArgumentException {
-    ArgumentValidator.setIsRecipe(true);
+  public void setIngredientMap(Map<String, Quantity> ingredientMap) throws IllegalArgumentException {
     ArgumentValidator.isValidMap(ingredientMap, "Recipe cannot have zero ingredients!");
     this.ingredientMap = ingredientMap;
   }
@@ -132,8 +132,9 @@ public class Recipe {
     StringBuilder sb = new StringBuilder();
     
     sb.append("Recipe:\n").append(this.name).append("\n")
-                      .append(this.description).append("\n");
-  // TODO
+                      .append(this.description).append("\nIngredients:\n");
+    ingredientMap.forEach((k, v) -> sb.append("* ").append(k).append(" ")
+                                      .append(v.quantityString()).append("\n"));
     sb.append("\nStep by step:\n").append(this.instruction);
     return sb.toString();
   }

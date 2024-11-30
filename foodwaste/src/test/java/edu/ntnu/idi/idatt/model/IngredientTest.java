@@ -90,7 +90,7 @@ class IngredientTest {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
         () -> new Ingredient(name, price, expiryDate, null),
         "IllegalArgumentException should be thrown if quantity is null");
-    assertEquals("Amount cannot be negative or zero!", e.getMessage(), "Messages should match");
+    assertEquals("Quantity cannot be null!", e.getMessage(), "Messages should match");
   }
 
   @Test

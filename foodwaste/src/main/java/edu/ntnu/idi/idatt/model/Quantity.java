@@ -31,4 +31,8 @@ public class Quantity {
     ArgumentValidator.isValidString(unit, "Unit cannot be empty or null!");
     this.unit = unit;
   }
+
+  public String quantityString() {
+    return (this.amount + " " + this.unit);
+  }
 }

@@ -87,7 +87,7 @@ public class ArgumentValidator {
    * @throws IllegalStateException if <code>list</code> is null or empty
    */
   public static void isValidList(List<?> list, String m) throws IllegalStateException {
-    if (list == null || list.isEmpty()) {
+    if (list == null) {
       throw new IllegalArgumentException(m);
     }
   }
