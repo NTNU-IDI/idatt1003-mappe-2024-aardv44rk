@@ -1,17 +1,14 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
-
-import edu.ntnu.idi.idatt.util.ArgumentValidator;
-
-
+import java.util.TreeMap;
 
 /**
  * FoodStorage class manages the storage and provides methods to...
@@ -169,7 +166,7 @@ public class FoodStorage {
   public static double getTotalPrice(List<Ingredient> list) {
     ArgumentValidator.isValidObject(list, "List cannot be null, whoops!");
     return list.stream()
-          .mapToDouble(ingredient -> ingredient.getUnitPrice())
+          .mapToDouble(Ingredient::getUnitPrice)
           .sum();
   }
 
