@@ -1,9 +1,9 @@
 package edu.ntnu.idi.idatt.model;
 
-import java.time.LocalDate;
-
 import edu.ntnu.idi.idatt.util.ArgumentValidator;
 import edu.ntnu.idi.idatt.util.DateUtil;
+import java.time.LocalDate;
+
 
 /**
  * The ingredient class is responsible for creating ingredients and provides
@@ -11,7 +11,7 @@ import edu.ntnu.idi.idatt.util.DateUtil;
  *
  * @author @aardv44rk
  * @since November 17th 2024
- * @version 1.1
+ * @version 2.0
  */
 public class Ingredient {
   private final String name;

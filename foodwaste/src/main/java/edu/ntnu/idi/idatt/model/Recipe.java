@@ -1,8 +1,8 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
 import java.util.Map;
 
-import edu.ntnu.idi.idatt.util.ArgumentValidator;
 
 
 /**
@@ -11,7 +11,7 @@ import edu.ntnu.idi.idatt.util.ArgumentValidator;
  *
  * @author @aardv44rk
  * @since November 27th 2024
- * @version 1.1
+ * @version 2.0
  */
 public class Recipe {
   String name;

@@ -55,4 +55,13 @@ class QuantityTest {
     assertEquals("Invalid unit: banana\nUnit must be one of: g, mL, pcs", 
                 e.getMessage(), "Messages should match");
   }
+
+  @Test
+  void testConstructorNullUnit() {
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        () -> new Quantity(1, null), "Should throw exception with null unit");
+    
+    assertEquals("Invalid unit: null\nUnit must be one of: g, mL, pcs",
+                e.getMessage(), "Messages should match");
+  }
 }

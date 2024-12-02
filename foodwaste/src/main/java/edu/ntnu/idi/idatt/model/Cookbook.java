@@ -1,16 +1,16 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
 import java.util.List;
 import java.util.Map;
 
-import edu.ntnu.idi.idatt.util.ArgumentValidator;
 
 /**
  * Cookbook class manages Recipes and stores them in a list.
  *
  * @author @aardv44rk
  * @since November 27th 2024
- * @version 1.1
+ * @version 2.0
  */
 public class Cookbook {
   private final Map<String, Recipe> recipes;

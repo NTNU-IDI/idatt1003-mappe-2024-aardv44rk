@@ -1,6 +1,5 @@
 package edu.ntnu.idi.idatt.model;
 
-import edu.ntnu.idi.idatt.util.ArgumentValidator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,12 +9,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.TreeMap;
 
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
+
 /**
  * FoodStorage class manages the storage and provides methods to...
  *
  * @author @aardv44rk
  * @since November 19th 2024
- * @version 1.1
+ * @version 2.0
  */
 public class FoodStorage {
   private final Map<String, List<Ingredient>> storage;

@@ -4,6 +4,10 @@ import edu.ntnu.idi.idatt.util.ArgumentValidator;
 
 /**
  * Represents quantity of an Ingredient with an amount and unit.
+ *
+ * @author @aardv44rk
+ * @since November 29th 2024
+ * @version 2.0
  */
 public class Quantity {
   private double amount;

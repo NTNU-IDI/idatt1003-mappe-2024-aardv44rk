@@ -1,9 +1,9 @@
 package edu.ntnu.idi.idatt.util;
 
+import edu.ntnu.idi.idatt.model.Quantity;
 import java.time.LocalDate;
 import java.util.Map;
 
-import edu.ntnu.idi.idatt.model.Quantity;
 
 
 

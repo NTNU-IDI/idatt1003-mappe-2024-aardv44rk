@@ -5,6 +5,10 @@ import java.util.HashMap;
 /**
  * Class that extends HashMap. Overrides all functions used in the program so keys are handled
  * as lower case Strings at all times.
+ *
+ * @author @aardv44rk
+ * @since November 30th 2024
+ * @version 2.0
  */
 public class LowerCaseMap<V> extends HashMap<String, V> {
 
