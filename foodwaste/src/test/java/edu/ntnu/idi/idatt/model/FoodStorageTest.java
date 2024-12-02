@@ -16,22 +16,22 @@ import org.junit.jupiter.api.Test;
 import edu.ntnu.idi.idatt.util.DateUtil;
 
 /**
- * Class responsible for testing FoodStorage class. 
+ * Class responsible for testing FoodStorage class.
  *
  * @author @aardv44rk
  * @since November 19th 2024
- * @version 0.8
+ * @version 1.1
  */
 class FoodStorageTest {
   private Ingredient ingredient1;
   private Ingredient ingredient2;
   private Ingredient ingredient3;
   private Ingredient ingredient4;
+  private Ingredient ingredient5;
   private String name;
   private double price;
   private LocalDate expiryDate;
-  private double amount;
-  private String unit;
+  private Quantity quantity;
   private FoodStorage fs;
 
   @BeforeEach
@@ -41,12 +41,12 @@ class FoodStorageTest {
     name = "Milk";
     price = 10;
     expiryDate = DateUtil.parseDate("12-12-2024");
-    amount = 2.0;
-    unit = "L";
-    ingredient1 = new Ingredient(name, price, expiryDate, amount, unit);
-    ingredient2 = new Ingredient(name, 12.00, expiryDate, 1.00, unit);
-    ingredient3 = new Ingredient(name, 12.00, expiryDate, 1.00, unit);
-    ingredient4 = new Ingredient("Banana", price, DateUtil.parseDate("12-12-2023"), amount, unit);
+    quantity = new Quantity(2.0, "L");
+    ingredient1 = new Ingredient(name, price, expiryDate, quantity);
+    ingredient2 = new Ingredient(name, 12.00, expiryDate, new Quantity(1.0, "L"));
+    ingredient3 = new Ingredient(name, 12.00, expiryDate, new Quantity(1.0, "L"));
+    ingredient4 = new Ingredient("Banana", price, DateUtil.parseDate("12-12-2023"), quantity);
+    ingredient5 = new Ingredient(name, price, DateUtil.parseDate("10-12-2024"), quantity);
   }
 
   // Positive cases
@@ -61,21 +61,28 @@ class FoodStorageTest {
   void testAddIngredientMerge() {
     fs.addIngredient(ingredient2);
     List<Ingredient> ingredients = fs.searchIngredient(name);
-    
+
     assertEquals(1, ingredients.size(), "Sizes should match");
     fs.addIngredient(ingredient3);
 
     assertEquals(1, ingredients.size(), "Sizes should match");
     assertEquals(2,
-              ingredients.getFirst().getAmount(),
+              ingredients.getFirst().getQuantity().getAmount(),
               "Amounts should match");
   }
-  
+
   @Test
   void testAddIngredientNewKeyInStorage() {
     fs.addIngredient(ingredient1);
     fs.addIngredient(ingredient4);
     assertEquals(2, fs.getStorage().size(), "Size should be 2");
+  }
+
+  @Test
+  void testAddIngredientInsertionOrder() {
+    fs.addIngredient(ingredient1);
+    fs.addIngredient(ingredient5);
+    assertEquals(ingredient5, fs.getStorage().get(name).get(0));
   }
 
   @Test
@@ -111,7 +118,7 @@ class FoodStorageTest {
 
   @Test
   void testSearchIngredient() {
-    fs.addIngredient(ingredient1);    
+    fs.addIngredient(ingredient1);
     assertTrue(fs.searchIngredient(ingredient1.getName()).contains(ingredient1),
                "Ingredient should exist");
   }
@@ -153,7 +160,8 @@ class FoodStorageTest {
 
   @Test
   void testGetTotalPriceEmptyList() {
-    assertEquals(0, FoodStorage.getTotalPrice(new ArrayList<>()));
+    List<Ingredient> emptyList = new ArrayList<>();
+    assertEquals(0, FoodStorage.getTotalPrice(emptyList));
   }
 
   @Test
@@ -167,20 +175,21 @@ class FoodStorageTest {
 
   @Test
   void testGetTotalAmountEmptyList() {
-    assertEquals(0, FoodStorage.getTotalAmount(new ArrayList<>()));
+    List<Ingredient> emptyList = new ArrayList<>();
+    assertEquals(0, FoodStorage.getTotalAmount(emptyList));
   }
 
   @Test
   void testContainsIngredient() {
     fs.addIngredient(ingredient1);
-    assertTrue(fs.containsIngredient(name, amount));
+    assertTrue(fs.containsIngredient(name, 2.0));
   }
 
   @Test
   void testNotContainsIngredient() {
-    assertFalse(fs.containsIngredient(name, amount));
+    assertFalse(fs.containsIngredient(name, 2.0));
     fs.addIngredient(ingredient2);
-    assertFalse(fs.containsIngredient(name, amount));
+    assertFalse(fs.containsIngredient(name, 2.0));
   }
 
   // Negative cases
@@ -194,8 +203,8 @@ class FoodStorageTest {
 
   @Test
   void testAddIngredientEdgeCases() {
-    fs.addIngredient(new Ingredient(name, price, LocalDate.MAX, amount, unit));
-    fs.addIngredient(new Ingredient(name, price, LocalDate.MIN, amount, unit));
+    fs.addIngredient(new Ingredient(name, price, LocalDate.MAX, quantity));
+    fs.addIngredient(new Ingredient(name, price, LocalDate.MIN, quantity));
 
     assertTrue(fs.getStorage().containsKey(name), "Storage should contain edge case Ingredients");
     assertEquals(2, fs.getStorage().get(name).size(), "Both edge cases should have been added");
@@ -203,7 +212,7 @@ class FoodStorageTest {
 
   @Test
   void testGetTotalPriceNull() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
             () -> FoodStorage.getTotalPrice(null),
             "Should throw an IllegalArgumentException for a null List");
     assertEquals("List cannot be null, whoops!", e.getMessage(), "Messages should match");
@@ -211,7 +220,7 @@ class FoodStorageTest {
 
   @Test
   void getTotalAmountNull() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
             () -> FoodStorage.getTotalAmount(null),
             "Should throw an IllegalArgumentException for a null List");
     assertEquals("List cannot be null, whoops!", e.getMessage(), "Messages should match");
@@ -231,7 +240,7 @@ class FoodStorageTest {
   @Test
   void testRemoveIngredientNotFound() {
     IllegalStateException e = assertThrows(IllegalStateException.class,
-                  () -> fs.removeIngredient("", amount),
+                  () -> fs.removeIngredient("", 2.0),
                   "IllegalStateException should be thrown if Ingredient not present");
     assertEquals("Ingredient not in storage", e.getMessage());
   }
@@ -241,10 +250,10 @@ class FoodStorageTest {
     IllegalStateException e = assertThrows(IllegalStateException.class,
                   () -> fs.removeIngredient(""),
                   "IllegalStateException should be thrown if Ingredient not present");
-    assertEquals("Ingredient not in storage", e.getMessage()); 
+    assertEquals("Ingredient not in storage", e.getMessage());
   }
 
-  @Test 
+  @Test
   void testRemoveIngredientInvalidAmount() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
                   () -> fs.removeIngredient(name, -1),

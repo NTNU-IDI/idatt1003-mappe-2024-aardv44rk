@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  *
  * @author @aardv44rk
  * @since November 19th 2024
- * @version 1.0
+ * @version 1.1
  */
 public class FoodStorage {
   private final Map<String, List<Ingredient>> storage;
@@ -47,8 +47,28 @@ public class FoodStorage {
               .filter(item -> item.getExpiryDate().equals(ingredient.getExpiryDate())
               && item.getPrice() == ingredient.getPrice())
               .findFirst()
-              .ifPresentOrElse(item -> item.setAmount(item.getAmount() + ingredient.getAmount()),
+              .ifPresentOrElse(item -> mergeIngredient(ingredient, item),
                   () -> ingredients.add(index, ingredient));
+  }
+
+  /**
+   * Merges two ingredients if their units are the same.
+   *
+   * @param ingredient new Ingredient to be merged
+   * @param other Ingredient already in storage
+   */
+  public void mergeIngredient(Ingredient ingredient, Ingredient other) {
+    double amount = ingredient.getQuantity().getAmount();
+    String unit = ingredient.getQuantity().getUnit();
+    double otherAmount = other.getQuantity().getAmount();
+    String otherUnit = other.getQuantity().getUnit();
+
+    if (!unit.equalsIgnoreCase(otherUnit)) {
+      throw new IllegalArgumentException("TEMP"); //TODO add unit conversion handling
+
+    }
+
+    other.getQuantity().setAmount(amount + otherAmount);
   }
 
   /**
@@ -67,18 +87,19 @@ public class FoodStorage {
     if (!storage.containsKey(name)) {
       throw new IllegalStateException("Ingredient not in storage");
     }
-
+    
     List<Ingredient> ingredients = storage.get(name);
     Iterator<Ingredient> iterator = ingredients.iterator();
     Ingredient ingredient;
 
     while (iterator.hasNext() && amount > 0) {
       ingredient = iterator.next();
-      if (ingredient.getAmount() >= amount) {
-        ingredient.setAmount(ingredient.getAmount() - amount);
+      double ingredientAmount = ingredient.getQuantity().getAmount();
+      if (ingredientAmount >= amount) {
+        ingredient.getQuantity().setAmount(ingredientAmount - amount);
         amount = 0;
       } else {
-        amount -= ingredient.getAmount();
+        amount -= ingredientAmount;
         iterator.remove();
         if (ingredients.isEmpty()) {
           storage.remove(name);
@@ -150,7 +171,7 @@ public class FoodStorage {
   public static double getTotalPrice(List<Ingredient> list) {
     ArgumentValidator.isValidList(list, "List cannot be null, whoops!");
     return list.stream()
-          .mapToDouble(ingredient -> ingredient.getPrice() * ingredient.getAmount())
+          .mapToDouble(ingredient -> ingredient.getPrice() * ingredient.getQuantity().getAmount())
           .sum();
   }
 
@@ -163,7 +184,7 @@ public class FoodStorage {
   public static double getTotalAmount(List<Ingredient> list) {
     ArgumentValidator.isValidList(list, "List cannot be null, whoops!");
     return list.stream()
-          .mapToDouble(Ingredient::getAmount)
+          .mapToDouble(ingredient -> ingredient.getQuantity().getAmount())
           .sum();
   }
 

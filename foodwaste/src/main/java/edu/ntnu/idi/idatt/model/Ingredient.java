@@ -1,8 +1,9 @@
 package edu.ntnu.idi.idatt.model;
 
+import java.time.LocalDate;
+
 import edu.ntnu.idi.idatt.util.ArgumentValidator;
 import edu.ntnu.idi.idatt.util.DateUtil;
-import java.time.LocalDate;
 
 /**
  * The ingredient class is responsible for creating ingredients and provides
@@ -10,37 +11,48 @@ import java.time.LocalDate;
  *
  * @author @aardv44rk
  * @since November 17th 2024
- * @version 1.0
+ * @version 1.1
  */
 public class Ingredient {
   private final String name;
   private double price;
   private final LocalDate expiryDate;
-  private double amount;
-  private final String unit;
+  private Quantity quantity;
   
   /**
-   * Constructs an Ingredient with a name, price, expiryDate amount and unit.
+   * Constructs an Ingredient with a name, price, expiration date, amount, and unit.
    *
    * @param name A String representing the name of an <code>Ingredient</code>
    * @param price A double representing the price per unit of the <code>Ingredient</code>
    * @param expiryDate A Date representing the date an <code>Ingredient</code> expires
-   * @param amount A double representing the amount of an <code>Ingredient</code>
-   * @param unit A string representing the unit an <code>Ingredient</code> is measured in
-   * @throws IllegalArgumentException if values are invalid
+   * @param quantity Quantity object with amount and unit of Ingredient object
    */
-  public Ingredient(String name, double price, LocalDate expiryDate, double amount, String unit) {
+  public Ingredient(String name, double price, LocalDate expiryDate, Quantity quantity) {
     ArgumentValidator.isValidString(name, "Name cannot be empty or null!");
     ArgumentValidator.isValidDouble(price, "Price cannot be negative or zero!");
     ArgumentValidator.isValidDate(expiryDate, "Date cannot be null!");
-    ArgumentValidator.isValidDouble(amount, "Amount cannot be negative or zero!");
-    ArgumentValidator.isValidString(unit, "Unit cannot be empty or null!");
-
+    ArgumentValidator.isValidObject(quantity, "Quantity cannot be null!");
     this.name = name;
     this.price = price;
     this.expiryDate = expiryDate;
-    this.amount = amount;
-    this.unit = unit;
+    this.quantity = quantity;
+  }
+  
+  /**
+   * Constructor specifically for Ingredients in recipes. Creates an ingredient with default
+   * values for price and date.
+   *
+   * @param name A String representing the name of an <code>Ingredient</code>
+   * @param quantity Quantity object with amount and unit of Ingredient object
+   * @throws IllegalArgumentException if values are invalid
+   */
+  public Ingredient(String name, Quantity quantity) {
+    ArgumentValidator.isValidString(name, "Name cannot be empty or null!");
+
+    this.name = name;
+    this.price = -1;
+    this.expiryDate = LocalDate.MAX;
+    this.quantity = quantity;
   }
 
   // Getters
@@ -56,12 +68,8 @@ public class Ingredient {
     return expiryDate;
   }
 
-  public double getAmount() {
-    return amount;
-  }
-
-  public String getUnit() {
-    return unit;
+  public Quantity getQuantity() {
+    return quantity;
   }
 
   /**
@@ -76,14 +84,13 @@ public class Ingredient {
   }
 
   /**
-   * Sets the amount attribute of an object.
+   * Sets the quantity attribute of an Ingredient.
    *
-   * @param amount new amount of object
-   * @throws IllegalArgumentException if amount <= 0
+   * @param quantity new amount and unit of object stored as a Quantity object
    */
-  public void setAmount(double amount) {
-    ArgumentValidator.isValidDouble(amount, "Amount cannot be negative or zero!");
-    this.amount = amount;
+  public void setQuantity(Quantity quantity) {
+    ArgumentValidator.isValidObject(quantity, "Quantity cannot be null!");
+    this.quantity = quantity;
   }
 
   /**
@@ -95,8 +102,20 @@ public class Ingredient {
     StringBuilder sb = new StringBuilder();
     sb.append(this.name).append("\n")
       .append("Price: ").append(this.price).append(" money units\n")
-      .append("Amount: ").append(this.amount).append(" ").append(this.unit).append("\n")
+      .append("Amount: ").append(this.quantity.getAmount())
+      .append(" ").append(this.quantity.getUnit()).append("\n")
       .append("Expiry date: ").append(DateUtil.formatDate(this.expiryDate));
+    return sb.toString();
+  }
+
+  /**
+   * Prints an Ingredient specifically for Recipe class.
+   *
+   * @return A string consisting of Ingredient name, amount, and unit.
+   */
+  public String printRecipeIngredient() {
+    StringBuilder sb = new StringBuilder();
+    sb.append(this.name).append(" ").append(this.quantity);
     return sb.toString();
   }
 }
