@@ -1,10 +1,13 @@
 package edu.ntnu.idi.idatt.model;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +31,7 @@ class RecipeTest {
     name = "Oatmeal";
     description = "A mediocre meal consisting of oats and water.";
     instruction = "Boil water, add oats, bon apetit";
-    ingredientMap = new HashMap<>();
+    ingredientMap = new LowerCaseMap<>();
     oatQuantity = new Quantity(100, "g");
     otherQuantity = new Quantity(100, "mL");
     ingredientMap.put("Oats", oatQuantity);
@@ -93,12 +96,26 @@ class RecipeTest {
         Oatmeal
         A mediocre meal consisting of oats and water.
         Ingredients:
-        * Water 100.0 mL
-        * Oats 100.0 g
+        * oats 100.0 g
+        * water 100.0 mL
         
         Step by step:
         Boil water, add oats, bon apetit""", 
         recipe.printRecipe(), "Should be equal");
+  }
+
+  @Test
+  void testIsMakeableRecipe() {
+    FoodStorage fs = new FoodStorage();
+    fs.addIngredient(new Ingredient("oats", 10, LocalDate.now(), new Quantity(100.0, "g")));
+    fs.addIngredient(new Ingredient("Water", 10, LocalDate.now(), new Quantity(100.0, "mL")));
+    assertTrue(recipe.isMakeableRecipe(fs), "Recipe should be makeable");
+  }
+
+  @Test
+  void testIsMakeableRecipeReturnFalse() {
+    FoodStorage fs = new FoodStorage();
+    assertFalse(recipe.isMakeableRecipe(fs), "Recipe should not be makeable");
   }
 
   // Negative tests
@@ -106,7 +123,7 @@ class RecipeTest {
   void testSetNameNull() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
               () -> recipe.setName(null),
-              "Should throw IllegalArgumentException if ");
+              "Should throw IllegalArgumentException if name null");
     assertEquals("Name field cannot be empty!", e.getMessage());
   }
 
@@ -180,6 +197,7 @@ class RecipeTest {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
               () -> recipe.setPortions(-1),
               "Should throw IllegalArgumentException if negative number is passed");
-    assertEquals("Recipe cannot have zero or negative amount of portions!", e.getMessage());
+    assertEquals("Recipe cannot have zero or negative amount of portions!", e.getMessage(),
+                  "Messages should match");
   }
 }

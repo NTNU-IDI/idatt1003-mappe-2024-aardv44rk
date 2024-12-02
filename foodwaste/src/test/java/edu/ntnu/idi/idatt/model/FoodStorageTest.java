@@ -41,10 +41,10 @@ class FoodStorageTest {
     name = "Milk";
     price = 10;
     expiryDate = DateUtil.parseDate("12-12-2024");
-    quantity = new Quantity(2.0, "L");
+    quantity = new Quantity(2000.0, "mL");
     ingredient1 = new Ingredient(name, price, expiryDate, quantity);
-    ingredient2 = new Ingredient(name, 12.00, expiryDate, new Quantity(1.0, "L"));
-    ingredient3 = new Ingredient(name, 12.00, expiryDate, new Quantity(1.0, "L"));
+    ingredient2 = new Ingredient(name, 12.00, expiryDate, new Quantity(200.0, "mL"));
+    ingredient3 = new Ingredient(name, 12.00, expiryDate, new Quantity(200.0, "mL"));
     ingredient4 = new Ingredient("Banana", price, DateUtil.parseDate("12-12-2023"), quantity);
     ingredient5 = new Ingredient(name, price, DateUtil.parseDate("10-12-2024"), quantity);
   }
@@ -53,7 +53,7 @@ class FoodStorageTest {
   @Test
   void testAddIngredient() {
     fs.addIngredient(ingredient1);
-    assertTrue(fs.getStorage().containsKey(name));
+    assertTrue(fs.containsIngredient(name, 2000));
     assertTrue(fs.searchIngredient(name).contains(ingredient1));
   }
 
@@ -66,9 +66,19 @@ class FoodStorageTest {
     fs.addIngredient(ingredient3);
 
     assertEquals(1, ingredients.size(), "Sizes should match");
-    assertEquals(2,
+    assertEquals(400,
               ingredients.getFirst().getQuantity().getAmount(),
               "Amounts should match");
+  }
+
+  @Test
+  void testMergeIngredient() {
+    ingredient2.getQuantity().setUnit("g");
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
+                                () -> fs.mergeIngredient(ingredient2, ingredient3),
+                                "Differing units when merging should throw exception");
+    assertEquals("Unit differs from previous unit: " + ingredient3.getQuantity().getUnit(),
+                  e.getMessage(), "Messages should be the same");
   }
 
   @Test
@@ -98,14 +108,14 @@ class FoodStorageTest {
     fs.addIngredient(ingredient2);
 
     List<Ingredient> ingredients = fs.searchIngredient(name);
-    assertEquals(true, fs.removeIngredient(name, 2.5), "Return value should be true");
+    assertEquals(true, fs.removeIngredient(name, 2100), "Return value should be true");
     assertEquals(1, ingredients.size(), "Size should be 1");
   }
 
   @Test
   void testRemoveIngredientExcessAmount() {
     fs.addIngredient(ingredient1);
-    assertFalse(fs.removeIngredient(name, 10), "Should return false if excess amount");
+    assertFalse(fs.removeIngredient(name, 2001), "Should return false if excess amount");
   }
 
   @Test
@@ -129,7 +139,7 @@ class FoodStorageTest {
     fs.addIngredient(ingredient4);
 
     Map<String, List<Ingredient>> sortedStorage = fs.sortStorage(fs.getStorage());
-    assertEquals("Banana", sortedStorage.keySet().toArray()[0]);
+    assertEquals("Banana".toLowerCase(), sortedStorage.keySet().toArray()[0]);
   }
 
   @Test
@@ -155,7 +165,7 @@ class FoodStorageTest {
     fs.addIngredient(ingredient2);
     fs.addIngredient(ingredient3);
     double total = FoodStorage.getTotalPrice(fs.searchIngredient(name));
-    assertEquals(44, total, "Price should equal");
+    assertEquals(34, total, "Price should equal");
   }
 
   @Test
@@ -170,7 +180,7 @@ class FoodStorageTest {
     fs.addIngredient(ingredient2);
     fs.addIngredient(ingredient3);
     double total = FoodStorage.getTotalAmount(fs.searchIngredient(name));
-    assertEquals(4, total, "Price should equal");
+    assertEquals(2400, total, "Amount should equal");
   }
 
   @Test
@@ -187,9 +197,9 @@ class FoodStorageTest {
 
   @Test
   void testNotContainsIngredient() {
-    assertFalse(fs.containsIngredient(name, 2.0));
+    assertFalse(fs.containsIngredient(name, 300.0));
     fs.addIngredient(ingredient2);
-    assertFalse(fs.containsIngredient(name, 2.0));
+    assertFalse(fs.containsIngredient(name, 300.0));
   }
 
   // Negative cases
