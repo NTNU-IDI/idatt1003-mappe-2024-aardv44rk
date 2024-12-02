@@ -1,15 +1,16 @@
 package edu.ntnu.idi.idatt.model;
 
-import edu.ntnu.idi.idatt.util.ArgumentValidator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
+
 
 
 /**
@@ -23,7 +24,7 @@ public class FoodStorage {
   private final Map<String, List<Ingredient>> storage;
 
   public FoodStorage() {
-    storage = new HashMap<>();
+    storage = new LowerCaseMap<>();
   }
 
   /**
@@ -45,7 +46,7 @@ public class FoodStorage {
 
     ingredients.stream()
               .filter(item -> item.getExpiryDate().equals(ingredient.getExpiryDate())
-              && item.getPrice() == ingredient.getPrice())
+              && item.getUnitPrice() == ingredient.getUnitPrice())
               .findFirst()
               .ifPresentOrElse(item -> mergeIngredient(ingredient, item),
                   () -> ingredients.add(index, ingredient));
@@ -59,16 +60,18 @@ public class FoodStorage {
    */
   public void mergeIngredient(Ingredient ingredient, Ingredient other) {
     double amount = ingredient.getQuantity().getAmount();
+    double price = ingredient.getUnitPrice();
     String unit = ingredient.getQuantity().getUnit();
     double otherAmount = other.getQuantity().getAmount();
+    double otherPrice = ingredient.getUnitPrice();
     String otherUnit = other.getQuantity().getUnit();
 
     if (!unit.equalsIgnoreCase(otherUnit)) {
-      throw new IllegalArgumentException("TEMP"); //TODO add unit conversion handling
-
+      throw new IllegalArgumentException("Unit differs from previous unit: " + otherUnit); 
     }
 
     other.getQuantity().setAmount(amount + otherAmount);
+    other.setUnitPrice(price + otherPrice);
   }
 
   /**
@@ -84,9 +87,7 @@ public class FoodStorage {
   public boolean removeIngredient(String name, double amount) throws IllegalArgumentException,
                                   IllegalStateException {
     ArgumentValidator.isValidDouble(amount, "Amount cannot be negative or zero!");
-    if (!storage.containsKey(name)) {
-      throw new IllegalStateException("Ingredient not in storage");
-    }
+    ArgumentValidator.validateMapContainsKey(storage, name, "Ingredient not in storage");
     
     List<Ingredient> ingredients = storage.get(name);
     Iterator<Ingredient> iterator = ingredients.iterator();
@@ -117,10 +118,7 @@ public class FoodStorage {
    * @throws IllegalStateException if storage does not contain <code>name</code>
    */
   public void removeIngredient(String name) {
-    if (!storage.containsKey(name)) {
-      throw new IllegalStateException("Ingredient not in storage");
-    }
-
+    ArgumentValidator.validateMapContainsKey(storage, name, "Ingredient not in storage"); 
     storage.remove(name);
   }
 
@@ -146,7 +144,7 @@ public class FoodStorage {
     Map<String, List<Ingredient>> sortedStorage = new TreeMap<>();
     sortedStorage.putAll(map);
     return sortedStorage;
-  } // TODO partial matching
+  }
 
   /**
    * Method that returns a list of all ingredients that have an expirydate before a certain date.
@@ -169,9 +167,9 @@ public class FoodStorage {
    * @return a double corresponding to the total value of the objects in the list
    */
   public static double getTotalPrice(List<Ingredient> list) {
-    ArgumentValidator.isValidList(list, "List cannot be null, whoops!");
+    ArgumentValidator.isValidObject(list, "List cannot be null, whoops!");
     return list.stream()
-          .mapToDouble(ingredient -> ingredient.getPrice() * ingredient.getQuantity().getAmount())
+          .mapToDouble(ingredient -> ingredient.getUnitPrice())
           .sum();
   }
 
@@ -182,7 +180,7 @@ public class FoodStorage {
    * @return a double corresponding to the total amount
    */
   public static double getTotalAmount(List<Ingredient> list) {
-    ArgumentValidator.isValidList(list, "List cannot be null, whoops!");
+    ArgumentValidator.isValidObject(list, "List cannot be null, whoops!");
     return list.stream()
           .mapToDouble(ingredient -> ingredient.getQuantity().getAmount())
           .sum();
