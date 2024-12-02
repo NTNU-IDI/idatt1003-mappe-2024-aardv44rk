@@ -35,7 +35,7 @@ public class Quantity {
   }
   
   public void setUnit(String unit) {
-    ArgumentValidator.isValidString(unit, "Unit cannot be empty or null!");
+    ArgumentValidator.isValidUnit(unit);
     this.unit = unit;
   }
 

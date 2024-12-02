@@ -1,8 +1,9 @@
 package edu.ntnu.idi.idatt.util;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
+
+import edu.ntnu.idi.idatt.model.Quantity;
 
 
 
@@ -77,25 +78,38 @@ public class ArgumentValidator {
       throw new IllegalArgumentException(m);
     }
   }
-
+  
   /**
-   * Validates user input <code>list</code>. Throws IllegalStateException with message
-   * <code>m</code> if <code>list</code> is empty or null, else does nothing. 
+   * Validates user input <code>unit</code>. Throws IllegalArgumentException if <code>unit</code>
+   * is null or not one of: "g", "mL", "pcs". Else does nothing.
    *
-   * @param list the list to be validated
-   * @param m the message of the thrown Exception
-   * @throws IllegalStateException if <code>list</code> is null or empty
+   * @param unit the String to be validated
+   * @throws IllegalArgumentException if <code>unit</code> is null or neither one of g, mL or pcs
    */
-  public static void isValidList(List<?> list, String m) throws IllegalStateException {
-    if (list == null) {
-      throw new IllegalArgumentException(m);
+  public static void isValidUnit(String unit) throws IllegalArgumentException {
+    if (
+        unit == null 
+        || !(unit.trim().equalsIgnoreCase("g") 
+        || unit.trim().equalsIgnoreCase("mL") 
+        || unit.trim().equalsIgnoreCase("pcs"))
+    ) {
+      throw new IllegalArgumentException(
+          "Invalid unit: " + unit + "\nUnit must be one of: g, mL, pcs"
+        );
     }
   }
 
+  /**
+   * Validates all parameters of a Quantity object <code>q</code>.
+   *
+   * @param amount amount of <code>q</code>
+   * @param unit unit of <code>q</code>
+   */
   public static void isValidQuantity(double amount, String unit) {
     isValidDouble(amount, "Amount cannot be negative or zero!");
-    isValidString(unit, "Unit cannot be blank or empty");
+    isValidUnit(unit);
   }
+
 
   /**
    * Validates all parameters of an Ingredient object.
@@ -103,21 +117,41 @@ public class ArgumentValidator {
    * @param name String representing name of an Ingredient
    * @param price Double representing price of an Ingredient
    * @param expiryDate LocalDate representing expiration date
-   * @param amount Double representing amount of an Ingredient
-   * @param unit String representing unit of an Ingredient
+   * @param quantity Quantity representing amount and unit
    */
   public static void isValidIngredient(
                         String name, 
                         double price, 
                         LocalDate expiryDate, 
-                        double amount, 
-                        String unit
+                        Quantity quantity 
   ) {
     isValidString(name, "Name cannot be empty or null!");
     isValidDouble(price, "Price cannot be negative or zero!");
     isValidDate(expiryDate, "Date cannot be null!");
-    isValidDouble(amount, "Amount cannot be negative or zero!");
-    isValidString(unit, "Unit cannot be empty or null!");
+    isValidObject(quantity, "Quantity cannot be null!");
+  }
+
+  /**
+   * Validates all parameters of a Recipe object.
+   *
+   * @param name String representing name of the recipe
+   * @param description String representing description of the recipe
+   * @param instruction String representing instruction of the recipe
+   * @param ingredientMap Map with key String and value Quantity holding recipe ingredients
+   * @param portions double representing the amount of servings
+   */
+  public static void isValidRecipe(String name, 
+                String description, 
+                String instruction,
+                Map<String, Quantity> ingredientMap, 
+                double portions
+  ) {
+    ArgumentValidator.isValidString(name, "Name cannot be empty!");
+    ArgumentValidator.isValidString(description, "Description cannot be empty!");
+    ArgumentValidator.isValidString(instruction, "Instruction cannot be empty!");
+    ArgumentValidator.isValidMap(ingredientMap, "A recipe cannot have zero ingredients!");
+    ArgumentValidator.isValidDouble(portions,
+          "A recipe cannot have zero or negative amount of portions!");
   }
 
   /**
@@ -145,7 +179,7 @@ public class ArgumentValidator {
    * @param m message of the thrown Exception
    * @throws IllegalStateException if <code>k</code> is not present in <code>map</code>
    */
-  public static void mapContainsKey(Map<?, ?> map,
+  public static void validateMapContainsKey(Map<?, ?> map,
                                    String k, 
                                    String m) 
                             throws IllegalStateException {

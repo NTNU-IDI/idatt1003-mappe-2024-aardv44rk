@@ -2,7 +2,8 @@ package edu.ntnu.idi.idatt.model;
 
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
 
 /**
  * Cookbook class manages Recipes and stores them in a list.
@@ -13,9 +14,9 @@ import java.util.TreeMap;
  */
 public class Cookbook {
   private final Map<String, Recipe> recipes;
-
+  
   public Cookbook() {
-    recipes = new TreeMap<>();
+    recipes = new LowerCaseMap<>();
   }
 
   /**
@@ -25,9 +26,9 @@ public class Cookbook {
    */
   public void addRecipe(Recipe recipe) {
     if (recipes.containsKey(recipe.getName())) {
-      throw new IllegalStateException("Recipe already in cookbook!");
+      throw new IllegalStateException("Recipe of same name already in cookbook!");
     }
-
+    
     recipes.put(recipe.getName(), recipe);
   }
 
@@ -38,9 +39,7 @@ public class Cookbook {
    * @throws IllegalStateException if recipe not present
    */
   public void removeRecipe(String name) throws IllegalStateException {
-    if (!recipes.containsKey(name)) {
-      throw new IllegalStateException("Recipe not in cookbook!");
-    }
+    ArgumentValidator.validateMapContainsKey(recipes, name, "Recipe not found");
 
     recipes.remove(name);
   }
@@ -49,7 +48,7 @@ public class Cookbook {
    * Finds all recipes that are makeable in a cookbook based on Ingredients in a FoodStorage
    * <code>fs</code>.
    *
-   * @param fs FoodStorage to be compared with.
+   * @param fs FoodStorage where Ingredients are stored
    * @return List consisting of all recipes that are makeable
    */
   public List<Recipe> recommendRecipes(FoodStorage fs) {
@@ -61,7 +60,11 @@ public class Cookbook {
    *
    * @return List of all keys in <code>recipes</code>
    */
-  public List<String> listRecipes() {
+  public List<String> recipeNamesToList() {
     return this.recipes.keySet().stream().toList();
+  }
+
+  public Map<String, Recipe> getRecipes() {
+    return recipes;
   }
 }

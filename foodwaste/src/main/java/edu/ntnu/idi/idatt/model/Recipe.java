@@ -1,8 +1,8 @@
 package edu.ntnu.idi.idatt.model;
 
-import edu.ntnu.idi.idatt.util.ArgumentValidator;
-import java.util.Collections;
 import java.util.Map;
+
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
 
 
 /**
@@ -34,12 +34,7 @@ public class Recipe {
                 Map<String, Quantity> ingredientMap, 
                 double portions
   ) {
-    ArgumentValidator.isValidString(name, "Name cannot be empty!");
-    ArgumentValidator.isValidString(description, "Description cannot be empty!");
-    ArgumentValidator.isValidString(instruction, "Instruction cannot be empty!");
-    ArgumentValidator.isValidMap(ingredientMap, "A recipe cannot have zero ingredients!");
-    ArgumentValidator.isValidDouble(portions,
-          "A recipe cannot have zero or negative amount of portions!");
+    ArgumentValidator.isValidRecipe(name, description, instruction, ingredientMap, portions);
     this.name = name;
     this.description = description;
     this.instruction = instruction;
@@ -135,9 +130,12 @@ public class Recipe {
     
     sb.append("Recipe:\n").append(this.name).append("\n")
                       .append(this.description).append("\nIngredients:\n");
-    ingredientMap.forEach((k, v) -> sb.append("* ").append(k).append(" ")
-                                      .append(v.quantityString()).append("\n"));
+
+    ingredientMap.forEach((ingredientName, quantity)
+                          -> sb.append("* ").append(ingredientName).append(" ")
+                          .append(quantity.quantityString()).append("\n"));
     sb.append("\nStep by step:\n").append(this.instruction);
+
     return sb.toString();
   }
 
@@ -150,15 +148,11 @@ public class Recipe {
   public boolean isMakeableRecipe(FoodStorage fs) {
     Map<String, Quantity> ingredients = this.getIngredientMap();
     return ingredients.entrySet().stream()
-      .allMatch(recipe -> {
-        String ingredientName = recipe.getKey().toLowerCase();
-        double amount = recipe.getValue().getAmount();
+      .allMatch(i -> {
+        String ingredientName = i.getKey().toLowerCase();
+        double amount = i.getValue().getAmount();
 
-        double availableAmount = fs.getStorage()
-                  .getOrDefault(ingredientName, Collections.emptyList()).stream()
-                  .mapToDouble(ingredient -> ingredient.getQuantity().getAmount())
-                  .sum();
-
+        double availableAmount = FoodStorage.getTotalAmount(fs.searchIngredient(ingredientName));
         return amount <= availableAmount;
       });
   }
