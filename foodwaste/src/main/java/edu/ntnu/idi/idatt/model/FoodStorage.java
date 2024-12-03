@@ -1,15 +1,17 @@
 package edu.ntnu.idi.idatt.model;
 
+import edu.ntnu.idi.idatt.util.ArgumentValidator;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.TreeMap;
 
-import edu.ntnu.idi.idatt.util.ArgumentValidator;
+
 
 /**
  * FoodStorage class manages the storage and provides methods to...
@@ -38,16 +40,39 @@ public class FoodStorage {
     storage.putIfAbsent(name, new ArrayList<>());
     List<Ingredient> ingredients = storage.get(name);
     
-    int index = (int) ingredients.stream()
-              .takeWhile(item -> item.getExpiryDate().compareTo(ingredient.getExpiryDate()) < 0)
-              .count();
+    int indexByExpiryDate = findIndex(
+            ingredients,                     
+            ingredient,                                 
+            Comparator.comparing(Ingredient::getExpiryDate)
+    );
 
     ingredients.stream()
               .filter(item -> item.getExpiryDate().equals(ingredient.getExpiryDate())
               && item.getUnitPrice() == ingredient.getUnitPrice())
               .findFirst()
               .ifPresentOrElse(item -> mergeIngredient(ingredient, item),
-                  () -> ingredients.add(index, ingredient));
+                  () -> ingredients.add(indexByExpiryDate, ingredient));
+  }
+
+  /**
+   * Finds the correct index for an <code>Ingredient</code> in a list, based on a comparison
+   * between target ingredient and ingredients in the list, provided by the Comparator class.
+   * 
+   * @param ingredients the list of ingredients to be compared to
+   * @param target the target ingredient to compare against
+   * @param comparator the comparator used to compare ingredients
+   * @return index where target ingredient is to be placed
+   * @throws IllegalArgumentException if any parameters are null
+   */
+  public int findIndex(List<Ingredient> ingredients, 
+                      Ingredient target,
+                      Comparator<Ingredient> comparator) {
+    ArgumentValidator.isValidObject(ingredients, "List cannot be null");
+    ArgumentValidator.isValidObject(target, "Target cannot be null");
+    ArgumentValidator.isValidObject(comparator, "Comparator cannot be null");
+    return (int) ingredients.stream()
+                .takeWhile(ingredient -> comparator.compare(ingredient, target) < 0)
+                .count();
   }
 
   /**

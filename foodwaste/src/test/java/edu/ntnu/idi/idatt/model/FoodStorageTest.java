@@ -2,6 +2,7 @@ package edu.ntnu.idi.idatt.model;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -53,8 +54,8 @@ class FoodStorageTest {
   @Test
   void testAddIngredient() {
     fs.addIngredient(ingredient1);
-    assertTrue(fs.containsIngredient(name, 2000));
-    assertTrue(fs.searchIngredient(name).contains(ingredient1));
+    assertTrue(fs.containsIngredient(name, 2000), "Storage should contain correct amount");
+    assertTrue(fs.searchIngredient(name).contains(ingredient1), "List should contain object");
   }
 
   @Test
@@ -92,7 +93,7 @@ class FoodStorageTest {
   void testAddIngredientInsertionOrder() {
     fs.addIngredient(ingredient1);
     fs.addIngredient(ingredient5);
-    assertEquals(ingredient5, fs.getStorage().get(name).get(0));
+    assertEquals(ingredient5, fs.getStorage().get(name).get(0), "Index should be 0");
   }
 
   @Test
@@ -121,9 +122,9 @@ class FoodStorageTest {
   @Test
   void testRemoveIngredientNameOnly() {
     fs.addIngredient(ingredient1);
-    assertTrue(fs.getStorage().containsKey(name));
+    assertTrue(fs.getStorage().containsKey(name), "Storage should contain ingredient");
     fs.removeIngredient(name);
-    assertFalse(fs.getStorage().containsKey(name));
+    assertFalse(fs.getStorage().containsKey(name), "Storage should not contain ingredient");
   }
 
   @Test
@@ -139,24 +140,37 @@ class FoodStorageTest {
     fs.addIngredient(ingredient4);
 
     Map<String, List<Ingredient>> sortedStorage = fs.sortStorage(fs.getStorage());
-    assertEquals("Banana".toLowerCase(), sortedStorage.keySet().toArray()[0]);
+    assertEquals(
+              "Banana".toLowerCase(), 
+              sortedStorage.keySet().toArray()[0], 
+              "Banana should be first index"
+    );
   }
 
   @Test
   void testGetExpired() {
     fs.addIngredient(ingredient4);
-    assertTrue(fs.getExpiredFood(DateUtil.parseDate("12-12-2024")).contains(ingredient4));
+    assertTrue(
+            fs.getExpiredFood(DateUtil.parseDate("12-12-2024")).contains(ingredient4),
+            "List should contain ingredient"
+    );
   }
 
   @Test
   void testGetExpiredNoExpired() {
     fs.addIngredient(ingredient1);
-    assertTrue(fs.getExpiredFood(DateUtil.parseDate("12-12-2024")).isEmpty());
+    assertTrue(
+        fs.getExpiredFood(DateUtil.parseDate("12-12-2024")).isEmpty(),
+        "Should not contain ingerdient"
+    );
   }
 
   @Test
   void testGetExpiredEmptyStorage() {
-    assertTrue(fs.getExpiredFood(DateUtil.parseDate("12-12-2024")).isEmpty());
+    assertTrue(
+        fs.getExpiredFood(DateUtil.parseDate("12-12-2024")).isEmpty(),
+        "Should return empty list"
+    );
   }
 
   @Test
@@ -171,7 +185,7 @@ class FoodStorageTest {
   @Test
   void testGetTotalPriceEmptyList() {
     List<Ingredient> emptyList = new ArrayList<>();
-    assertEquals(0, FoodStorage.getTotalPrice(emptyList));
+    assertEquals(0, FoodStorage.getTotalPrice(emptyList), "Empty list should return 0");
   }
 
   @Test
@@ -186,20 +200,33 @@ class FoodStorageTest {
   @Test
   void testGetTotalAmountEmptyList() {
     List<Ingredient> emptyList = new ArrayList<>();
-    assertEquals(0, FoodStorage.getTotalAmount(emptyList));
+    assertEquals(0, FoodStorage.getTotalAmount(emptyList), "Empty list should return 0");
   }
 
   @Test
   void testContainsIngredient() {
     fs.addIngredient(ingredient1);
-    assertTrue(fs.containsIngredient(name, 2.0));
+    assertTrue(fs.containsIngredient(name, 2000.0), "Should contain ingredient1");
   }
 
   @Test
   void testNotContainsIngredient() {
-    assertFalse(fs.containsIngredient(name, 300.0));
+    assertFalse(fs.containsIngredient(name, 300.0), "Should not contain any ingredient");
     fs.addIngredient(ingredient2);
-    assertFalse(fs.containsIngredient(name, 300.0));
+    assertFalse(fs.containsIngredient(name, 300.0), "Should not contain more than 200");
+  }
+
+  @Test
+  void testFindIndexAllMatch() {
+    List<Ingredient> ingredients = List.of(ingredient4, ingredient5);
+    Ingredient target = ingredient1;
+    int index = fs.findIndex(
+                ingredients, 
+                target, 
+                Comparator.comparing(Ingredient::getExpiryDate)
+    );
+
+    assertEquals(2, index, "Index should be 2");
   }
 
   // Negative cases
@@ -244,7 +271,7 @@ class FoodStorageTest {
 
   @Test
   void testSearchIngredientNotExist() {
-    assertTrue(fs.searchIngredient("NonExistent").isEmpty());
+    assertTrue(fs.searchIngredient("NonExistent").isEmpty(), "Should return empty list");
   }
 
   @Test
@@ -252,7 +279,7 @@ class FoodStorageTest {
     IllegalStateException e = assertThrows(IllegalStateException.class,
                   () -> fs.removeIngredient("", 2.0),
                   "IllegalStateException should be thrown if Ingredient not present");
-    assertEquals("Ingredient not in storage", e.getMessage());
+    assertEquals("Ingredient not in storage", e.getMessage(), "Messages should match");
   }
 
   @Test
@@ -260,7 +287,7 @@ class FoodStorageTest {
     IllegalStateException e = assertThrows(IllegalStateException.class,
                   () -> fs.removeIngredient(""),
                   "IllegalStateException should be thrown if Ingredient not present");
-    assertEquals("Ingredient not in storage", e.getMessage());
+    assertEquals("Ingredient not in storage", e.getMessage(), "Messages should match");
   }
 
   @Test
@@ -268,13 +295,13 @@ class FoodStorageTest {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
                   () -> fs.removeIngredient(name, -1),
                   "IllegalArgumentException should be thrown if negative or zero amount");
-    assertEquals("Amount cannot be negative or zero!", e.getMessage());
+    assertEquals("Amount cannot be negative or zero!", e.getMessage(), "Messages should match");
   }
 
   @Test
   void testSortEmptyStorage() {
     Map<String, List<Ingredient>> storage = fs.sortStorage(fs.getStorage());
-    assertTrue(storage.isEmpty());
+    assertTrue(storage.isEmpty(), "Should return empty list");
   }
 
   @Test
