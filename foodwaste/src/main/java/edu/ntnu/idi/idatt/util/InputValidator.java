@@ -85,13 +85,17 @@ public class InputValidator {
     boolean valid = false;
     LocalDate output = LocalDate.MIN;
     while (!valid) {
-      try {
-        output = DateUtil.parseDate(sc.nextLine());
-        valid = true;
-      } catch (DateTimeParseException e) {
-        System.out.println("Input not on required format!");
+      if (sc.nextLine().isBlank()) {
+        throw new IllegalArgumentException("Blank input not allowed, sorry!");
+      } else {
+        try {
+          output = DateUtil.parseDate(sc.nextLine());
+          valid = true;
+        } catch (DateTimeParseException e) {
+          System.out.println("Input has to be a date in the format dd-MM-yyyy, whoops!");
+        }
       }
-    }
+    }      
     return output;
   }
 }
