@@ -7,7 +7,6 @@ import edu.ntnu.idi.idatt.model.LowerCaseMap;
 import edu.ntnu.idi.idatt.model.Quantity;
 import edu.ntnu.idi.idatt.model.Recipe;
 import edu.ntnu.idi.idatt.util.InputValidator;
-
 import java.time.LocalDate;
 import java.util.InputMismatchException;
 import java.util.Map;
@@ -15,8 +14,7 @@ import java.util.Scanner;
 
 /**
  * Class responsible for outputting information to the user. Serves as the TUI
- * of this
- * application.
+ * of this application.
  *
  * @author @aardv44rk
  * @since December 2nd 2024
@@ -75,7 +73,11 @@ public class UserInterface {
       sc.nextLine();
       switch (choice) {
         case 1 -> addRecipe(sc, cookbook);
-
+        case 2 -> removeRecipe(sc, cookbook);
+        case 3 -> viewCookbook(cookbook);
+        case 4 -> checkMakeableRecipes(cookbook, fs);
+        case 5 -> recipeRecommender(cookbook, fs);
+        default -> System.out.println("Invalid choice");
       }
     }
   }
@@ -164,6 +166,12 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Reads user input and removes an ingredient from FoodStorage {@code fs}.
+   *
+   * @param sc Scanner object used to read input from the user
+   * @param fs FoodStorage object used to store food items
+   */
   public void removeIngredient(Scanner sc, FoodStorage fs) {
     try {
       String name = InputValidator.getString(sc,
@@ -175,6 +183,13 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Reads user input and removes an amount of an ingredient from FoodStorage
+   * {@code fs}.
+   *
+   * @param sc Scanner object used to read input from the user
+   * @param fs FoodStorage object used to store food items
+   */
   public void removeAmount(Scanner sc, FoodStorage fs) {
     try {
       String name = InputValidator.getString(sc,
@@ -191,9 +206,15 @@ public class UserInterface {
   }
 
   public void viewStorage(FoodStorage fs) {
-    System.out.println(fs);
+    System.out.println(fs); // TODO
   }
 
+  /**
+   * Reads user input and searches for an ingredient in FoodStorage {@code fs}.
+   *
+   * @param sc Scanner object used to read input from the user
+   * @param fs FoodStorage object used to store food items
+   */
   public void searchForIngredient(Scanner sc, FoodStorage fs) {
     try {
       String name = InputValidator.getString(sc,
@@ -207,11 +228,18 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Reads user input and displays all items that have expired on a given date
+   * in FoodStorage {@code fs}.
+   *
+   * @param sc Scanner object used to read input from the user
+   * @param fs FoodStorage object used to store food items
+   */
   public void viewExpired(Scanner sc, FoodStorage fs) {
     try {
       LocalDate date = InputValidator.getDate(sc,
           "Enter the date you want to check for expired food: ");
-      System.out.println(fs.getExpiredFood(date));
+      System.out.println(fs.getExpiredFood(date)); // TODO
     } catch (IllegalArgumentException e) {
       System.out.println(e.getMessage());
       viewExpired(sc, fs);
@@ -220,6 +248,12 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Reads user input and adds a recipe to Cookbook {@code cookbook}.
+   *
+   * @param sc       Scanner object used to read input from the user
+   * @param cookbook Cookbook object used to store recipes
+   */
   public void addRecipe(Scanner sc, Cookbook cookbook) {
     try {
       String name = InputValidator.getString(sc,
@@ -258,6 +292,12 @@ public class UserInterface {
     }
   }
 
+  /**
+   * Reads user input and removes a recipe from Cookbook {@code cookbook}.
+   *
+   * @param sc       Scanner object used to read input from the user
+   * @param cookbook Cookbook object used to store recipes
+   */
   public void removeRecipe(Scanner sc, Cookbook cookbook) {
     try {
       String name = InputValidator.getString(sc,
