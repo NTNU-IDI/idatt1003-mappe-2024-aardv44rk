@@ -1,8 +1,9 @@
 package edu.ntnu.idi.idatt.util;
 
+import edu.ntnu.idi.idatt.exceptions.InvalidInputException;
+import edu.ntnu.idi.idatt.exceptions.UnsupportedFormatException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -26,15 +27,15 @@ public class InputValidator {
    * @param sc Scanner that reads user input
    * @param p Prompt that user receives through the terminal
    * @return The string input of the user if it is validated
-   * @throws InputMismatchException if user input is blank
+   * @throws InvalidInputException if user input is blank
    */
-  public static String getString(Scanner sc, String p) throws InputMismatchException {
+  public static String getString(Scanner sc, String p) throws InvalidInputException {
     System.out.println(p);
     boolean valid = false;
     String output = "";
     while (!valid) {
       if (sc.nextLine().isBlank()) {
-        throw new InputMismatchException("Blank input not allowed, sorry!");
+        throw new InvalidInputException("Blank input not allowed, sorry!");
       } else {
         valid = true;
         output = sc.nextLine();
@@ -50,15 +51,15 @@ public class InputValidator {
    * @param sc Scanner that reads user input
    * @param p Prompt that user receives 
    * @return The string input of the user if it is validated
-   * @throws InputMismatchException if user input is blank
+   * @throws InvalidInputException if user input is blank
    */
-  public static double getDouble(Scanner sc, String p) throws InputMismatchException {
+  public static double getDouble(Scanner sc, String p) throws InvalidInputException {
     System.out.println(p);
     boolean valid = false;
     double output = 0;
     while (!valid) {
       if (sc.nextLine().isBlank()) {
-        throw new InputMismatchException("Blank input not allowed, sorry!");
+        throw new InvalidInputException("Blank input not allowed, sorry!");
       } else {
         try {
           output = Double.parseDouble(sc.nextLine());
@@ -80,7 +81,7 @@ public class InputValidator {
    * @return The string input of the user if it is validated
    * @throws IllegalArgumentException if user input does not match the required date format
    */
-  public static LocalDate getDate(Scanner sc, String p) throws IllegalArgumentException {
+  public static LocalDate getDate(Scanner sc, String p) throws UnsupportedFormatException {
     System.out.println(p);
     boolean valid = false;
     LocalDate output = LocalDate.MIN;
