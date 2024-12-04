@@ -24,7 +24,7 @@ class RecipeTest {
   private Quantity otherQuantity;
   private double portions;
   private Recipe recipe;
-  
+
   @BeforeEach
   @SuppressWarnings("unused")
   void testInit() {
@@ -37,8 +37,7 @@ class RecipeTest {
     ingredientMap.put("Oats", oatQuantity);
     ingredientMap.put("Water", otherQuantity);
     portions = 1.0;
-    recipe = new Recipe(name, description, instruction, ingredientMap, portions);
-
+    recipe = new Recipe(name, description, instruction, portions, ingredientMap);
   }
 
   @Test
@@ -98,9 +97,9 @@ class RecipeTest {
         Ingredients:
         * oats 100.0 g
         * water 100.0 mL
-        
+
         Step by step:
-        Boil water, add oats, bon apetit""", 
+        Boil water, add oats, bon apetit""",
         recipe.printRecipe(), "Should be equal");
   }
 
@@ -121,83 +120,83 @@ class RecipeTest {
   // Negative tests
   @Test
   void testSetNameNull() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
-              () -> recipe.setName(null),
-              "Should throw IllegalArgumentException if name null");
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        () -> recipe.setName(null),
+        "Should throw IllegalArgumentException if name null");
     assertEquals("Name field cannot be empty!", e.getMessage());
   }
 
   @Test
   void testSetDescriptionNull() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
-              () -> recipe.setDescription(null),
-              "Should throw IllegalArgumentException if null is passed");
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        () -> recipe.setDescription(null),
+        "Should throw IllegalArgumentException if null is passed");
     assertEquals("Description field cannot be empty!", e.getMessage());
   }
 
   @Test
   void testSetInstructionNull() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
-              () -> recipe.setInstruction(null),
-              "Should throw IllegalArgumentException if null is passed");
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        () -> recipe.setInstruction(null),
+        "Should throw IllegalArgumentException if null is passed");
     assertEquals("Instruction field cannot be empty!", e.getMessage());
   }
-  
+
   @Test
   void testSetIngredientsNull() {
-    IllegalStateException e = assertThrows(IllegalStateException.class, 
-              () -> recipe.setIngredientMap(null),
-              "Should throw IllegalArgumentException if null is passed");
+    IllegalStateException e = assertThrows(IllegalStateException.class,
+        () -> recipe.setIngredientMap(null),
+        "Should throw IllegalArgumentException if null is passed");
     assertEquals("Recipe cannot have zero ingredients!", e.getMessage());
   }
 
   @Test
   void testSetPortionsZero() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
-              () -> recipe.setPortions(0),
-              "Should throw IllegalArgumentException if zero is passed");
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        () -> recipe.setPortions(0),
+        "Should throw IllegalArgumentException if zero is passed");
     assertEquals("Recipe cannot have zero or negative amount of portions!", e.getMessage());
   }
 
   @Test
   void testSetNameEmpty() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
-              () -> recipe.setName(""),
-              "Should throw IllegalArgumentException if ");
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        () -> recipe.setName(""),
+        "Should throw IllegalArgumentException if ");
     assertEquals("Name field cannot be empty!", e.getMessage());
   }
 
   @Test
   void testSetDescriptionEmpty() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
-              () -> recipe.setDescription(""),
-              "Should throw IllegalArgumentException if null is passed");
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        () -> recipe.setDescription(""),
+        "Should throw IllegalArgumentException if null is passed");
     assertEquals("Description field cannot be empty!", e.getMessage());
   }
 
   @Test
   void testSetInstructionEmpty() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
-              () -> recipe.setInstruction(""),
-              "Should throw IllegalArgumentException if null is passed");
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        () -> recipe.setInstruction(""),
+        "Should throw IllegalArgumentException if null is passed");
     assertEquals("Instruction field cannot be empty!", e.getMessage());
   }
-  
+
   @Test
   void testSetIngredientMapEmpty() {
     Map<String, Quantity> emptyMap = new HashMap<>();
-    IllegalStateException e = assertThrows(IllegalStateException.class, 
-              () -> recipe.setIngredientMap(emptyMap),
-              "Should throw IllegalArgumentException if empty map is passed");
+    IllegalStateException e = assertThrows(IllegalStateException.class,
+        () -> recipe.setIngredientMap(emptyMap),
+        "Should throw IllegalArgumentException if empty map is passed");
     assertEquals("Recipe cannot have zero ingredients!", e.getMessage());
   }
 
   @Test
   void testSetPortionsNegative() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
-              () -> recipe.setPortions(-1),
-              "Should throw IllegalArgumentException if negative number is passed");
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+        () -> recipe.setPortions(-1),
+        "Should throw IllegalArgumentException if negative number is passed");
     assertEquals("Recipe cannot have zero or negative amount of portions!", e.getMessage(),
-                  "Messages should match");
+        "Messages should match");
   }
 }

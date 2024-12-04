@@ -26,21 +26,21 @@ class CookBookTest {
     ingredientMap.put("oats", oatQuantity);
     ingredientMap.put("water", otherQuantity);
     recipe = new Recipe(
-            "Oatmeal", 
-            "A mediocre meal consisting of oats and water.", 
-            "Boil water, add oats, bon apetit",
-            ingredientMap,
-            1.0);
+        "Oatmeal",
+        "A mediocre meal consisting of oats and water.",
+        "Boil water, add oats, bon apetit",
+        1.0,
+        ingredientMap);
   }
 
   @Test
   void testAddRecipe() {
     cookbook.addRecipe(recipe);
-    assertTrue(cookbook.getRecipes().containsValue(recipe), 
-              "Should contain recipe");
+    assertTrue(cookbook.getRecipes().containsValue(recipe),
+        "Should contain recipe");
 
-    assertTrue(cookbook.getRecipes().containsKey(recipe.getName().toLowerCase()), 
-              "Key should match recipe name to lowercase");
+    assertTrue(cookbook.getRecipes().containsKey(recipe.getName().toLowerCase()),
+        "Key should match recipe name to lowercase");
   }
 
   @Test
@@ -55,30 +55,28 @@ class CookBookTest {
   void testRecipeNamesToList() {
     cookbook.addRecipe(recipe);
     cookbook.addRecipe(
-            new Recipe(
-              "Oatmeal 2", 
-              recipe.getDescription(), 
-              recipe.getInstruction(), 
-              recipe.getIngredientMap(), 
-              recipe.getPortions())
-    );
-    assertTrue(cookbook.recipeNamesToList().contains("oatmeal 2"), 
-            "Should contain recipe (lowercase name)");
+        new Recipe(
+            "Oatmeal 2",
+            recipe.getDescription(),
+            recipe.getInstruction(),
+            recipe.getPortions(),
+            recipe.getIngredientMap()));
+    assertTrue(cookbook.recipeNamesToList().contains("oatmeal 2"),
+        "Should contain recipe (lowercase name)");
     assertTrue(cookbook.recipeNamesToList().contains("oatmeal"),
-            "Should contain recipe (lowercase name)");
+        "Should contain recipe (lowercase name)");
   }
 
   @Test
   void testRecommendRecipes() {
     cookbook.addRecipe(recipe);
     cookbook.addRecipe(
-            new Recipe(
-              "Oatmeal 2", 
-              recipe.getDescription(), 
-              recipe.getInstruction(), 
-              recipe.getIngredientMap(), 
-              recipe.getPortions())
-    );
+        new Recipe(
+            "Oatmeal 2",
+            recipe.getDescription(),
+            recipe.getInstruction(),
+            recipe.getPortions(),
+            recipe.getIngredientMap()));
     FoodStorage fs = new FoodStorage();
     fs.addIngredient(new Ingredient("oats", 10, LocalDate.now(), oatQuantity));
     fs.addIngredient(new Ingredient("water", 10, LocalDate.now(), otherQuantity));
@@ -89,13 +87,12 @@ class CookBookTest {
   @Test
   void testAddRecipeThrowsException() {
     cookbook.addRecipe(recipe);
-    IllegalStateException e = assertThrows(IllegalStateException.class, 
-                              () -> cookbook.addRecipe(recipe),
-                              "Should throw exception for duplicate recipe");
+    IllegalStateException e = assertThrows(IllegalStateException.class,
+        () -> cookbook.addRecipe(recipe),
+        "Should throw exception for duplicate recipe");
 
-    assertEquals("Recipe of same name already in cookbook!", 
-                e.getMessage(), "Messages should match");
+    assertEquals("Recipe of same name already in cookbook!",
+        e.getMessage(), "Messages should match");
   }
-
 
 }

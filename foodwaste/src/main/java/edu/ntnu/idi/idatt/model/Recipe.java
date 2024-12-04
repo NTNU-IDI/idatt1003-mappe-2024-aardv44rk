@@ -31,8 +31,8 @@ public class Recipe {
   public Recipe(String name, 
                 String description, 
                 String instruction,
-                Map<String, Quantity> ingredientMap, 
-                double portions
+                double portions,
+                Map<String, Quantity> ingredientMap
   ) {
     ArgumentValidator.isValidRecipe(name, description, instruction, ingredientMap, portions);
     this.name = name;

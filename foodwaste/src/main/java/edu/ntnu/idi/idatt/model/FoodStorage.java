@@ -8,8 +8,8 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 
 
@@ -57,7 +57,7 @@ public class FoodStorage {
   /**
    * Finds the correct index for an <code>Ingredient</code> in a list, based on a comparison
    * between target ingredient and ingredients in the list, provided by the Comparator class.
-   * 
+   *
    * @param ingredients the list of ingredients to be compared to
    * @param target the target ingredient to compare against
    * @param comparator the comparator used to compare ingredients
