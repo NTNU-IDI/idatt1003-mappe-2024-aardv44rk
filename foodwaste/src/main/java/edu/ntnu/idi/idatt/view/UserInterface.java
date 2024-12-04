@@ -1,5 +1,7 @@
 package edu.ntnu.idi.idatt.view;
 
+import edu.ntnu.idi.idatt.exceptions.InvalidInputException;
+import edu.ntnu.idi.idatt.exceptions.UnsupportedFormatException;
 import edu.ntnu.idi.idatt.model.Cookbook;
 import edu.ntnu.idi.idatt.model.FoodStorage;
 import edu.ntnu.idi.idatt.model.Ingredient;
@@ -7,8 +9,8 @@ import edu.ntnu.idi.idatt.model.LowerCaseMap;
 import edu.ntnu.idi.idatt.model.Quantity;
 import edu.ntnu.idi.idatt.model.Recipe;
 import edu.ntnu.idi.idatt.util.InputValidator;
+import edu.ntnu.idi.idatt.util.PrintUtil;
 import java.time.LocalDate;
-import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -158,7 +160,7 @@ public class UserInterface {
       Quantity quantity = new Quantity(amount, unit);
       Ingredient ingredient = new Ingredient(name, price, expiryDate, quantity);
       fs.addIngredient(ingredient);
-    } catch (IllegalArgumentException | InputMismatchException e) {
+    } catch (UnsupportedFormatException | InvalidInputException e) {
       System.out.println(e.getMessage());
       addIngredient(sc, fs);
     } catch (Exception e) {
@@ -177,7 +179,7 @@ public class UserInterface {
       String name = InputValidator.getString(sc,
           "Enter the name of the ingredient you want to remove: ");
       fs.removeIngredient(name);
-    } catch (InputMismatchException e) {
+    } catch (InvalidInputException e) {
       System.out.println(e.getMessage());
       removeIngredient(sc, fs);
     }
@@ -197,7 +199,7 @@ public class UserInterface {
       double amount = InputValidator.getDouble(sc,
           "Enter the amount you want to remove: ");
       fs.removeIngredient(name, amount);
-    } catch (InputMismatchException e) {
+    } catch (InvalidInputException e) {
       System.out.println(e.getMessage());
       removeAmount(sc, fs);
     } catch (Exception e) {
@@ -220,7 +222,7 @@ public class UserInterface {
       String name = InputValidator.getString(sc,
           "Enter the name of the ingredient you want to search for: ");
       System.out.println(fs.searchIngredient(name)); // TODO
-    } catch (InputMismatchException e) {
+    } catch (InvalidInputException e) {
       System.out.println(e.getMessage());
       searchForIngredient(sc, fs);
     } catch (Exception e) {
@@ -239,8 +241,8 @@ public class UserInterface {
     try {
       LocalDate date = InputValidator.getDate(sc,
           "Enter the date you want to check for expired food: ");
-      System.out.println(fs.getExpiredFood(date)); // TODO
-    } catch (IllegalArgumentException e) {
+      PrintUtil.printList(fs.getExpiredFood(date), Ingredient::ingredientToString);
+    } catch (UnsupportedFormatException e) {
       System.out.println(e.getMessage());
       viewExpired(sc, fs);
     } catch (Exception e) {
@@ -284,7 +286,7 @@ public class UserInterface {
       }
       Recipe recipe = new Recipe(name, description, instruction, portions, ingredientMap);
       cookbook.addRecipe(recipe);
-    } catch (InputMismatchException e) {
+    } catch (InvalidInputException e) {
       System.out.println(e.getMessage());
       addRecipe(sc, cookbook);
     } catch (Exception e) {
@@ -303,7 +305,7 @@ public class UserInterface {
       String name = InputValidator.getString(sc,
           "Enter the name of the recipe you want to remove: ");
       cookbook.removeRecipe(name);
-    } catch (InputMismatchException e) {
+    } catch (InvalidInputException e) {
       System.out.println(e.getMessage());
       removeRecipe(sc, cookbook);
     } catch (Exception e) {
@@ -312,15 +314,23 @@ public class UserInterface {
   }
 
   public void viewCookbook(Cookbook cookbook) {
-    System.out.println(cookbook); // TODO
+    PrintUtil.printMap(cookbook.getRecipes(), Recipe::recipeToString);
   }
 
   public void checkMakeableRecipes(Cookbook cookbook, FoodStorage fs) {
-    System.out.println(cookbook.recommendRecipes(fs)); // TODO
+    PrintUtil.printList(cookbook.getMakeableRecipes(fs), Recipe::recipeToString);
   }
 
+  /**
+   * Recommends a recipe based on the ingredients in FoodStorage {@code fs}.
+   *
+   * @param cookbook Cookbook object used to store recipes
+   * @param fs       FoodStorage object used to store food items
+   */
   public void recipeRecommender(Cookbook cookbook, FoodStorage fs) {
-    System.out.println(cookbook.recommendRecipes(fs)); // TODO
+    System.out.println("Recommended recipe: ");
+    Recipe recipe = cookbook.recommendRecipe(fs);
+    System.out.println(recipe.recipeToString());
   }
 
 }
