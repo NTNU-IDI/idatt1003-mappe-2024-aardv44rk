@@ -3,6 +3,7 @@ package edu.ntnu.idi.idatt.model;
 import edu.ntnu.idi.idatt.util.ArgumentValidator;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 
 /**
@@ -51,8 +52,24 @@ public class Cookbook {
    * @param fs FoodStorage where Ingredients are stored
    * @return List consisting of all recipes that are makeable
    */
-  public List<Recipe> recommendRecipes(FoodStorage fs) {
+  public List<Recipe> getMakeableRecipes(FoodStorage fs) {
     return this.recipes.values().stream().filter(recipe -> recipe.isMakeableRecipe(fs)).toList();
+  }
+
+  /**
+   * Recommends recipes based on the makeable recipes in a cookbook and the ingredients
+   * in a FoodStorage <code>fs</code>.
+   *
+   * @param fs FoodStorage where Ingredients are stored
+   * @return a list of recipes that are recommended to make
+   */
+  public Recipe recommendRecipe(FoodStorage fs) {
+    List<Recipe> makeableRecipes = getMakeableRecipes(fs);
+
+    Random random = new Random();
+    int randomIndex = random.nextInt(makeableRecipes.size());
+
+    return makeableRecipes.get(randomIndex);
   }
 
   /**
