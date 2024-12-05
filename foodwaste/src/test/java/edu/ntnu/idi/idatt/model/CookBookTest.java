@@ -1,30 +1,38 @@
 package edu.ntnu.idi.idatt.model;
 
-import java.time.LocalDate;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.LocalDate;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class CookBookTest {
   private Cookbook cookbook;
   private Recipe recipe;
-  private Quantity oatQuantity;
-  private Quantity otherQuantity;
-  private Map<String, Quantity> ingredientMap;
+  private String name;
+  private String otherName;
+  private double amount;
+  private String oatUnit;
+  private String otherUnit;
+  private Map<String, Ingredient> ingredientMap;
 
   @BeforeEach
   void testInit() {
     cookbook = new Cookbook();
     ingredientMap = new LowerCaseMap<>();
-    oatQuantity = new Quantity(100, "g");
-    otherQuantity = new Quantity(100, "mL");
-    ingredientMap.put("oats", oatQuantity);
-    ingredientMap.put("water", otherQuantity);
+    name = "oats";
+    otherName = "water";
+    amount = 100;
+    oatUnit = "g";
+    otherUnit = "mL";
+    Ingredient oats = new Ingredient(name, amount, oatUnit);
+    Ingredient water = new Ingredient(otherName, amount, otherUnit);
+    ingredientMap.put("oats", oats);
+    ingredientMap.put("water", water);
     recipe = new Recipe(
         "Oatmeal",
         "A mediocre meal consisting of oats and water.",
@@ -78,10 +86,10 @@ class CookBookTest {
             recipe.getPortions(),
             recipe.getIngredientMap()));
     FoodStorage fs = new FoodStorage();
-    fs.addIngredient(new Ingredient("oats", 10, LocalDate.now(), oatQuantity));
-    fs.addIngredient(new Ingredient("water", 10, LocalDate.now(), otherQuantity));
-    assertTrue(cookbook.recommendRecipes(fs).contains(recipe), "Recipe should be contained");
-    assertEquals(2, cookbook.recommendRecipes(fs).size(), "Should contain 2 recipes");
+    fs.addIngredient(new Ingredient("oats", 10, LocalDate.now(), amount, oatUnit));
+    fs.addIngredient(new Ingredient("water", 10, LocalDate.now(), amount, otherUnit));
+    assertTrue(cookbook.getMakeableRecipes(fs).contains(recipe), "Recipe should be contained");
+    assertEquals(2, cookbook.getMakeableRecipes(fs).size(), "Should contain 2 recipes");
   }
 
   @Test

@@ -82,18 +82,18 @@ public class FoodStorage {
    * @param other Ingredient already in storage
    */
   public void mergeIngredient(Ingredient ingredient, Ingredient other) {
-    double amount = ingredient.getQuantity().getAmount();
+    double amount = ingredient.getAmount();
     double price = ingredient.getUnitPrice();
-    String unit = ingredient.getQuantity().getUnit();
-    double otherAmount = other.getQuantity().getAmount();
+    String unit = ingredient.getUnit();
+    double otherAmount = other.getAmount();
     double otherPrice = ingredient.getUnitPrice();
-    String otherUnit = other.getQuantity().getUnit();
+    String otherUnit = other.getUnit();
 
     if (!unit.equalsIgnoreCase(otherUnit)) {
       throw new IllegalArgumentException("Unit differs from previous unit: " + otherUnit); 
     }
 
-    other.getQuantity().setAmount(amount + otherAmount);
+    other.setAmount(amount + otherAmount);
     other.setUnitPrice(price + otherPrice);
   }
 
@@ -118,9 +118,9 @@ public class FoodStorage {
 
     while (iterator.hasNext() && amount > 0) {
       ingredient = iterator.next();
-      double ingredientAmount = ingredient.getQuantity().getAmount();
+      double ingredientAmount = ingredient.getAmount();
       if (ingredientAmount >= amount) {
-        ingredient.getQuantity().setAmount(ingredientAmount - amount);
+        ingredient.setAmount(ingredientAmount - amount);
         amount = 0;
       } else {
         amount -= ingredientAmount;
@@ -205,7 +205,7 @@ public class FoodStorage {
   public static double getTotalAmount(List<Ingredient> list) {
     ArgumentValidator.isValidObject(list, "List cannot be null, whoops!");
     return list.stream()
-          .mapToDouble(ingredient -> ingredient.getQuantity().getAmount())
+          .mapToDouble(ingredient -> ingredient.getAmount())
           .sum();
   }
 

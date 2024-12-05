@@ -1,13 +1,13 @@
 package edu.ntnu.idi.idatt.model;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,14 +16,18 @@ import org.junit.jupiter.api.Test;
  */
 class RecipeTest {
 
+
   private String name;
   private String description;
   private String instruction;
-  private Map<String, Quantity> ingredientMap;
-  private Quantity oatQuantity;
-  private Quantity otherQuantity;
+  private Map<String, Ingredient> ingredientMap;
+  private double amount;
+  private String oatUnit;
+  private String otherUnit;
   private double portions;
   private Recipe recipe;
+  Ingredient oats;
+  Ingredient water;
 
   @BeforeEach
   @SuppressWarnings("unused")
@@ -32,10 +36,13 @@ class RecipeTest {
     description = "A mediocre meal consisting of oats and water.";
     instruction = "Boil water, add oats, bon apetit";
     ingredientMap = new LowerCaseMap<>();
-    oatQuantity = new Quantity(100, "g");
-    otherQuantity = new Quantity(100, "mL");
-    ingredientMap.put("Oats", oatQuantity);
-    ingredientMap.put("Water", otherQuantity);
+    amount = 100;
+    oatUnit = "g";
+    otherUnit = "mL";
+    oats = new Ingredient("oats", amount, oatUnit);
+    water = new Ingredient("water", amount, otherUnit);
+    ingredientMap.put("Oats", oats);
+    ingredientMap.put("Water", water);
     portions = 1.0;
     recipe = new Recipe(name, description, instruction, portions, ingredientMap);
   }
@@ -72,11 +79,13 @@ class RecipeTest {
 
   @Test
   void testSetIngredientMap() {
-    Map<String, Quantity> expected = new HashMap<>();
+    Map<String, Ingredient> expected = new HashMap<>();
     String ingredientName = "Milk";
-    Quantity quantity = new Quantity(100.0, "mL");
-    expected.put(ingredientName, quantity);
-    expected.put("Oats", oatQuantity);
+    double amount = 100;
+    String unit = "mL";
+    Ingredient milk = new Ingredient(ingredientName, amount, unit);
+    expected.put(ingredientName, milk);
+    expected.put("Oats", oats);
     recipe.setIngredientMap(expected);
     assertEquals(expected, recipe.getIngredientMap());
   }
@@ -100,14 +109,14 @@ class RecipeTest {
 
         Step by step:
         Boil water, add oats, bon apetit""",
-        recipe.printRecipe(), "Should be equal");
+        recipe.recipeToString(), "Should be equal");
   }
 
   @Test
   void testIsMakeableRecipe() {
     FoodStorage fs = new FoodStorage();
-    fs.addIngredient(new Ingredient("oats", 10, LocalDate.now(), new Quantity(100.0, "g")));
-    fs.addIngredient(new Ingredient("Water", 10, LocalDate.now(), new Quantity(100.0, "mL")));
+    fs.addIngredient(new Ingredient("oats", 10, LocalDate.now(), 100, "g"));
+    fs.addIngredient(new Ingredient("Water", 10, LocalDate.now(), 100, "mL"));
     assertTrue(recipe.isMakeableRecipe(fs), "Recipe should be makeable");
   }
 
@@ -184,7 +193,7 @@ class RecipeTest {
 
   @Test
   void testSetIngredientMapEmpty() {
-    Map<String, Quantity> emptyMap = new HashMap<>();
+    Map<String, Ingredient> emptyMap = new HashMap<>();
     IllegalStateException e = assertThrows(IllegalStateException.class,
         () -> recipe.setIngredientMap(emptyMap),
         "Should throw IllegalArgumentException if empty map is passed");

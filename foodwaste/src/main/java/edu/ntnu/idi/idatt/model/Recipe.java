@@ -18,7 +18,7 @@ public class Recipe {
   String description;
   String instruction;
   double portions;
-  Map<String, Quantity> ingredientMap;
+  Map<String, Ingredient> ingredientMap;
 
   /**
    * Sole constructor.
@@ -32,7 +32,7 @@ public class Recipe {
                 String description, 
                 String instruction,
                 double portions,
-                Map<String, Quantity> ingredientMap
+                Map<String, Ingredient> ingredientMap
   ) {
     ArgumentValidator.isValidRecipe(name, description, instruction, ingredientMap, portions);
     this.name = name;
@@ -54,7 +54,7 @@ public class Recipe {
     return instruction;
   }
 
-  public Map<String, Quantity> getIngredientMap() {
+  public Map<String, Ingredient> getIngredientMap() {
     return ingredientMap;
   }
 
@@ -102,7 +102,7 @@ public class Recipe {
    * @param ingredientMap the name of the recipe
    * @throws IllegalArgumentException if <code>ingredients</code> is empty
    */
-  public void setIngredientMap(Map<String, Quantity> ingredientMap) 
+  public void setIngredientMap(Map<String, Ingredient> ingredientMap) 
               throws IllegalArgumentException {
     ArgumentValidator.isValidMap(ingredientMap, "Recipe cannot have zero ingredients!");
     this.ingredientMap = ingredientMap;
@@ -125,15 +125,16 @@ public class Recipe {
    *
    * @return a string containing the information of a recipe 
    */
-  public String printRecipe() {
+  public String recipeToString() {
     StringBuilder sb = new StringBuilder();
     
     sb.append("Recipe:\n").append(this.name).append("\n")
                       .append(this.description).append("\nIngredients:\n");
 
-    ingredientMap.forEach((ingredientName, quantity)
+    ingredientMap.forEach((ingredientName, ingredient)
                           -> sb.append("* ").append(ingredientName).append(" ")
-                          .append(quantity.quantityString()).append("\n"));
+                          .append(ingredient.getAmount()).append(" ")
+                          .append(ingredient.getUnit()).append("\n"));
     sb.append("\nStep by step:\n").append(this.instruction);
 
     return sb.toString();
@@ -146,7 +147,7 @@ public class Recipe {
    * @param fs storage to compare
    */
   public boolean isMakeableRecipe(FoodStorage fs) {
-    Map<String, Quantity> ingredients = this.getIngredientMap();
+    Map<String, Ingredient> ingredients = this.getIngredientMap();
     return ingredients.entrySet().stream()
       .allMatch(i -> {
         String ingredientName = i.getKey().toLowerCase();

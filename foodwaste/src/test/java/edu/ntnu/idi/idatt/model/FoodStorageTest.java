@@ -1,20 +1,19 @@
 package edu.ntnu.idi.idatt.model;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import edu.ntnu.idi.idatt.util.DateUtil;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Class responsible for testing FoodStorage class.
@@ -32,7 +31,8 @@ class FoodStorageTest {
   private String name;
   private double price;
   private LocalDate expiryDate;
-  private Quantity quantity;
+  private double amount;
+  private String unit;
   private FoodStorage fs;
 
   @BeforeEach
@@ -42,12 +42,13 @@ class FoodStorageTest {
     name = "Milk";
     price = 10;
     expiryDate = DateUtil.parseDate("12-12-2024");
-    quantity = new Quantity(2000.0, "mL");
-    ingredient1 = new Ingredient(name, price, expiryDate, quantity);
-    ingredient2 = new Ingredient(name, 12.00, expiryDate, new Quantity(200.0, "mL"));
-    ingredient3 = new Ingredient(name, 12.00, expiryDate, new Quantity(200.0, "mL"));
-    ingredient4 = new Ingredient("Banana", price, DateUtil.parseDate("12-12-2023"), quantity);
-    ingredient5 = new Ingredient(name, price, DateUtil.parseDate("10-12-2024"), quantity);
+    amount = 2000;
+    unit = "mL";
+    ingredient1 = new Ingredient(name, price, expiryDate, amount, unit);
+    ingredient2 = new Ingredient(name, 12.00, expiryDate, amount, unit);
+    ingredient3 = new Ingredient(name, 12.00, expiryDate, amount, unit);
+    ingredient4 = new Ingredient("Banana", price, DateUtil.parseDate("12-12-2023"), amount, unit);
+    ingredient5 = new Ingredient(name, price, DateUtil.parseDate("10-12-2024"), amount, unit);
   }
 
   // Positive cases
@@ -68,17 +69,17 @@ class FoodStorageTest {
 
     assertEquals(1, ingredients.size(), "Sizes should match");
     assertEquals(400,
-              ingredients.getFirst().getQuantity().getAmount(),
+              ingredients.getFirst().getAmount(),
               "Amounts should match");
   }
 
   @Test
-  void testMergeIngredient() {
-    ingredient2.getQuantity().setUnit("g");
+  void testMergeIngredientDifferentUnits() {
+    ingredient2 = new Ingredient(name, 12.00, expiryDate, amount, "g");
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class, 
                                 () -> fs.mergeIngredient(ingredient2, ingredient3),
                                 "Differing units when merging should throw exception");
-    assertEquals("Unit differs from previous unit: " + ingredient3.getQuantity().getUnit(),
+    assertEquals("Unit differs from previous unit: " + ingredient3.getUnit(),
                   e.getMessage(), "Messages should be the same");
   }
 
@@ -240,8 +241,8 @@ class FoodStorageTest {
 
   @Test
   void testAddIngredientEdgeCases() {
-    fs.addIngredient(new Ingredient(name, price, LocalDate.MAX, quantity));
-    fs.addIngredient(new Ingredient(name, price, LocalDate.MIN, quantity));
+    fs.addIngredient(new Ingredient(name, price, LocalDate.MAX, amount, unit));
+    fs.addIngredient(new Ingredient(name, price, LocalDate.MIN, amount, unit));
 
     assertTrue(fs.getStorage().containsKey(name), "Storage should contain edge case Ingredients");
     assertEquals(2, fs.getStorage().get(name).size(), "Both edge cases should have been added");
