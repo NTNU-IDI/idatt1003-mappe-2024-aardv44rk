@@ -16,6 +16,11 @@ import java.util.Scanner;
  */
 public class InputValidator {
 
+  /**
+   * Constructor that throws an UnsupportedOperationException to prevent instantiation of the class.
+   *
+   * @throws UnsupportedOperationException if the class is instantiated
+   */
   protected InputValidator() throws UnsupportedOperationException {
     throw new UnsupportedOperationException("Utility class");
   }
@@ -33,12 +38,13 @@ public class InputValidator {
     System.out.println(p);
     boolean valid = false;
     String output = "";
+    String input = sc.nextLine();
     while (!valid) {
-      if (sc.nextLine().isBlank()) {
+      if (input.isBlank()) {
         throw new InvalidInputException("Blank input not allowed, sorry!");
       } else {
         valid = true;
-        output = sc.nextLine();
+        output = input;
       }
     }
     return output;
@@ -57,12 +63,13 @@ public class InputValidator {
     System.out.println(p);
     boolean valid = false;
     double output = 0;
+    String input = sc.nextLine();
     while (!valid) {
-      if (sc.nextLine().isBlank()) {
+      if (input.isBlank()) {
         throw new InvalidInputException("Blank input not allowed, sorry!");
       } else {
         try {
-          output = Double.parseDouble(sc.nextLine());
+          output = Double.parseDouble(input);
           valid = true;
         } catch (NumberFormatException e) {
           System.out.println("Input has to be a number, whoops!");
@@ -85,12 +92,13 @@ public class InputValidator {
     System.out.println(p);
     boolean valid = false;
     LocalDate output = LocalDate.MIN;
+    String input = sc.nextLine();
     while (!valid) {
-      if (sc.nextLine().isBlank()) {
+      if (input.isBlank()) {
         throw new IllegalArgumentException("Blank input not allowed, sorry!");
       } else {
         try {
-          output = DateUtil.parseDate(sc.nextLine());
+          output = DateUtil.parseDate(input);
           valid = true;
         } catch (DateTimeParseException e) {
           System.out.println("Input has to be a date in the format dd-MM-yyyy, whoops!");
