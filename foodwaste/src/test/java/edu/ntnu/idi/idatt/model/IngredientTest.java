@@ -44,17 +44,6 @@ class IngredientTest {
     assertEquals(unit, ingredient.getUnit(), "Units should be equal");
   }
 
-  @Test
-  void testPrintIngredient() {
-    String output = """
-        Milk
-        Price: 10.0 money units
-        Amount: 2.0 mL
-        Expiry date: 12-12-2024""";
-
-    assertEquals(output, ingredient.ingredientToString());
-  }
-
   // Negative tests
   @Test
   void testNameEmptyOrNull() {

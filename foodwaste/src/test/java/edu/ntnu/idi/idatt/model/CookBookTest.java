@@ -51,26 +51,26 @@ class CookBookTest {
 
   @Test
   void testAddRecipe() {
-    cookbook.addRecipe(recipe);
-    assertTrue(cookbook.getRecipes().containsValue(recipe),
+    cookbookController.addRecipe(recipe);
+    assertTrue(cookbookController.getRecipes().containsValue(recipe),
         "Should contain recipe");
 
-    assertTrue(cookbook.getRecipes().containsKey(recipe.getName().toLowerCase()),
+    assertTrue(cookbookController.getRecipes().containsKey(recipe.getName().toLowerCase()),
         "Key should match recipe name to lowercase");
   }
 
   @Test
   void testRemoveRecipe() {
-    cookbook.addRecipe(recipe);
-    assertTrue(cookbook.getRecipes().containsValue(recipe), "Should contain recipe");
-    cookbook.removeRecipe(recipe.getName());
-    assertFalse(cookbook.getRecipes().containsValue(recipe), "Should not contain recipe");
+    cookbookController.addRecipe(recipe);
+    assertTrue(cookbookController.getRecipes().containsValue(recipe), "Should contain recipe");
+    cookbookController.removeRecipe(recipe.getName());
+    assertFalse(cookbookController.getRecipes().containsValue(recipe), "Should not contain recipe");
   }
 
   @Test
   void testRecipeNamesToList() {
-    cookbook.addRecipe(recipe);
-    cookbook.addRecipe(
+    cookbookController.addRecipe(recipe);
+    cookbookController.addRecipe(
         new Recipe(
             "Oatmeal 2",
             recipe.getDescription(),
@@ -84,9 +84,9 @@ class CookBookTest {
   }
 
   @Test
-  void testRecommendRecipes() {
-    cookbook.addRecipe(recipe);
-    cookbook.addRecipe(
+  void testGetMakeableRecipes() {
+    cookbookController.addRecipe(recipe);
+    cookbookController.addRecipe(
         new Recipe(
             "Oatmeal 2",
             recipe.getDescription(),
@@ -100,6 +100,23 @@ class CookBookTest {
     assertTrue(cookbookController.getMakeableRecipes().contains(recipe),
           "Recipe should be contained");
     assertEquals(2, cookbookController.getMakeableRecipes().size(), "Should contain 2 recipes");
+  }
+
+  @Test
+  void testRecommendRecipes() {
+    cookbookController.addRecipe(recipe);
+    cookbookController.addRecipe(
+        new Recipe(
+            "Oatmeal 2",
+            recipe.getDescription(),
+            recipe.getInstruction(),
+            recipe.getPortions(),
+            recipe.getIngredientMap()));
+    storageController.addIngredient(new Ingredient("oats", 10, LocalDate.now(), amount, oatUnit));
+    storageController.addIngredient(
+            new Ingredient("water", 10, LocalDate.now(), amount, otherUnit)
+    );
+    assertEquals(2, cookbookController.recommendRecipes().size(), "Should contain 2 recipes");
   }
 
   @Test
@@ -125,5 +142,10 @@ class CookBookTest {
     assertFalse(cookbookController.isMakeableRecipe(recipe), "Recipe should not be makeable");
   }
 
+  @Test
+  void testNotContainsEnoughIngredients() {
+    assertFalse(cookbookController.containsEnoughIngredients(recipe, 0.8),
+        "Should not contain enough ingredients");
+  }
 
 }
