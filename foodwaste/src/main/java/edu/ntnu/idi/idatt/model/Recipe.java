@@ -139,22 +139,4 @@ public class Recipe {
 
     return sb.toString();
   }
-
-  /**
-   * Compares the ingredients in a recipe to the ingredients in a storage.
-   * Returns true or false based on the result.
-   *
-   * @param fs storage to compare
-   */
-  public boolean isMakeableRecipe(FoodStorage fs) {
-    Map<String, Ingredient> ingredients = this.getIngredientMap();
-    return ingredients.entrySet().stream()
-      .allMatch(i -> {
-        String ingredientName = i.getKey().toLowerCase();
-        double amount = i.getValue().getAmount();
-
-        double availableAmount = FoodStorage.getTotalAmount(fs.searchIngredient(ingredientName));
-        return amount <= availableAmount;
-      });
-  }
 }
