@@ -1,9 +1,6 @@
 package edu.ntnu.idi.idatt;
 
-import edu.ntnu.idi.idatt.controllers.CookbookController;
-import edu.ntnu.idi.idatt.controllers.StorageController;
-import edu.ntnu.idi.idatt.model.Cookbook;
-import edu.ntnu.idi.idatt.model.FoodStorage;
+import edu.ntnu.idi.idatt.util.AppInitializer;
 import edu.ntnu.idi.idatt.view.MainMenu;
 
 /**
@@ -21,10 +18,8 @@ public class App {
    * @param args the command line arguments
    */
   public static void main(String[] args) {
-    Cookbook cookbook = new Cookbook();
-    FoodStorage storage = new FoodStorage();
-    StorageController storageController = new StorageController(storage);
-    CookbookController cookbookController = new CookbookController(cookbook, storageController);
-    new MainMenu(storageController, cookbookController).display();
+    AppInitializer appInitializer = new AppInitializer();
+    MainMenu mainMenu = appInitializer.init();
+    appInitializer.start(mainMenu);
   }
 }
