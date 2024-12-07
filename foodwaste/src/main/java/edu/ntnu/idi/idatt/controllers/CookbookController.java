@@ -29,6 +29,9 @@ public class CookbookController {
    */
   public void addRecipe(Recipe recipe) {
     ArgumentValidator.isValidObject(recipe, "Recipe cannot be null");
+    if (cookbook.getRecipes().containsKey(recipe.getName().toLowerCase())) {
+      throw new IllegalStateException("Recipe already exists in cookbook");
+    }
 
     cookbook.addRecipe(recipe);
   }
