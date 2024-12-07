@@ -100,4 +100,21 @@ public class CookbookController {
   public Map<String, Recipe> getRecipes() {
     return new TreeMap<>(cookbook.getRecipes());
   }
+
+   /**
+   * Method that prints the name and description of a <code>Recipe</code> object, specifically
+   * for the CookbookMenu#viewCookbook() method. If the recipe is makeable, the name will be
+   * printed in green.
+   *
+   * @return a string consisting of the name and description of a recipe
+   */
+  public String recipeToMapString(Recipe recipe) {
+    ArgumentValidator.isValidObject(recipe, "Recipe cannot be null");
+    final String green = "\u001B[32m";
+    final String reset = "\u001B[0m";
+    if (isMakeableRecipe(recipe)) {
+        return String.format("%-20s %-50s", green + recipe.getName() + reset + " (Makeable)", recipe.getDescription());
+    }
+    return String.format("%-20s %-50s", recipe.getName(), recipe.getDescription());
+  }
 }

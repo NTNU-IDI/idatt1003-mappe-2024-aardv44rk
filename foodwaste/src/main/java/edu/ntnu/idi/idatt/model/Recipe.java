@@ -38,8 +38,8 @@ public class Recipe {
     this.name = name;
     this.description = description;
     this.instruction = instruction;
-    this.ingredientMap = ingredientMap;
     this.portions = portions;
+    this.ingredientMap = ingredientMap;
   }
 
   public String getName() {
@@ -127,8 +127,8 @@ public class Recipe {
    */
   public String recipeToString() {
     StringBuilder sb = new StringBuilder();
-    
-    sb.append("Recipe:\n").append(this.name).append("\n")
+    sb.append(("-").repeat(40)).append("\n")
+                      .append(this.name).append("\n")
                       .append(this.description).append("\nIngredients:\n");
 
     ingredientMap.forEach((ingredientName, ingredient)
@@ -139,4 +139,5 @@ public class Recipe {
 
     return sb.toString();
   }
+
 }
