@@ -1,8 +1,9 @@
 package edu.ntnu.idi.idatt.view;
 
+import edu.ntnu.idi.idatt.controllers.CookbookController;
+import edu.ntnu.idi.idatt.controllers.StorageController;
 import edu.ntnu.idi.idatt.exceptions.InvalidInputException;
 import edu.ntnu.idi.idatt.exceptions.UnsupportedFormatException;
-import edu.ntnu.idi.idatt.model.FoodStorage;
 import edu.ntnu.idi.idatt.model.Ingredient;
 import edu.ntnu.idi.idatt.util.InputValidator;
 import edu.ntnu.idi.idatt.util.PrintUtil;
@@ -13,14 +14,17 @@ import java.util.List;
  * This class represents the interface for the storage view.
  */
 public class StorageMenu implements UserInterface {
-  private final FoodStorage fs;
+  private final StorageController storageController;
+  private final CookbookController cookbookController;
 
-  public StorageMenu(FoodStorage fs) {
-    this.fs = fs;
+  public StorageMenu(StorageController storageController, CookbookController cookbookController) {
+    this.storageController = storageController;
+    this.cookbookController = cookbookController;
   }
 
   @Override
   public void display() {
+    System.out.println(("-").repeat(40));
     System.out.println("Storage Menu");
     System.out.println("1. Add ingredient");
     System.out.println("2. Remove ingredient");
@@ -28,21 +32,30 @@ public class StorageMenu implements UserInterface {
     System.out.println("4. View storage");
     System.out.println("5. Search for ingredient");
     System.out.println("6. View expired");
-    System.out.println("7. Go Back"); 
+    System.out.println("7. Go Back");
+    System.out.println(("-").repeat(40));
+
+    try {
+      String input = InputValidator.getString("Enter your choice: ");
+      handleInput(input);
+    } catch (InvalidInputException e) {
+      System.out.println(e.getMessage());
+    }
   }
 
   /**
    * Handles the input provided by the user.
    */
+  @Override
   public void handleInput(String input) {
     switch (input) {
       case "1" -> addIngredient();
       case "2" -> removeIngredient();
-      case "3" -> removeAmount();
+      case "3" -> removeIngredientAmount();
       case "4" -> viewStorage();
       case "5" -> searchForIngredient();
       case "6" -> viewExpired();
-      // case "7" -> new MainMenu().display(); TODO: Fix this
+      case "7" -> new MainMenu(storageController, cookbookController).display();
       default -> System.out.println("Invalid choice");
     }
   }
@@ -55,13 +68,13 @@ public class StorageMenu implements UserInterface {
     while (running) {
       try {
         String name = InputValidator.getString("Enter the name of the ingredient: ");
-        double price = InputValidator.getDouble("Enter the price of the ingredient: ");
+        double price = InputValidator.getPositiveDouble("Enter the price of the ingredient: ");
         LocalDate expiryDate = InputValidator.getDate("Enter the expiry date of the ingredient "
             + "(on format dd-MM-yyyy): ");
-        double amount = InputValidator.getDouble("Enter the amount of the ingredient: ");
+        double amount = InputValidator.getPositiveDouble("Enter the amount of the ingredient: ");
         String unit = InputValidator.getString("Enter the unit of the ingredient (mL, g, or pcs):");
         Ingredient ingredient = new Ingredient(name, price, expiryDate, amount, unit);
-        fs.addIngredient(ingredient);
+        storageController.addIngredient(ingredient);
         running = false;
       } catch (UnsupportedFormatException | InvalidInputException e) {
         System.out.println(e.getMessage());
@@ -80,7 +93,7 @@ public class StorageMenu implements UserInterface {
     while (running) {
       try {
         String name = InputValidator.getString("Enter the name of the ingredient to remove: ");
-        fs.removeIngredient(name);
+        storageController.removeIngredient(name);
         running = false;
       } catch (InvalidInputException | IllegalStateException e) {
         System.out.println(e.getMessage());
@@ -92,15 +105,15 @@ public class StorageMenu implements UserInterface {
    * Reads user input and removes an amount of an ingredient from FoodStorage
    * {@code fs}.
    */
-  public void removeAmount() {
+  public void removeIngredientAmount() {
     boolean running = true;
     while (running) {
       try {
         String name = InputValidator.getString("Enter the name of the ingredient you "
             + "want to remove an amount of: ");
-        double amount = InputValidator.getDouble("Enter the amount you want to remove of " 
+        double amount = InputValidator.getPositiveDouble("Enter the amount you want to remove of " 
               + name + ": ");
-        fs.removeIngredient(name, amount);
+        storageController.removeIngredientAmount(name, amount);
         running = false;
       } catch (InvalidInputException | IllegalArgumentException | IllegalStateException e) {
         System.out.println(e.getMessage());
@@ -114,8 +127,15 @@ public class StorageMenu implements UserInterface {
    * Displays all items in FoodStorage {@code fs}.
    */
   public void viewStorage() {
-    List<Ingredient> ingredients = fs.getStorage().values().stream()
-        .<Ingredient>flatMap(List::stream)
+    String header = String.format(
+        "%-20s %-10s %-15s %-10s %-10s",
+        "Name", "Price", "Expiry Date", "Amount", "Unit"
+    );
+    String line = "-".repeat(header.length());
+    System.out.println(header);
+    System.out.println(line);
+    List<Ingredient> ingredients = storageController.sortStorage().values().stream()
+        .flatMap(List::stream)
         .toList();
     PrintUtil.printList(ingredients, Ingredient::ingredientToString);
   }
@@ -129,7 +149,8 @@ public class StorageMenu implements UserInterface {
       try {
         String name = InputValidator.getString("Enter the name of the ingredient "
             + "you want to search for: ");
-        PrintUtil.printList(fs.searchIngredient(name), Ingredient::ingredientToString); 
+        PrintUtil.printList(storageController.searchIngredient(name),
+              Ingredient::ingredientToString); 
         running = false;
       } catch (InvalidInputException e) {
         System.out.println(e.getMessage());
@@ -149,7 +170,7 @@ public class StorageMenu implements UserInterface {
       try {
         LocalDate date = InputValidator.getDate("Enter the date you want to check for expired "
             + "items (on format dd-MM-yyyy): ");
-        PrintUtil.printList(fs.getExpiredFood(date), Ingredient::ingredientToString);
+        PrintUtil.printList(storageController.getExpiredFood(date), Ingredient::ingredientToString);
         running = false;
       } catch (UnsupportedFormatException e) {
         System.out.println(e.getMessage());
