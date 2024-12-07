@@ -38,6 +38,7 @@ public class InputValidator {
    * @throws InvalidInputException if user input is blank
    */
   public static String getString(String p) throws InvalidInputException {
+    ArgumentValidator.isValidString(p, "Prompt cannot be null or empty");
     System.out.println(p);
     String output = "";
     String input = sc.nextLine();
@@ -51,13 +52,14 @@ public class InputValidator {
 
   /**
    * Prompts the user for a String with prompt {@code p}.
-   * Validates and returns if it can be parsed to a double.
+   * Validates and returns if it can be parsed to a double, throws exception if empty or negative input.
    *
    * @param p Prompt that user receives 
    * @return The string input of the user if it is validated
-   * @throws InvalidInputException if user input is blank
+   * @throws InvalidInputException if user input is blank 
    */
-  public static double getDouble(String p) throws InvalidInputException {
+  public static double getPositiveDouble(String p) throws InvalidInputException {
+    ArgumentValidator.isValidString(p, "Prompt cannot be null or empty");
     System.out.println(p);
     double output = 0;
     String input = sc.nextLine();
@@ -66,6 +68,7 @@ public class InputValidator {
     } else {
       try {
         output = Double.parseDouble(input);
+        ArgumentValidator.isValidDouble(output, "Input has to be a positive number, whoops!");
       } catch (NumberFormatException e) {
         System.out.println("Input has to be a number, whoops!");
       }
@@ -82,6 +85,7 @@ public class InputValidator {
    * @throws IllegalArgumentException if user input does not match the required date format
    */
   public static LocalDate getDate(String p) throws UnsupportedFormatException {
+    ArgumentValidator.isValidString(p, "Prompt cannot be null or empty");
     System.out.println(p);
     LocalDate output = LocalDate.MIN;
     String input = sc.nextLine();
