@@ -1,6 +1,6 @@
 package edu.ntnu.idi.idatt.util;
 
-import edu.ntnu.idi.idatt.model.Quantity;
+import edu.ntnu.idi.idatt.model.Ingredient;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -16,8 +16,13 @@ import java.util.Map;
  */
 
 public class ArgumentValidator {
-   
-  protected ArgumentValidator() {
+  
+  /**
+   * Constructor that throws an UnsupportedOperationException to prevent instantiation of the class.
+   *
+   * @throws UnsupportedOperationException if the class is instantiated 
+   */
+  private ArgumentValidator() throws UnsupportedOperationException {
     throw new UnsupportedOperationException("Utility class");
   }
 
@@ -100,35 +105,26 @@ public class ArgumentValidator {
   }
 
   /**
-   * Validates all parameters of a Quantity object <code>q</code>.
-   *
-   * @param amount amount of <code>q</code>
-   * @param unit unit of <code>q</code>
-   */
-  public static void isValidQuantity(double amount, String unit) {
-    isValidDouble(amount, "Amount cannot be negative or zero!");
-    isValidUnit(unit);
-  }
-
-
-  /**
    * Validates all parameters of an Ingredient object.
    *
    * @param name String representing name of an Ingredient
    * @param price Double representing price of an Ingredient
    * @param expiryDate LocalDate representing expiration date
-   * @param quantity Quantity representing amount and unit
+   * @param amount Double representing amount of an Ingredient
+   * @param unit String representing unit of an Ingredient
    */
   public static void isValidIngredient(
                         String name, 
                         double price, 
                         LocalDate expiryDate, 
-                        Quantity quantity 
+                        double amount,
+                        String unit
   ) {
     isValidString(name, "Name cannot be empty or null!");
     isValidDouble(price, "Price cannot be negative or zero!");
     isValidDate(expiryDate, "Date cannot be null!");
-    isValidObject(quantity, "Quantity cannot be null!");
+    isValidDouble(amount, "Amount cannot be negative or zero!");
+    isValidUnit(unit);
   }
 
   /**
@@ -143,7 +139,7 @@ public class ArgumentValidator {
   public static void isValidRecipe(String name, 
                 String description, 
                 String instruction,
-                Map<String, Quantity> ingredientMap, 
+                Map<String, Ingredient> ingredientMap, 
                 double portions
   ) {
     ArgumentValidator.isValidString(name, "Name cannot be empty!");
