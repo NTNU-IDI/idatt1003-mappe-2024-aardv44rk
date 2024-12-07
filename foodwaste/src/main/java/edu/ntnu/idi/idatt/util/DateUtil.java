@@ -18,7 +18,8 @@ public class DateUtil {
     throw new UnsupportedOperationException("Utility class");
   }
 
-  private static final String DEFAULT_DATE_FORMAT = "dd-MM-yyyy";
+  private static final String DEFAULT_DATE_INPUT_FORMAT = "dd-MM-yyyy";
+  private static final String DEFAULT_DATE_OUTPUT_FORMAT = "MMMM d'th' yyyy";
 
   // Parses date
   public static LocalDate parseDate(String dateString, String format) {
@@ -27,7 +28,7 @@ public class DateUtil {
   }
 
   public static LocalDate parseDate(String dateString) {
-    return parseDate(dateString, DEFAULT_DATE_FORMAT);
+    return parseDate(dateString, DEFAULT_DATE_INPUT_FORMAT);
   }
 
   // Formats date
@@ -37,7 +38,7 @@ public class DateUtil {
   }
 
   public static String formatDate(LocalDate date) {
-    return formatDate(date, DEFAULT_DATE_FORMAT);
+    return formatDate(date, DEFAULT_DATE_OUTPUT_FORMAT);
   }
 
 

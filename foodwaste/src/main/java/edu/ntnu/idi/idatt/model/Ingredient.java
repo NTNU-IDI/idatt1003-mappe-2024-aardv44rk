@@ -114,7 +114,7 @@ public class Ingredient {
       formattedDate = DateUtil.formatDate(expiryDate);
     }
     return String.format(
-          "%-20s %-10.2f %-15s %-10.2f %-10s",
+          "%-20s %-10.2f %-25s %-10.2f %-10s",
           name, 
           unitPrice, 
           formattedDate,

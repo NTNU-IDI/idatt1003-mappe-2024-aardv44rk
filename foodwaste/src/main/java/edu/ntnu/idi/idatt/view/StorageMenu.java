@@ -128,7 +128,7 @@ public class StorageMenu implements UserInterface {
    */
   public void viewStorage() {
     String header = String.format(
-        "%-20s %-10s %-15s %-10s %-10s",
+        "%-20s %-10s %-25s %-10s %-10s",
         "Name", "Price", "Expiry Date", "Amount", "Unit"
     );
     String line = "-".repeat(header.length());
