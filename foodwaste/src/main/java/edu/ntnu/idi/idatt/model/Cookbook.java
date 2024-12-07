@@ -1,9 +1,7 @@
 package edu.ntnu.idi.idatt.model;
 
-import edu.ntnu.idi.idatt.util.ArgumentValidator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 
 /**
@@ -25,11 +23,7 @@ public class Cookbook {
    *
    * @param recipe Recipe to be added
    */
-  public void addRecipe(Recipe recipe) {
-    if (recipes.containsKey(recipe.getName())) {
-      throw new IllegalStateException("Recipe of same name already in cookbook!");
-    }
-    
+  public void addRecipe(Recipe recipe) {  
     recipes.put(recipe.getName(), recipe);
   }
 
@@ -40,36 +34,7 @@ public class Cookbook {
    * @throws IllegalStateException if recipe not present
    */
   public void removeRecipe(String name) throws IllegalStateException {
-    ArgumentValidator.validateMapContainsKey(recipes, name, "Recipe not found");
-
     recipes.remove(name);
-  }
-
-  /**
-   * Finds all recipes that are makeable in a cookbook based on Ingredients in a FoodStorage
-   * <code>fs</code>.
-   *
-   * @param fs FoodStorage where Ingredients are stored
-   * @return List consisting of all recipes that are makeable
-   */
-  public List<Recipe> getMakeableRecipes(FoodStorage fs) {
-    return this.recipes.values().stream().filter(recipe -> recipe.isMakeableRecipe(fs)).toList();
-  }
-
-  /**
-   * Recommends recipes based on the makeable recipes in a cookbook and the ingredients
-   * in a FoodStorage <code>fs</code>.
-   *
-   * @param fs FoodStorage where Ingredients are stored
-   * @return a list of recipes that are recommended to make
-   */
-  public Recipe recommendRecipe(FoodStorage fs) {
-    List<Recipe> makeableRecipes = getMakeableRecipes(fs);
-
-    Random random = new Random();
-    int randomIndex = random.nextInt(makeableRecipes.size());
-
-    return makeableRecipes.get(randomIndex);
   }
 
   /**
