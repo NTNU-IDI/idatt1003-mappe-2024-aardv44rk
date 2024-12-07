@@ -7,7 +7,6 @@ import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 
-// TODO move loops to UI
 /**
  * Class responsible for validating user inputs by making sure they can be parsed to the correct
  * datatypes.
@@ -51,8 +50,8 @@ public class InputValidator {
   }
 
   /**
-   * Prompts the user for a String with prompt {@code p}.
-   * Validates and returns if it can be parsed to a double, throws exception if empty or negative input.
+   * Prompts the user for a String with prompt {@code p}. Validates and returns if it
+   * can be parsed to a double, throws exception if empty or negative input.
    *
    * @param p Prompt that user receives 
    * @return The string input of the user if it is validated
