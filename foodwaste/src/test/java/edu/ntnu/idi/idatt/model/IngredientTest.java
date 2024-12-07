@@ -99,7 +99,8 @@ class IngredientTest {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
         () -> new Ingredient(name, unitPrice, expiryDate, amount, null),
         "IllegalArgumentException should be thrown if quantity is null");
-    assertEquals("Unit cannot be null!", e.getMessage(), "Messages should match");
+    assertEquals("Invalid unit: null\nUnit must be one of: g, mL, pcs",
+        e.getMessage(), "Messages should match");
   }
 
   @Test

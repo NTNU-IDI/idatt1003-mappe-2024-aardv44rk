@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.ntnu.idi.idatt.controllers.CookbookController;
+import edu.ntnu.idi.idatt.controllers.StorageController;
 import java.time.LocalDate;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +14,9 @@ import org.junit.jupiter.api.Test;
 
 class CookBookTest {
   private Cookbook cookbook;
+  private CookbookController cookbookController;
+  private FoodStorage fs;
+  private StorageController storageController;
   private Recipe recipe;
   private String name;
   private String otherName;
@@ -23,6 +28,9 @@ class CookBookTest {
   @BeforeEach
   void testInit() {
     cookbook = new Cookbook();
+    fs = new FoodStorage();
+    storageController = new StorageController(fs); 
+    cookbookController = new CookbookController(cookbook, storageController);
     ingredientMap = new LowerCaseMap<>();
     name = "oats";
     otherName = "water";
@@ -85,22 +93,37 @@ class CookBookTest {
             recipe.getInstruction(),
             recipe.getPortions(),
             recipe.getIngredientMap()));
-    FoodStorage fs = new FoodStorage();
-    fs.addIngredient(new Ingredient("oats", 10, LocalDate.now(), amount, oatUnit));
-    fs.addIngredient(new Ingredient("water", 10, LocalDate.now(), amount, otherUnit));
-    assertTrue(cookbook.getMakeableRecipes(fs).contains(recipe), "Recipe should be contained");
-    assertEquals(2, cookbook.getMakeableRecipes(fs).size(), "Should contain 2 recipes");
+    storageController.addIngredient(new Ingredient("oats", 10, LocalDate.now(), amount, oatUnit));
+    storageController.addIngredient(
+            new Ingredient("water", 10, LocalDate.now(), amount, otherUnit)
+    );
+    assertTrue(cookbookController.getMakeableRecipes().contains(recipe),
+          "Recipe should be contained");
+    assertEquals(2, cookbookController.getMakeableRecipes().size(), "Should contain 2 recipes");
   }
 
   @Test
   void testAddRecipeThrowsException() {
-    cookbook.addRecipe(recipe);
+    cookbookController.addRecipe(recipe);
     IllegalStateException e = assertThrows(IllegalStateException.class,
-        () -> cookbook.addRecipe(recipe),
+        () -> cookbookController.addRecipe(recipe),
         "Should throw exception for duplicate recipe");
 
-    assertEquals("Recipe of same name already in cookbook!",
+    assertEquals("Recipe already exists in cookbook",
         e.getMessage(), "Messages should match");
   }
+
+  @Test
+  void testIsMakeableRecipe() {
+    storageController.addIngredient(new Ingredient("oats", 10, LocalDate.now(), 100, "g"));
+    storageController.addIngredient(new Ingredient("Water", 10, LocalDate.now(), 100, "mL"));
+    assertTrue(cookbookController.isMakeableRecipe(recipe), "Recipe should be makeable");
+  }
+
+  @Test
+  void testIsMakeableRecipeReturnFalse() {
+    assertFalse(cookbookController.isMakeableRecipe(recipe), "Recipe should not be makeable");
+  }
+
 
 }

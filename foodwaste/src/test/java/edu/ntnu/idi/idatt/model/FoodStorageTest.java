@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import edu.ntnu.idi.idatt.controllers.StorageController;
 import edu.ntnu.idi.idatt.util.DateUtil;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -34,11 +35,13 @@ class FoodStorageTest {
   private double amount;
   private String unit;
   private FoodStorage fs;
+  private StorageController storageController;
 
   @BeforeEach
   @SuppressWarnings("unused")
   void testInit() {
     fs = new FoodStorage();
+    storageController = new StorageController(fs);
     name = "Milk";
     price = 10;
     expiryDate = DateUtil.parseDate("12-12-2024");
@@ -55,20 +58,22 @@ class FoodStorageTest {
   @Test
   void testAddIngredient() {
     fs.addIngredient(ingredient1);
-    assertTrue(fs.containsIngredient(name, 2000), "Storage should contain correct amount");
-    assertTrue(fs.searchIngredient(name).contains(ingredient1), "List should contain object");
+    assertTrue(storageController.containsIngredient(name, 2000),
+          "Storage should contain correct amount");
+    assertTrue(storageController.searchIngredient(name).contains(ingredient1),
+          "List should contain object");
   }
 
   @Test
   void testAddIngredientMerge() {
     fs.addIngredient(ingredient2);
-    List<Ingredient> ingredients = fs.searchIngredient(name);
+    List<Ingredient> ingredients = storageController.searchIngredient(name);
 
     assertEquals(1, ingredients.size(), "Sizes should match");
     fs.addIngredient(ingredient3);
 
     assertEquals(1, ingredients.size(), "Sizes should match");
-    assertEquals(400,
+    assertEquals(4000,
               ingredients.getFirst().getAmount(),
               "Amounts should match");
   }
@@ -101,7 +106,7 @@ class FoodStorageTest {
   void testAddIngredientNotMerge() {
     fs.addIngredient(ingredient1);
     fs.addIngredient(ingredient2);
-    assertEquals(2, fs.searchIngredient(name).size(), "Size should be 2");
+    assertEquals(2, storageController.searchIngredient(name).size(), "Size should be 2");
   }
 
   @Test
@@ -109,7 +114,7 @@ class FoodStorageTest {
     fs.addIngredient(ingredient1);
     fs.addIngredient(ingredient2);
 
-    List<Ingredient> ingredients = fs.searchIngredient(name);
+    List<Ingredient> ingredients = storageController.searchIngredient(name);
     assertEquals(true, fs.removeIngredient(name, 2100), "Return value should be true");
     assertEquals(1, ingredients.size(), "Size should be 1");
   }
@@ -131,7 +136,7 @@ class FoodStorageTest {
   @Test
   void testSearchIngredient() {
     fs.addIngredient(ingredient1);
-    assertTrue(fs.searchIngredient(ingredient1.getName()).contains(ingredient1),
+    assertTrue(storageController.searchIngredient(ingredient1.getName()).contains(ingredient1),
                "Ingredient should exist");
   }
 
@@ -140,7 +145,7 @@ class FoodStorageTest {
     fs.addIngredient(ingredient1);
     fs.addIngredient(ingredient4);
 
-    Map<String, List<Ingredient>> sortedStorage = fs.sortStorage(fs.getStorage());
+    Map<String, List<Ingredient>> sortedStorage = storageController.sortStorage();
     assertEquals(
               "Banana".toLowerCase(), 
               sortedStorage.keySet().toArray()[0], 
@@ -152,7 +157,8 @@ class FoodStorageTest {
   void testGetExpired() {
     fs.addIngredient(ingredient4);
     assertTrue(
-            fs.getExpiredFood(DateUtil.parseDate("12-12-2024")).contains(ingredient4),
+            storageController.getExpiredFood(DateUtil.parseDate("12-12-2024"))
+                  .contains(ingredient4),
             "List should contain ingredient"
     );
   }
@@ -161,7 +167,7 @@ class FoodStorageTest {
   void testGetExpiredNoExpired() {
     fs.addIngredient(ingredient1);
     assertTrue(
-        fs.getExpiredFood(DateUtil.parseDate("12-12-2024")).isEmpty(),
+        storageController.getExpiredFood(DateUtil.parseDate("12-12-2024")).isEmpty(),
         "Should not contain ingerdient"
     );
   }
@@ -169,7 +175,7 @@ class FoodStorageTest {
   @Test
   void testGetExpiredEmptyStorage() {
     assertTrue(
-        fs.getExpiredFood(DateUtil.parseDate("12-12-2024")).isEmpty(),
+        storageController.getExpiredFood(DateUtil.parseDate("12-12-2024")).isEmpty(),
         "Should return empty list"
     );
   }
@@ -179,14 +185,14 @@ class FoodStorageTest {
     fs.addIngredient(ingredient1);
     fs.addIngredient(ingredient2);
     fs.addIngredient(ingredient3);
-    double total = FoodStorage.getTotalPrice(fs.searchIngredient(name));
+    double total = StorageController.getTotalPrice(storageController.searchIngredient(name));
     assertEquals(34, total, "Price should equal");
   }
 
   @Test
   void testGetTotalPriceEmptyList() {
     List<Ingredient> emptyList = new ArrayList<>();
-    assertEquals(0, FoodStorage.getTotalPrice(emptyList), "Empty list should return 0");
+    assertEquals(0, StorageController.getTotalPrice(emptyList), "Empty list should return 0");
   }
 
   @Test
@@ -194,27 +200,29 @@ class FoodStorageTest {
     fs.addIngredient(ingredient1);
     fs.addIngredient(ingredient2);
     fs.addIngredient(ingredient3);
-    double total = FoodStorage.getTotalAmount(fs.searchIngredient(name));
-    assertEquals(2400, total, "Amount should equal");
+    double total = StorageController.getTotalAmount(storageController.searchIngredient(name));
+    assertEquals(6000, total, "Amount should equal");
   }
 
   @Test
   void testGetTotalAmountEmptyList() {
     List<Ingredient> emptyList = new ArrayList<>();
-    assertEquals(0, FoodStorage.getTotalAmount(emptyList), "Empty list should return 0");
+    assertEquals(0, StorageController.getTotalAmount(emptyList), "Empty list should return 0");
   }
 
   @Test
   void testContainsIngredient() {
     fs.addIngredient(ingredient1);
-    assertTrue(fs.containsIngredient(name, 2000.0), "Should contain ingredient1");
+    assertTrue(storageController.containsIngredient(name, 2000.0), "Should contain ingredient1");
   }
 
   @Test
   void testNotContainsIngredient() {
-    assertFalse(fs.containsIngredient(name, 300.0), "Should not contain any ingredient");
+    assertFalse(storageController.containsIngredient(name, 300.0),
+          "Should not contain any ingredient");
     fs.addIngredient(ingredient2);
-    assertFalse(fs.containsIngredient(name, 300.0), "Should not contain more than 200");
+    assertFalse(storageController.containsIngredient(name, 2100.0),
+          "Should not contain more than 2000");
   }
 
   @Test
@@ -251,7 +259,7 @@ class FoodStorageTest {
   @Test
   void testGetTotalPriceNull() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-            () -> FoodStorage.getTotalPrice(null),
+            () -> StorageController.getTotalPrice(null),
             "Should throw an IllegalArgumentException for a null List");
     assertEquals("List cannot be null, whoops!", e.getMessage(), "Messages should match");
   }
@@ -259,57 +267,60 @@ class FoodStorageTest {
   @Test
   void getTotalAmountNull() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-            () -> FoodStorage.getTotalAmount(null),
+            () -> StorageController.getTotalAmount(null),
             "Should throw an IllegalArgumentException for a null List");
     assertEquals("List cannot be null, whoops!", e.getMessage(), "Messages should match");
   }
 
   @Test
   void testSearchIngredientEmptyStorage() {
-    assertNotEquals(null, fs.searchIngredient(""), "Method should not return null");
-    assertTrue(fs.searchIngredient("").isEmpty(), "Collections.emptyList() should be empty");
+    assertNotEquals(null, storageController.searchIngredient("n"), "Method should not return null");
+    assertTrue(storageController.searchIngredient("n").isEmpty(),
+          "Collections.emptyList() should be empty");
   }
 
   @Test
   void testSearchIngredientNotExist() {
-    assertTrue(fs.searchIngredient("NonExistent").isEmpty(), "Should return empty list");
+    assertTrue(storageController.searchIngredient("NonExistent").isEmpty(),
+          "Should return empty list");
   }
 
   @Test
   void testRemoveIngredientNotFound() {
     IllegalStateException e = assertThrows(IllegalStateException.class,
-                  () -> fs.removeIngredient("", 2.0),
+                  () -> storageController.removeIngredientAmount("nonexistent", 2.0),
                   "IllegalStateException should be thrown if Ingredient not present");
-    assertEquals("Ingredient not in storage", e.getMessage(), "Messages should match");
+    assertEquals("Ingredient not found in storage", e.getMessage(), "Messages should match");
   }
+  
+  @Test
+  void testRemoveIngredientBlankName() {
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                  () -> storageController.removeIngredientAmount("", 2.0),
+                  "IllegalStateException should be thrown if Ingredient not present");
+    assertEquals("Name cannot be null or empty", e.getMessage(), "Messages should match");
+  }
+
 
   @Test
   void testRemoveIngredientNameOnlyNotFound() {
     IllegalStateException e = assertThrows(IllegalStateException.class,
-                  () -> fs.removeIngredient(""),
+                  () -> storageController.removeIngredient("nonexistent"),
                   "IllegalStateException should be thrown if Ingredient not present");
-    assertEquals("Ingredient not in storage", e.getMessage(), "Messages should match");
+    assertEquals("Ingredient not found in storage", e.getMessage(), "Messages should match");
   }
 
   @Test
   void testRemoveIngredientInvalidAmount() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-                  () -> fs.removeIngredient(name, -1),
+                  () -> storageController.removeIngredientAmount(name, -1),
                   "IllegalArgumentException should be thrown if negative or zero amount");
-    assertEquals("Amount cannot be negative or zero!", e.getMessage(), "Messages should match");
+    assertEquals("Amount cannot be negative or zero", e.getMessage(), "Messages should match");
   }
 
   @Test
   void testSortEmptyStorage() {
-    Map<String, List<Ingredient>> storage = fs.sortStorage(fs.getStorage());
+    Map<String, List<Ingredient>> storage = storageController.sortStorage();
     assertTrue(storage.isEmpty(), "Should return empty list");
-  }
-
-  @Test
-  void testSortNullStorage() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-                              () -> fs.sortStorage(null),
-                              "Exception should be thrown if null map");
-    assertEquals("Map cannot be null", e.getMessage(), "Messages should match");
   }
 }

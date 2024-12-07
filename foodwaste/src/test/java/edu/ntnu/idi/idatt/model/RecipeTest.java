@@ -1,11 +1,8 @@
 package edu.ntnu.idi.idatt.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -110,20 +107,6 @@ class RecipeTest {
         Step by step:
         Boil water, add oats, bon apetit""",
         recipe.recipeToString(), "Should be equal");
-  }
-
-  @Test
-  void testIsMakeableRecipe() {
-    FoodStorage fs = new FoodStorage();
-    fs.addIngredient(new Ingredient("oats", 10, LocalDate.now(), 100, "g"));
-    fs.addIngredient(new Ingredient("Water", 10, LocalDate.now(), 100, "mL"));
-    assertTrue(recipe.isMakeableRecipe(fs), "Recipe should be makeable");
-  }
-
-  @Test
-  void testIsMakeableRecipeReturnFalse() {
-    FoodStorage fs = new FoodStorage();
-    assertFalse(recipe.isMakeableRecipe(fs), "Recipe should not be makeable");
   }
 
   // Negative tests
