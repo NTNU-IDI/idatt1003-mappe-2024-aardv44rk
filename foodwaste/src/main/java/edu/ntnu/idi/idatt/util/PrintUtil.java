@@ -28,20 +28,15 @@ public class PrintUtil {
 
   /**
    * Prints the values in a Map {@code map} using the function {@code mapper} to convert the object
-   * to a string. If the values are lists, they are printed using the function
-   * {@link #printList(List, Function)} and {@code mapper}.
+   * to a string. 
    *
    * @param <T> the type of the values in the map
    * @param map the map to be printed
    * @param mapper the function that converts the object to a string
    */
   public static <T> void printMap(Map<String, T> map, Function<T, String> mapper) {
-    map.values().forEach(value -> {
-      if (value instanceof List) {
-        printList((List<T>) value, mapper);
-      } else {
-        System.out.println(mapper.apply(value));
-      }
-    });
+    map.values().stream()
+                .map(mapper)
+                .forEach(System.out::println);
   }
 }
