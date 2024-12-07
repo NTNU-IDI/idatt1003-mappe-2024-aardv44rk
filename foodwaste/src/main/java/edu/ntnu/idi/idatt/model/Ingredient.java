@@ -97,17 +97,29 @@ public class Ingredient {
   }
 
   /**
-   * Method that functions as a toString for an <code>Ingredient</code>.
+   * Method that returns a String for an <code>Ingredient</code>. Expiry dates that are
+   * in the past are printed in red.
+   * 
+   * <p>For use in printing tables of ingredients.</p>
    *
    * @return A string containing the attributes of an <code>Ingredient</code>
    */
   public String ingredientToString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append(this.name).append("\n")
-      .append("Price: ").append(this.unitPrice).append(" money units\n")
-      .append("Amount: ").append(this.getAmount())
-      .append(" ").append(this.getUnit()).append("\n")
-      .append("Expiry date: ").append(DateUtil.formatDate(this.expiryDate));
-    return sb.toString();
+    final String red = "\u001B[31m";
+    final String reset = "\u001B[0m";
+    String formattedDate = "";
+    if (expiryDate.isBefore(LocalDate.now())) {
+      formattedDate = red + DateUtil.formatDate(expiryDate) + reset;
+    } else {
+      formattedDate = DateUtil.formatDate(expiryDate);
+    }
+    return String.format(
+          "%-20s %-10.2f %-15s %-10.2f %-10s",
+          name, 
+          unitPrice, 
+          formattedDate,
+          amount, 
+          unit
+    );
   }
 }
