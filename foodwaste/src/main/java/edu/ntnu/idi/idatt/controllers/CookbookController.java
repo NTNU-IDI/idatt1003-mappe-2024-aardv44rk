@@ -4,6 +4,8 @@ import edu.ntnu.idi.idatt.model.Cookbook;
 import edu.ntnu.idi.idatt.model.Ingredient;
 import edu.ntnu.idi.idatt.model.Recipe;
 import edu.ntnu.idi.idatt.util.ArgumentValidator;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -69,8 +71,8 @@ public class CookbookController {
   }
 
   /**
-   * Checks if a recipe contains enough ingredients to be makeable based on a given 
-   * threshold.
+   * Checks if the users storage contains enough ingredients to make Recipe {@code recipe} based on a given 
+   * threshold. If an ingredient in the storage is expired, it is not counted as available.
    *
    * @param recipe the recipe to check
    * @param threshold the threshold for the amount of ingredients needed
@@ -79,7 +81,7 @@ public class CookbookController {
   public boolean containsEnoughIngredients(Recipe recipe, double threshold) {
     int availableIngredients = (int) recipe.getIngredientMap().values().stream()
         .filter(ingredient -> storageController.containsIngredient(ingredient.getName(),
-                ingredient.getAmount()))
+                ingredient.getAmount()) && !ingredient.getExpiryDate().isBefore(LocalDate.now()))
         .count();
     return (double) availableIngredients / recipe.getIngredientMap().size() >= threshold;
   }
