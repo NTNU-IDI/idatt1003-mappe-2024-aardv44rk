@@ -169,8 +169,10 @@ public class StorageMenu implements UserInterface {
     while (running) {
       try {
         LocalDate date = InputValidator.getDate("Enter the date you want to check for expired "
-            + "items (on format dd-MM-yyyy): ");
-        PrintUtil.printList(storageController.getExpiredFood(date), Ingredient::ingredientToString);
+              + "items (on format dd-MM-yyyy): ");
+        List<Ingredient> ingredients = storageController.getExpiredFood(date);
+        PrintUtil.printList(ingredients, Ingredient::ingredientToString);
+        System.out.println("\nTotal cost of expired items: " + StorageController.getTotalPrice(ingredients));
         running = false;
       } catch (UnsupportedFormatException e) {
         System.out.println(e.getMessage());
