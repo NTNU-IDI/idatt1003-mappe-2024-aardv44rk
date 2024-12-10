@@ -97,7 +97,7 @@ class RecipeTest {
   @Test
   void testPrintRecipe() {
     assertEquals("""
-        Recipe:
+        ----------------------------------------
         Oatmeal
         A mediocre meal consisting of oats and water.
         Ingredients:

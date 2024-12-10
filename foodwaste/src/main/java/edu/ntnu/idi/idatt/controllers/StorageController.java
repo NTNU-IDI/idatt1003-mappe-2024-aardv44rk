@@ -86,10 +86,7 @@ public class StorageController {
    * @return A TreeMap consisting of all ingredients in the storage
    */
   public Map<String, List<Ingredient>> sortStorage() {
-    Map<String, List<Ingredient>> sortedStorage = new TreeMap<>();
-    sortedStorage.putAll(fs.getStorage());
-    return sortedStorage;
-
+    return new TreeMap<String, List<Ingredient>>(fs.getStorage());
   }
 
   
