@@ -73,7 +73,7 @@ public class StorageController {
    * @return A list consisting of all expired <code>Ingredient</code> objects
    */
   public List<Ingredient> getExpiredFood(LocalDate date) {
-    ArgumentValidator.isValidDate(date, "Invalid date! Please try again.");
+    ArgumentValidator.isValidObject(date, "Invalid date! Please try again.");
     return fs.getStorage().values().stream()
                     .flatMap(List::stream)
                     .filter(ingredient -> ingredient.getExpiryDate().isBefore(date))
