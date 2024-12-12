@@ -57,20 +57,6 @@ public class ArgumentValidator {
   }
 
   /**
-   * Validates user input <code>date</code>. Throws IllegalArgumentException 
-   * with message <code>m</code> if <code>date</code> is null, else does nothing.
-   *
-   * @param date the <code>Date</code> to be validated
-   * @param m the message of the thrown exception
-   * @throws IllegalArgumentException if <code>date</code> is empty or null
-   */
-  public static void isValidDate(LocalDate date, String m) throws IllegalArgumentException {
-    if (date == null) {
-      throw new IllegalArgumentException(m);
-    }
-  }
-
-  /**
    * Validates user input <code>o</code>. Throws IllegalArgumentException with message
    * <code>m</code> if <code>o</code> is null, else does nothing.
    *
@@ -122,7 +108,24 @@ public class ArgumentValidator {
   ) {
     isValidString(name, "Name cannot be empty or null!");
     isValidDouble(price, "Price cannot be negative or zero!");
-    isValidDate(expiryDate, "Date cannot be null!");
+    isValidObject(expiryDate, "Date cannot be null!");
+    isValidDouble(amount, "Amount cannot be negative or zero!");
+    isValidUnit(unit);
+  }
+
+  /**
+   * Validates all parameters of an Ingredient object, specifically one for use in Recipes.
+   *
+   * @param name String representing name of an Ingredient
+   * @param amount Double representing amount of an Ingredient
+   * @param unit String representing unit of an Ingredient
+   */
+  public static void isValidIngredient(
+                        String name, 
+                        double amount,
+                        String unit
+  ) {
+    isValidString(name, "Name cannot be empty or null!");
     isValidDouble(amount, "Amount cannot be negative or zero!");
     isValidUnit(unit);
   }

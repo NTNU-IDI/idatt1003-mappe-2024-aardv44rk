@@ -46,6 +46,7 @@ public class Ingredient {
    * @param unit A String representing the unit of an <code>Ingredient</code>
    */
   public Ingredient(String name, double amount, String unit) {
+    ArgumentValidator.isValidIngredient(name, amount, unit);
     this.name = name;
     this.unitPrice = -1;
     this.expiryDate = LocalDate.MAX;
