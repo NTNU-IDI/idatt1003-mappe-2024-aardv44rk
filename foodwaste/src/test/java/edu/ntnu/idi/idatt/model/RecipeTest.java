@@ -3,7 +3,6 @@ package edu.ntnu.idi.idatt.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,47 +51,7 @@ class RecipeTest {
     assertEquals(ingredientMap, recipe.getIngredientMap(), "Ingredient lists should match");
     assertEquals(portions, recipe.getPortions(), "Portion integers should match");
   }
-
-  @Test
-  void testSetName() {
-    String expected = "Oatmeal Deluxe";
-    recipe.setName(expected);
-    assertEquals(expected, recipe.getName());
-  }
-
-  @Test
-  void testSetDescription() {
-    String expected = "Same as oatmeal... but this time with milk!";
-    recipe.setDescription(expected);
-    assertEquals(expected, recipe.getDescription());
-  }
-
-  @Test
-  void testSetInstruction() {
-    String expected = "Bring the milk to pasteurizing temperature, add oats, voila!";
-    recipe.setInstruction(expected);
-    assertEquals(expected, recipe.getInstruction());
-  }
-
-  @Test
-  void testSetIngredientMap() {
-    Map<String, Ingredient> expected = new HashMap<>();
-    String ingredientName = "Milk";
-    double amount = 100;
-    String unit = "mL";
-    Ingredient milk = new Ingredient(ingredientName, amount, unit);
-    expected.put(ingredientName, milk);
-    expected.put("Oats", oats);
-    recipe.setIngredientMap(expected);
-    assertEquals(expected, recipe.getIngredientMap());
-  }
-
-  @Test
-  void testSetPortions() {
-    double expected = 2;
-    recipe.setPortions(expected);
-    assertEquals(expected, recipe.getPortions());
-  }
+ 
 
   @Test
   void testPrintRecipe() {
@@ -111,84 +70,58 @@ class RecipeTest {
 
   // Negative tests
   @Test
-  void testSetNameNull() {
+  void testConstructorNullName() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-        () -> recipe.setName(null),
-        "Should throw IllegalArgumentException if name null");
-    assertEquals("Name field cannot be empty!", e.getMessage());
+                () -> new Recipe(null, description, instruction, portions, ingredientMap),
+                "Should throw exception if name is null");
+    assertEquals("Name cannot be empty!", e.getMessage(), "Should throw correct exception");
   }
 
   @Test
-  void testSetDescriptionNull() {
+  void testConstructorEmptyName() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-        () -> recipe.setDescription(null),
-        "Should throw IllegalArgumentException if null is passed");
-    assertEquals("Description field cannot be empty!", e.getMessage());
+                () -> new Recipe("", description, instruction, portions, ingredientMap),
+                "Should throw exception if name is empty");
+    assertEquals("Name cannot be empty!", e.getMessage(), "Should throw correct exception");
   }
 
   @Test
-  void testSetInstructionNull() {
+  void testConstructorNullDescription() {
     IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-        () -> recipe.setInstruction(null),
-        "Should throw IllegalArgumentException if null is passed");
-    assertEquals("Instruction field cannot be empty!", e.getMessage());
+                () -> new Recipe(name, null, instruction, portions, ingredientMap),
+                "Should throw exception if description is null");
+    assertEquals("Description cannot be empty!", e.getMessage(), "Should throw correct exception");
   }
 
   @Test
-  void testSetIngredientsNull() {
+  void testConstructorEmptyDescription() {
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> new Recipe(name, "", instruction, portions, ingredientMap),
+                "Should throw exception if description is empty");
+    assertEquals("Description cannot be empty!", e.getMessage(), "Should throw correct exception");
+  }
+
+  @Test
+  void testConstructorNullInstruction() {
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> new Recipe(name, description, null, portions, ingredientMap),
+                "Should throw exception if instruction is null");
+    assertEquals("Instruction cannot be empty!", e.getMessage(), "Should throw correct exception");
+  }
+
+  @Test
+  void testConstructorEmptyInstruction() {
+    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
+                () -> new Recipe(name, description, "", portions, ingredientMap),
+                "Should throw exception if instruction is empty");
+    assertEquals("Instruction cannot be empty!", e.getMessage(), "Should throw correct exception");
+  }
+
+  @Test
+  void testConstructorNullIngredientMap() {
     IllegalStateException e = assertThrows(IllegalStateException.class,
-        () -> recipe.setIngredientMap(null),
-        "Should throw IllegalArgumentException if null is passed");
-    assertEquals("Recipe cannot have zero ingredients!", e.getMessage());
+                () -> new Recipe(name, description, instruction, portions, null),
+                "Should throw exception if ingredientMap is null");
+    assertEquals("A recipe cannot have zero ingredients!", e.getMessage(), "Should throw correct exception");
   }
-
-  @Test
-  void testSetPortionsZero() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-        () -> recipe.setPortions(0),
-        "Should throw IllegalArgumentException if zero is passed");
-    assertEquals("Recipe cannot have zero or negative amount of portions!", e.getMessage());
-  }
-
-  @Test
-  void testSetNameEmpty() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-        () -> recipe.setName(""),
-        "Should throw IllegalArgumentException if ");
-    assertEquals("Name field cannot be empty!", e.getMessage());
-  }
-
-  @Test
-  void testSetDescriptionEmpty() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-        () -> recipe.setDescription(""),
-        "Should throw IllegalArgumentException if null is passed");
-    assertEquals("Description field cannot be empty!", e.getMessage());
-  }
-
-  @Test
-  void testSetInstructionEmpty() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-        () -> recipe.setInstruction(""),
-        "Should throw IllegalArgumentException if null is passed");
-    assertEquals("Instruction field cannot be empty!", e.getMessage());
-  }
-
-  @Test
-  void testSetIngredientMapEmpty() {
-    Map<String, Ingredient> emptyMap = new HashMap<>();
-    IllegalStateException e = assertThrows(IllegalStateException.class,
-        () -> recipe.setIngredientMap(emptyMap),
-        "Should throw IllegalArgumentException if empty map is passed");
-    assertEquals("Recipe cannot have zero ingredients!", e.getMessage());
-  }
-
-  @Test
-  void testSetPortionsNegative() {
-    IllegalArgumentException e = assertThrows(IllegalArgumentException.class,
-        () -> recipe.setPortions(-1),
-        "Should throw IllegalArgumentException if negative number is passed");
-    assertEquals("Recipe cannot have zero or negative amount of portions!", e.getMessage(),
-        "Messages should match");
-  }
-}
+ }

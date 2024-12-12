@@ -14,11 +14,11 @@ import java.util.Map;
  * @version 2.0
  */
 public class Recipe {
-  String name;
-  String description;
-  String instruction;
-  double portions;
-  Map<String, Ingredient> ingredientMap;
+  private final String name;
+  private final String description;
+  private final String instruction;
+  private final double portions;
+  private final Map<String, Ingredient> ingredientMap;
 
   /**
    * Sole constructor.
@@ -62,65 +62,7 @@ public class Recipe {
     return portions;
   }
 
-  // setters
-  /**
-   * Sets the name of a recipe.
-   *
-   * @param name the name of the recipe
-   * @throws IllegalArgumentException if name field is null or empty
-   */
-  public final void setName(String name) throws IllegalArgumentException {
-    ArgumentValidator.isValidString(name, "Name field cannot be empty!");
-    this.name = name;
-  }
-
-  /**
-   * Sets the description of a recipe.
-   *
-   * @param description the description of the recipe
-   * @throws IllegalArgumentException if description field is null or empty
-   */
-  public void setDescription(String description) throws IllegalArgumentException {
-    ArgumentValidator.isValidString(description, "Description field cannot be empty!");
-    this.description = description;
-  }
-
-  /**
-   * Sets the instruction of a recipe.
-   *
-   * @param instruction the instruction of the recipe
-   * @throws IllegalArgumentException if instruction field is null or empty
-   */
-  public void setInstruction(String instruction) throws IllegalArgumentException {
-    ArgumentValidator.isValidString(instruction, "Instruction field cannot be empty!");
-    this.instruction = instruction;
-  }
-
-  /**
-   * Sets the <code>Ingredients</code> in a recipe.
-   *
-   * @param ingredientMap the name of the recipe
-   * @throws IllegalArgumentException if <code>ingredients</code> is empty
-   */
-  public void setIngredientMap(Map<String, Ingredient> ingredientMap) 
-              throws IllegalArgumentException {
-    ArgumentValidator.isValidMap(ingredientMap, "Recipe cannot have zero ingredients!");
-    this.ingredientMap = ingredientMap;
-  }
-
-  /**
-   * Sets the <code>portions</code> in a recipe.
-   *
-   * @param portions the portion amount of the recipe
-   * @throws IllegalArgumentException if <code>portions</code> is negative or empty
-   */
-  public void setPortions(double portions) {
-    ArgumentValidator.isValidDouble(portions,
-            "Recipe cannot have zero or negative amount of portions!");
-    this.portions = portions;
-  }
-
-  /**
+   /**
    * Method that prints the arguments of a <code>Recipe</code> object <code>r</code>.
    *
    * @return a string containing the information of a recipe 
