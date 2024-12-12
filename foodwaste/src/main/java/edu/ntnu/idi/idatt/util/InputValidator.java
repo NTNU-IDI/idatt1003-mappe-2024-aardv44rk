@@ -37,7 +37,6 @@ public class InputValidator {
    * @throws InvalidInputException if user input is blank
    */
   public static String getString(String p) throws InvalidInputException {
-    ArgumentValidator.isValidString(p, "Prompt cannot be null or empty");
     System.out.println(p);
     String output = "";
     String input = sc.nextLine();
@@ -58,7 +57,6 @@ public class InputValidator {
    * @throws InvalidInputException if user input is blank 
    */
   public static double getPositiveDouble(String p) throws InvalidInputException {
-    ArgumentValidator.isValidString(p, "Prompt cannot be null or empty");
     System.out.println(p);
     double output = 0;
     String input = sc.nextLine();
@@ -84,7 +82,6 @@ public class InputValidator {
    * @throws IllegalArgumentException if user input does not match the required date format
    */
   public static LocalDate getDate(String p) throws UnsupportedFormatException {
-    ArgumentValidator.isValidString(p, "Prompt cannot be null or empty");
     System.out.println(p);
     LocalDate output = LocalDate.MIN;
     String input = sc.nextLine();
