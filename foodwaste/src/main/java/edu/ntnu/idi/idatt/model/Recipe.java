@@ -62,7 +62,7 @@ public class Recipe {
     return portions;
   }
 
-   /**
+  /**
    * Method that prints the arguments of a <code>Recipe</code> object <code>r</code>.
    *
    * @return a string containing the information of a recipe 
