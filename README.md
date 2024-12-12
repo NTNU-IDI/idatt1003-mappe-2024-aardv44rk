@@ -1,4 +1,3 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/INcAwgxk)
 # Portfolio project IDATT1003
 
 ## Student name and ID
@@ -10,7 +9,7 @@ STUDENT ID = "137426"
 
 [//]: # (TODO: Write a short description of your project/product here.)
 
-This project is a part of required assignments in IDATT1003 (Programmering 1).
+This project is a part of required assignments in IDATT1003 (Programmering 1). The assignment asks for an applicaton that helps users reduce their food waste by supplying them with tools to manage food and recipes.
 
 ## Project structure
 
@@ -27,6 +26,7 @@ https://github.com/NTNU-IDI/idatt1003-mappe-2024-aardv44rk
 ## Prerequisites
 
 Java JDK 21
+
 Maven
 
 ## How to run the project
