@@ -26,7 +26,7 @@ public class MainMenu implements UserInterface {
   public void display() {
     if (!initialized) {
       try {
-        String answer = InputValidator.getString("Do you want to load a dummy values? (y/n): ");
+        String answer = InputValidator.getString("Do you want to load dummy values? (y/n): ");
         if (answer.equalsIgnoreCase("y")) {
           DummyValues.initializeDummyValues(storageController, cookbookController);
         }
