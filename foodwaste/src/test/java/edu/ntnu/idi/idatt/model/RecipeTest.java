@@ -122,6 +122,7 @@ class RecipeTest {
     IllegalStateException e = assertThrows(IllegalStateException.class,
                 () -> new Recipe(name, description, instruction, portions, null),
                 "Should throw exception if ingredientMap is null");
-    assertEquals("A recipe cannot have zero ingredients!", e.getMessage(), "Should throw correct exception");
+    assertEquals("A recipe cannot have zero ingredients!", e.getMessage(),
+          "Should throw correct exception");
   }
- }
+}

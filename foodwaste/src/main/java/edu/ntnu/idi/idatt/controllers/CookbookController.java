@@ -4,7 +4,6 @@ import edu.ntnu.idi.idatt.model.Cookbook;
 import edu.ntnu.idi.idatt.model.Ingredient;
 import edu.ntnu.idi.idatt.model.Recipe;
 import edu.ntnu.idi.idatt.util.ArgumentValidator;
-
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,8 +70,9 @@ public class CookbookController {
   }
 
   /**
-   * Checks if the users storage contains enough ingredients to make Recipe {@code recipe} based on a given 
-   * threshold. If an ingredient in the storage is expired, it is not counted as available.
+   * Checks if the users storage contains enough ingredients to make Recipe {@code recipe} based
+   * on a given threshold. If an ingredient in the storage is expired, it is not counted as
+   * available.
    *
    * @param recipe the recipe to check
    * @param threshold the threshold for the amount of ingredients needed
@@ -93,6 +93,7 @@ public class CookbookController {
    * @param recipe Recipe to check for
    */
   public boolean isMakeableRecipe(Recipe recipe) {
+    ArgumentValidator.isValidObject(recipe, "Recipe cannot be null");
     Map<String, Ingredient> ingredients = recipe.getIngredientMap();
     return ingredients.values().stream()
         .allMatch(ingredient -> 
@@ -103,7 +104,7 @@ public class CookbookController {
     return new TreeMap<>(cookbook.getRecipes());
   }
 
-   /**
+  /**
    * Method that prints the name and description of a <code>Recipe</code> object, specifically
    * for the CookbookMenu#viewCookbook() method. If the recipe is makeable, the name will be
    * printed in green.
@@ -115,7 +116,9 @@ public class CookbookController {
     final String green = "\u001B[32m";
     final String reset = "\u001B[0m";
     if (isMakeableRecipe(recipe)) {
-        return String.format("%-20s %-50s", green + recipe.getName() + reset + " (Makeable)", recipe.getDescription());
+      return String.format(
+        "%-20s %-50s", green + recipe.getName() + reset + " (Makeable)", recipe.getDescription()
+      );
     }
     return String.format("%-20s %-50s", recipe.getName(), recipe.getDescription());
   }
