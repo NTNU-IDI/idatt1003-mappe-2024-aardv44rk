@@ -5,7 +5,7 @@ import java.util.Map;
 
 
 /**
- * Cookbook class manages Recipes and stores them in a list.
+ * Cookbook class is responsible for managing Recipes and stores them in a list.
  *
  * @author @aardv44rk
  * @since November 27th 2024

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * FoodStorage class manages the storage and provides methods to...
+ * FoodStorage class is responsible for managing data in a storage.
  *
  * @author @aardv44rk
  * @since November 19th 2024
