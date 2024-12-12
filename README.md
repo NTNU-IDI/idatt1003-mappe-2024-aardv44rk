@@ -26,24 +26,32 @@ https://github.com/NTNU-IDI/idatt1003-mappe-2024-aardv44rk
 
 ## Prerequisites
 
-Java JDK
+Java JDK 21
 Maven
 
 ## How to run the project
 
 [//]: # (TODO: Describe how to run your project here. What is the main class? What is the main method? What is the input and output of the program? What is the expected behaviour of the program?)
+1. Navigate to the /foodwaste/ directory by running "cd /path/to/mappe/foodwaste/" in your terminal
+2. Run mvn clean install
+3. Run mvn exec:java to run the program
+3. Run mvn dependency:resolve to fix missing dependencies if a problem occurs.
 
+Or, open /foodwaste/src/main/java/edu/ntnu/idi/idatt/App.java and run the file manually.
 
 
 ## How to run the tests
 
 [//]: # (TODO: Describe how to run the tests here.)
-
+1. Navigate to the /foodwaste/ directory by running "cd /path/to/mappe/foodwaste/" in your terminal
+2. Run mvn clean install
+3. Run mvn dependency:resolve to fix missing dependencies if a problem occurs.
 
 ## References
 
-https://www.w3schools.com/java/java_ref_reference.asp
+https://www.w3schools.com/java/
+http://www.baeldung.com
 
-This is at the moment the only website I have used for Java documentation.
+These sites are the only ones I have used for JavaDoc during the project.
 
-For learning git I've mostly used `git <command> -h` or trial and error.
+For learning git I have mostly used 'git -h', trial and error, and consulted classmates.
